@@ -1,0 +1,60 @@
+/* ========= HERO SECTION ========= */
+.legal-hero {
+  width: 100%;
+  text-align: center;
+  padding: 70px 20px;
+  color: #ffffffd9;
+ background: linear-gradient(135deg, #031576, #0d3ddf);
+  border-bottom: 4px solid #3fad2e;
+}
+
+.legal-hero h1 {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.legal-hero p {
+  font-size: 18px;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+/* ========= CONTENT SECTION ========= */
+.legal-content {
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+}
+
+.section-title {
+  color: #03076b;
+  border-left: 4px solid #fe6e03;
+  padding-left: 12px;
+  margin-top: 25px;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+/* Bullet list style */
+.legal-content ul {
+  margin-left: 20px;
+}
+
+.legal-content ul li {
+  margin-bottom: 6px;
+}
+
+/* ========= RESPONSIVENESS ========= */
+@media (max-width: 576px) {
+  .legal-hero h1 {
+    font-size: 32px;
+  }
+  
+  .legal-hero p {
+    font-size: 16px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+}

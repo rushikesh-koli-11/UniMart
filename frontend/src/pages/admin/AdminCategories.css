@@ -1,0 +1,313 @@
+:root {
+  --blue: #03076b;
+  --orange: #fe6e03;
+  --green: #3fad2e;
+  --white-d9: #ffffffd9;
+}
+
+/* PAGE WIDTH */
+.admin-category-page {
+  max-width: 1250px;
+}
+
+/* HERO SECTION */
+.admin-cat-hero {
+  background: linear-gradient(135deg, #03076b, #0d3ddf);
+  padding: 55px 25px;
+  border-radius: 16px;
+  color: var(--white-d9);
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  margin-bottom: 30px;
+}
+
+.admin-cat-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.admin-cat-hero p {
+  margin-top: 8px;
+  font-size: 17px;
+  opacity: 0.92;
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .admin-cat-hero {
+    padding: 35px 20px;
+  }
+  .admin-cat-hero h1 {
+    font-size: 24px;
+  }
+}
+
+/* HEADER TITLE COLOR */
+.text-primary-blue {
+  color: var(--blue) !important;
+}
+
+/* ADD BUTTON */
+.add-btn {
+  background: var(--orange) !important;
+  color: var(--white-d9) !important;
+  font-weight: 600 !important;
+  padding: 8px 18px !important;
+  border-radius: 8px !important;
+}
+
+/* CATEGORY CARD */
+.cat-card {
+  border: 2px solid var(--blue) !important;
+  border-radius: 14px !important;
+  padding: 12px !important;
+  background: #ffffff;
+}
+
+.cat-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.cat-description {
+  color: #666;
+}
+
+/* SUBCATEGORY HEADING */
+.sub-title {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+/* SUBCATEGORY GRID */
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 10px;
+}
+
+/* SUBCATEGORY ITEM */
+.sub-item {
+  background: #f1f4ff;
+  padding: 10px;
+  border-radius: 10px;
+  border-left: 5px solid var(--orange);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.25s ease;
+}
+
+.sub-item:hover {
+  background: #e3e7ff;
+  transform: translateY(-2px);
+}
+
+.sub-name {
+  font-weight: 600;
+  color: var(--blue);
+  font-size: 14px;
+}
+
+/* DELETE SUB BUTTON */
+.delete-sub-btn {
+  background: #ffe5e5 !important;
+  color: #d62828 !important;
+  padding: 4px !important;
+  border-radius: 6px !important;
+}
+
+.delete-sub-btn:hover {
+  background: #ffcccc !important;
+}
+
+/* CARD FOOTER */
+.cat-actions {
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* DIALOG BOX */
+.dialog-box .MuiPaper-root {
+  border-radius: 14px !important;
+  border: 2px solid var(--blue) !important;
+  padding-bottom: 20px !important;
+}
+
+.dialog-box .MuiDialogTitle-root {
+  color: var(--blue) !important;
+  font-weight: 700 !important;
+}
+
+/* RESPONSIVE GRID */
+@media (max-width: 992px) {
+  .sub-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .sub-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.edit-btn, .edit-sub-btn {
+  background: #e8e8ff !important;
+  color: var(--blue) !important;
+  margin-right: 4px;
+  border-radius: 6px !important;
+}
+
+.edit-btn:hover,
+.edit-sub-btn:hover {
+  background: #c9ceff !important;
+}
+/* ====================================================== */
+/*              BUTTON STYLING (THEME BASED)              */
+/* ====================================================== */
+
+/* Add Subcategory Button (inside card footer) */
+.cat-actions button:first-child {
+  background: var(--green) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 5px 14px !important;
+}
+
+.cat-actions button:first-child:hover {
+  background: #2d8c1f !important;
+}
+
+/* Delete Category Button */
+.cat-actions button:last-child {
+  background: var(--orange) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 5px 14px !important;
+}
+
+.cat-actions button:last-child:hover {
+  background: #c65605 !important;
+}
+
+/* ====================================================== */
+/*       Subcategory Edit / Delete Icon Buttons           */
+/* ====================================================== */
+
+.edit-sub-btn {
+  background: rgba(3, 7, 107, 0.07) !important;
+  color: var(--blue) !important;
+  border-radius: 6px !important;
+  margin-right: 4px !important;
+  transition: 0.2s ease;
+}
+
+.edit-sub-btn:hover {
+  background: rgba(3, 7, 107, 0.13) !important;
+}
+
+/* Delete subcategory button */
+.delete-sub-btn {
+  background: rgba(254, 110, 3, 0.12) !important;
+  color: red !important;
+  border-radius: 6px !important;
+  transition: 0.2s ease;
+}
+
+.delete-sub-btn:hover {
+  background: rgba(254, 110, 3, 0.22) !important;
+}
+
+/* ====================================================== */
+/*                Add Category (Orange Button)            */
+/* ====================================================== */
+
+.add-btn {
+  background: var(--orange) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  padding: 8px 20px !important;
+  border-radius: 10px !important;
+  transition: 0.25s ease;
+}
+
+.add-btn:hover {
+  background: #c65605 !important;
+}
+/* CATEGORY IMAGE */
+.cat-image-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cat-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* SUBCATEGORY IMAGE */
+.sub-image-box {
+  width: 35px;
+  height: 35px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sub-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* FALLBACK */
+.no-image {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+.no-image.small {
+  font-size: 10px;
+}
+/* FULL IMAGE PREVIEW */
+.image-preview-content {
+  text-align: center;
+  padding: 15px;
+  background: #fff;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+}
+
+/* CURSOR INDICATOR */
+.cat-image-box, .sub-image-box {
+  transition: transform 0.2s ease;
+}
+
+.cat-image-box:hover,
+.sub-image-box:hover {
+  transform: scale(1.05);
+}

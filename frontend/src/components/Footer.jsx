@@ -1,33 +1,124 @@
-import React from 'react';
-import { Box, Typography, Link as MuiLink, Grid } from '@mui/material';
+import React from "react";
+import {
+  Box,
+  Typography,
+  Link as MuiLink,
+  Grid,
+  IconButton
+} from "@mui/material";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Email,
+  Phone,
+  LocationOn
+} from "@mui/icons-material";
+
+import { Link } from "react-router-dom";
+
+import "./Footer.css";
+import logo from "../assets/UniMart.png";
 
 export default function Footer() {
   return (
-    <Box component="footer" sx={{ bgcolor: 'background.paper', py: 4, mt: 6 }}>
-      <Grid container spacing={2} sx={{ px: 4 }}>
-        <Grid item xs={12} md={4}>
-          <Typography variant="h6">UniMart</Typography>
-          <Typography>Seamless online shopping experience.</Typography>
+    <Box component="footer" className="footer-wrapper">
+
+      <Grid container spacing={3} className="footer-grid">
+
+        {/* BRAND + LOGO */}
+        <Grid item xs={12} md={3}>
+          <div className="footer-logo-box">
+            <img
+              src={logo}
+              alt="UniMart Logo"
+              className="footer-logo"
+            />
+          </div>
+
+          <Typography className="footer-text">
+            Seamless online shopping experience.
+          </Typography>
         </Grid>
-        <Grid item xs={6} md={2}>
-          <Typography variant="subtitle1">Company</Typography>
-          <MuiLink href="#" display="block">About Us</MuiLink>
-          <MuiLink href="#" display="block">Contact Us</MuiLink>
+
+        {/* QUICK LINKS */}
+<Grid item xs={6} md={2}>
+  <Typography className="footer-title">Quick Links</Typography>
+
+  <MuiLink component={Link} to="/about" className="footer-link">
+    About Us
+  </MuiLink>
+
+  <MuiLink component={Link} to="/contact" className="footer-link">
+    Contact Us
+  </MuiLink>
+
+  <MuiLink component={Link} to="/privacy-policy" className="footer-link">
+    Privacy Policy
+  </MuiLink>
+
+  <MuiLink component={Link} to="/terms" className="footer-link">
+    Terms & Conditions
+  </MuiLink>
+</Grid>
+
+
+        {/* CONTACT INFO */}
+        <Grid item xs={12} md={3}>
+          <Typography className="footer-title">Contact</Typography>
+
+          <div className="footer-contact">
+            <Typography className="footer-contact-item">
+              <Email className="footer-icon" /> support@unimart.com
+            </Typography>
+
+            <Typography className="footer-contact-item">
+              <Phone className="footer-icon" /> +91 98765 43210
+            </Typography>
+
+            <Typography className="footer-contact-item">
+              <LocationOn className="footer-icon" /> Mumbai, India
+            </Typography>
+          </div>
         </Grid>
-        <Grid item xs={6} md={2}>
-          <Typography variant="subtitle1">Legal</Typography>
-          <MuiLink href="#" display="block">Privacy Policy</MuiLink>
-          <MuiLink href="#" display="block">Terms & Conditions</MuiLink>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Typography variant="subtitle1">Follow Us</Typography>
-          <MuiLink href="#" display="block">Twitter</MuiLink>
-          <MuiLink href="#" display="block">Facebook</MuiLink>
-          <MuiLink href="#" display="block">Instagram</MuiLink>
+
+        {/* SOCIAL ICONS */}
+        <Grid item xs={12} md={2}>
+          <Typography className="footer-title">Follow Us</Typography>
+
+          <div className="footer-social">
+            <IconButton className="social-icon">
+              <Twitter />
+            </IconButton>
+
+            <IconButton className="social-icon">
+              <Facebook />
+            </IconButton>
+
+            <IconButton className="social-icon">
+              <Instagram />
+            </IconButton>
+          </div>
         </Grid>
       </Grid>
-      <Typography align="center" sx={{ mt: 3 }}>
+
+      {/* COPYRIGHT */}
+      <Typography align="center" className="footer-bottom">
         © UniMart 2025 — All rights reserved.
+      </Typography>
+
+      <Typography align="center" className="developer-credit mt-2">
+        Designed & Developed by{" "}
+        <span>
+          <MuiLink
+            href="https://www.linkedin.com/in/rushikeshkoli"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="name"
+          >
+            Rushikesh Koli
+          </MuiLink>
+        </span>
       </Typography>
     </Box>
   );

@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
     if (!match) return res.status(400).json({ message: "Incorrect login details" });
 
     const token = jwt.sign({ id: user._id, isAdmin: false }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
+    console.log("userAuth.js");
     res.json({ token, user });
   } catch (err) {
     res.status(500).json({ message: err.message });

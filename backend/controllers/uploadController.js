@@ -8,7 +8,7 @@ exports.uploadImage = async (req, res) => {
     // Buffer -> Cloudinary (using promise wrapper)
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'unimart' },
+        { folder: 'unimark' },
         (err, data) => (err ? reject(err) : resolve(data))
       );
       stream.end(req.file.buffer);

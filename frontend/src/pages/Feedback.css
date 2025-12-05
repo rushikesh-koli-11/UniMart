@@ -1,0 +1,77 @@
+:root {
+  --primary-blue: #031576;
+  --primary-orange: #fd6e04;
+  --success-green: #42b231;
+  --white: #ffffff;
+}
+
+/* Page wrapper */
+.feedback-wrapper {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 0 15px;
+}
+
+/* Main card */
+.feedback-card {
+  padding: 30px;
+  border-radius: 16px !important;
+  border: 2px solid #e6e8f5 !important;
+  background: #ffffff !important;
+  box-shadow: 0px 8px 24px rgba(3, 21, 118, 0.08) !important;
+}
+
+/* Title */
+.feedback-title {
+  font-weight: 700 !important;
+  color: var(--primary-blue) !important;
+  margin-bottom: 10px !important;
+}
+
+/* Subtitle */
+.feedback-subtext {
+  color: #555 !important;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+/* Alerts */
+.alert-msg {
+  border-radius: 8px !important;
+  margin-bottom: 10px;
+}
+
+/* Inputs */
+.input-field .MuiOutlinedInput-root {
+  border-radius: 10px !important;
+}
+
+.input-field .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: var(--primary-blue) !important;
+  box-shadow: 0 0 4px rgba(3, 21, 118, 0.3) !important;
+}
+
+/* Submit button */
+.feedback-btn {
+  background: var(--primary-orange) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  padding: 12px !important;
+  border-radius: 10px !important;
+  transition: 0.3s;
+}
+
+.feedback-btn:hover {
+  background: #e86102 !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .feedback-card {
+    padding: 20px !important;
+  }
+
+  .feedback-title {
+    font-size: 20px !important;
+  }
+}

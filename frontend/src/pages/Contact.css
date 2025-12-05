@@ -1,0 +1,330 @@
+/* ================================
+   UNI MART CONTACT PAGE STYLES
+================================ */
+
+/* Page Layout */
+.contact-container {
+  padding: 60px 20px;
+  background-color: #f5f7ff;
+  min-height: 100vh;
+}
+
+.contact-wrapper {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* ============================
+   LEFT SIDE (INFO SECTION)
+=========================== */
+.info-section {
+  flex: 1;
+  min-width: 320px;
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  border-left: 5px solid #031576;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.info-title {
+  font-size: 28px;
+  color: #031576;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.info-text {
+  font-size: 15.5px;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* Info Items */
+.info-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  color: #031576;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.info-box i {
+  font-size: 22px;
+  color: #fd6e04;
+}
+
+.info-note {
+  margin-top: 20px;
+  padding: 12px 14px;
+  background: #fff6e8;
+  border-radius: 6px;
+  border-left: 4px solid #fd6e04;
+  font-size: 14.5px;
+  color: #444;
+}
+
+/* ============================
+   RIGHT SIDE (FORM SECTION)
+=========================== */
+.form-section {
+  flex: 1;
+  min-width: 350px;
+}
+
+.contact-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  border-left: 5px solid #fd6e04;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.heading {
+  color: #031576;
+  font-weight: 700;
+}
+
+/* Input Fields */
+.input-box {
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.input-box:focus {
+  border-color: #031576;
+  box-shadow: 0 0 5px rgba(3, 21, 118, 0.4);
+}
+
+/* Send Button */
+.send-btn {
+  background-color: #fd6e04 !important;
+  color: #ffffff !important;
+  padding: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 6px;
+}
+
+.send-btn:hover {
+  background-color: #e26000 !important;
+}
+
+/* Alerts */
+.alert {
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.alert-success {
+  background-color: #e6f9e8;
+  color: #2d8a33;
+  border-left: 5px solid #36a229;
+}
+
+.alert-danger {
+  background-color: #ffe5e5;
+  color: #d9534f;
+  border-left: 5px solid #d9534f;
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+=========================== */
+@media (max-width: 768px) {
+  .contact-wrapper {
+    flex-direction: column;
+  }
+
+  .info-section,
+  .contact-card {
+    padding: 20px;
+  }
+
+  .info-title {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-container {
+    padding: 40px 15px;
+  }
+}
+/* PAGE LAYOUT */
+.contact-page {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+/* HERO */
+.contact-hero {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #031576, #0631d8);
+  color: #fff;
+  border-radius: 14px;
+  margin-bottom: 35px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.contact-hero h1 {
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.contact-hero h1 span {
+  color: #ffae36;
+}
+
+.contact-hero p {
+  margin-top: 8px;
+  font-size: 17px;
+}
+
+/* GRID */
+.contact-grid {
+  display: grid;
+  gap: 25px;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LEFT CARD */
+.contact-info-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.contact-info-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #031576;
+  margin-bottom: 12px;
+}
+
+.info-desc {
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* INFO ITEMS */
+.contact-detail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.contact-detail i {
+  font-size: 20px;
+  color: #031576;
+}
+
+/* NOTE */
+.info-note {
+  background: #f8f9ff;
+  padding: 12px;
+  margin-top: 15px;
+  border-left: 4px solid #031576;
+  border-radius: 6px;
+  color: #444;
+  font-size: 14px;
+}
+
+/* FORM CARD */
+.contact-form-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-title {
+  text-align: center;
+  color: #031576;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
+.input-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #031576;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #d0d7ff;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: #031576;
+  outline: none;
+}
+
+.invalid {
+  border-color: #d00000 !important;
+  background: #fff5f5;
+}
+
+.error-text {
+  color: #d00000;
+  font-size: 13px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+/* BUTTON */
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff7a00, #ff9900);
+  color: #fff;
+  padding: 12px;
+  font-size: 17px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: 0.25s ease;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #ff8f1a, #ffac33);
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}

@@ -1,0 +1,115 @@
+/* ============================
+   THEME COLORS
+============================ */
+:root {
+  --blue: #03076b;
+  --orange: #fe6e03;
+  --white: #ffffffd9;
+  --green: #3fad2e;
+}
+
+/* ============================
+   HERO SECTION
+============================ */
+.admin-users-hero {
+   background: linear-gradient(135deg, #03076b, #0839e6);
+  padding: 40px 20px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.18);
+  color: white;
+}
+
+.hero-title {
+  font-weight: 900!important;
+  font-size: 28px!important;
+}
+
+.hero-subtitle {
+  font-size: 15px!important;
+  opacity: 0.9!important;
+}
+
+/* ============================
+   TABLE STYLING
+============================ */
+.admin-users-table-container {
+  background: #fff;
+  border-radius: 14px;
+  padding: 0;
+}
+
+.table-header {
+  background: var(--blue) !important;
+  color: white;
+  font-weight: bold;
+}
+
+.admin-users-table tbody tr:hover {
+  background: #f3f5ff !important;
+}
+
+.admin-users-table td,
+.admin-users-table th {
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* ============================
+   DELETE BUTTON
+============================ */
+.btn-delete-user {
+  background: var(--orange) !important;
+  border: none;
+  color: white !important;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.btn-delete-user:hover {
+  background: #c95702 !important;
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 22px;
+  }
+  .admin-users-table td,
+  .admin-users-table th {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .btn-delete-user {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+}
+.nav-link-btn {
+  color: #ffffffd9 !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  transition: 0.25s ease-in-out !important;
+}
+
+.nav-link-btn:hover {
+  background: #03076b !important;
+  color: #fff !important;
+}
+
+.active-nav {
+  background: #fe6e03 !important;
+  color: #fff !important;
+}
+
+.mobile-menu-btn.active-nav {
+  background: #fe6e03 !important;
+  color: white !important;
+}

@@ -1,0 +1,252 @@
+/* ================================
+   Base Navbar Styles
+================================ */
+.navbar-main {
+  background-color: #031576 !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1200;
+}
+
+.navbar-toolbar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  padding: 8px 12px;
+}
+
+/* Logo */
+.logo-img {
+  height: 38px;
+  width: auto;
+}
+
+.navbar-logo-img {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Sections */
+.nav-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+/* ================================
+   Buttons & Links
+================================ */
+.nav-link-btn {
+  color: #ffffff !important;
+  font-weight: 500;
+  text-transform: none !important;
+}
+
+.nav-link-btn:hover {
+  color: #fd6e04 !important;
+}
+
+.nav-user-btn {
+  color: #ffffff !important;
+  font-weight: 600;
+  text-transform: none !important;
+}
+
+.nav-user-btn:hover {
+  color: #e26000 !important;
+}
+
+.nav-auth-btn {
+  color: #ffffff !important;
+  background-color: #fd6e04 !important;
+  font-weight: 600;
+  text-transform: none !important;
+}
+
+.nav-auth-btn:hover {
+  background-color: #e26000 !important;
+  color: white !important;
+}
+
+.nav-logout-btn {
+  color: white !important;
+  background-color: #e26000 !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+}
+
+.nav-logout-btn:hover {
+  background-color: #36a229 !important;
+}
+
+.nav-icon-btn {
+  color: white !important;
+}
+
+.nav-icon-btn:hover {
+  color: #fd6e04 !important;
+}
+
+
+
+/* ================================
+   Search Bar
+================================ */
+.fullwidth-search {
+  width: 100% !important;
+}
+
+.fullwidth-search .MuiInputBase-root {
+  width: 100%;
+  background-color: white;
+  border-radius: 6px;
+}
+
+/* ================================
+   Desktop / Mobile Control
+================================ */
+.desktop-only {
+  display: flex !important;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+/* Hamburger icon */
+.hamburger-btn {
+  color: white !important;
+}
+
+/* ================================
+   Mobile Menu
+================================ */
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu-btn {
+  color: #ffffff !important;
+  font-weight: 500;
+  margin: 6px 0;
+  text-transform: none !important;
+  border: 1px solid transparent;
+}
+
+.mobile-menu-btn:hover {
+  /* border-color: #fd6e04 !important; */
+  color: #fd6e04 !important;
+  /* background: #fd6e04 !important; */
+}
+
+.mobile-logout-btn {
+  color: #ffffff !important;
+  background-color: #42b231 !important;
+  margin-top: 10px;
+  text-transform: none !important;
+}
+
+.mobile-logout-btn:hover {
+  background-color: #36a229 !important;
+}
+
+/* Mobile dropdown animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ================================
+   RESPONSIVE RULES
+================================ */
+
+/* <= 992px: switch to mobile mode */
+@media (max-width: 992px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: #031576;
+    padding: 15px;
+    border-top: 2px solid #fd6e04;
+    animation: slideDown 0.3s ease;
+  }
+
+  .nav-center {
+    display: none !important; /* remove search from center, show inside mobile */
+  }
+}
+
+/* <= 768px: small screen tweaks */
+@media (max-width: 768px) {
+  .nav-link-btn {
+    font-size: 0.9rem;
+  }
+}
+.hamburger-btn {
+  color: white !important;
+  margin-left: auto !important;   /* pushes hamburger icon to right side */
+}
+.active-nav {
+  color: #fd6e04 !important;
+  border-bottom: 3px solid #fd6e04 !important;
+}
+.mobile-search-modal {
+  animation: fadeIn 0.2s ease-in;
+}
+
+.mobile-search-modal {
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.nav-right {
+  margin-left: auto !important;
+}
+
+.nav-link-btn.active-nav,
+.mobile-menu-btn.active-nav {
+  background: rgba(3,21,118,0.95) !important;
+  color: #fff !important;
+  border-radius: 8px;
+  font-weight: 700 !important;
+}
+.nav-icon-btn {
+  color: white !important;
+  background-color: #031576!important;
+}
+.nav-icon-btn:hover {
+  color: white !important;
+}

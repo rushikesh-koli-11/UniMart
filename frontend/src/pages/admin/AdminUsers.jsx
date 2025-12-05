@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table, TableHead, TableRow, TableCell, TableBody,
-  Typography, IconButton, Stack
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import API from "../../api/api";
+import { Button } from "react-bootstrap";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "./AdminUsers.css";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -29,38 +27,52 @@ export default function AdminUsers() {
   }, []);
 
   return (
-    <div>
-      <Typography variant="h4" sx={{ mb: 2 }}>Users</Typography>
+    <div className="container-fluid admin-users-wrapper py-3">
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Name</strong></TableCell>
-            <TableCell><strong>Email</strong></TableCell>
-            <TableCell><strong>Phone</strong></TableCell>
-            <TableCell><strong>Joined</strong></TableCell>
-            <TableCell><strong>Action</strong></TableCell>
-          </TableRow>
-        </TableHead>
+      {/* HERO */}
+      <div className="admin-users-hero text-center mb-4">
+        <h2 className="hero-title">Manage Users</h2>
+        <p className="hero-subtitle">View, monitor, and manage all registered users</p>
+      </div>
 
-        <TableBody>
-          {users.map((u) => (
-            <TableRow key={u._id}>
-              <TableCell>{u.name}</TableCell>
-              <TableCell>{u.email}</TableCell>
-              <TableCell>{u.phone || "-"}</TableCell>
-              <TableCell>{new Date(u.createdAt).toLocaleDateString()}</TableCell>
-              <TableCell>
-                <Stack direction="row">
-                  <IconButton color="error" onClick={() => deleteUser(u._id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Stack>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {/* TABLE SECTION */}
+      <div className="table-responsive shadow-sm rounded admin-users-table-container">
+        <table className="table table-bordered table-hover text-center align-middle admin-users-table">
+          <thead className="table-header">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Joined</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {users.map((u) => (
+              <tr key={u._id}>
+                <td>{u.name}</td>
+                <td>{u.email}</td>
+                <td>{u.phone || "-"}</td>
+                <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+
+                <td>
+                  <button
+                    className="btn btn-sm btn-delete-user"
+                    onClick={() => deleteUser(u._id)}
+                  >
+                    <DeleteIcon fontSize="small" /> Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {users.length === 0 && (
+        <p className="text-center text-muted mt-3">No users found.</p>
+      )}
     </div>
   );
 }

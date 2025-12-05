@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import './pages/admin/AdminOrders.css';  
 import { UserAuthProvider } from "./contexts/UserAuthContext";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 import { CartProvider } from "./contexts/CartContext";

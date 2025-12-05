@@ -12,11 +12,21 @@ router.post("/image", protectAdmin, upload.single("image"), async (req, res) => 
   try {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
+    // Decide folder dynamically
+    const folder =
+      req.body.type === "category"
+        ? "unimark/categories"
+        : "unimark/products";
+
     const uploadStream = cloudinary.uploader.upload_stream(
-      { folder: "unimart/products" },
+      { folder },
       (error, result) => {
         if (error) return res.status(500).json({ message: error.message });
-        res.json({ url: result.secure_url, public_id: result.public_id });
+
+        res.json({
+          url: result.secure_url,
+          public_id: result.public_id
+        });
       }
     );
 

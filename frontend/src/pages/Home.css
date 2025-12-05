@@ -1,0 +1,248 @@
+/* ---------------------------------------------------
+   THEME COLORS
+--------------------------------------------------- */
+:root {
+  --primary-blue: #031576;
+  --primary-orange: #fd6e04;
+  --white: #ffffff;
+}
+
+/* ---------------------------------------------------
+   CATEGORY & SUBCATEGORY TITLES
+--------------------------------------------------- */
+.category-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 10px;
+}
+
+.subcat-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-orange);
+  margin-bottom: 10px;
+}
+
+/* ---------------------------------------------------
+   PRODUCT ROW (HORIZONTAL SCROLL)
+--------------------------------------------------- */
+.product-row {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 8px 10px;
+  scroll-behavior: smooth;
+}
+
+.product-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.product-row::-webkit-scrollbar-thumb {
+  background: var(--primary-blue);
+  border-radius: 10px;
+}
+
+.product-row::-webkit-scrollbar-track {
+  background: #dfe4ff;
+}
+
+/* ---------------------------------------------------
+   PRODUCT CARD (SMALL CARD)
+--------------------------------------------------- */
+.small-card {
+  min-width: 180px;
+  max-width: 180px;
+  background: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e2e2e2;
+  transition: 0.25s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.small-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.20);
+  border-color: var(--primary-orange);
+  z-index: 10;
+}
+
+.small-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+  background: #f7f7f7;
+}
+
+.small-card-content {
+  padding: 10px;
+}
+
+.small-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.small-price {
+  color: #42b231;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.small-actions {
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* ---------------------------------------------------
+   FILTER BAR (SEARCH + CATEGORY + SUBCATEGORY)
+--------------------------------------------------- */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--white);
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #e2e2e2;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* ---------------- SEARCH BAR (AUTO WIDTH) ---------------- */
+.search-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input .MuiOutlinedInput-root {
+  height: 48px !important;
+  border-radius: 10px;
+  background: #f4f6ff;
+}
+
+.search-input .MuiOutlinedInput-notchedOutline {
+  border-color: #ccd3ff;
+}
+
+.search-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-blue);
+}
+
+.search-input .MuiOutlinedInput-input {
+  padding: 12px 14px !important;
+}
+
+/* ---------------- CATEGORY & SUBCATEGORY DROPDOWNS ---------------- */
+.big-filter {
+  width: 200px !important;
+}
+
+.big-filter .MuiOutlinedInput-root {
+  height: 48px !important;
+  border-radius: 10px;
+  background: #fffdf9;
+}
+
+.big-filter .MuiOutlinedInput-notchedOutline {
+  border-color: #ffe7cc;
+}
+
+.big-filter .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-orange);
+}
+
+.big-filter .MuiSelect-select {
+  padding: 12px 14px !important;
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------
+   MOBILE RESPONSIVE
+--------------------------------------------------- */
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .search-input {
+    width: 100% !important;
+    flex: none;
+  }
+
+  .big-filter {
+    width: 100% !important;
+  }
+}
+/* Home page filter bar styles */
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  background: #031576;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  color: #fff;
+}
+
+/* individual selects */
+.filter-select {
+  min-width: 160px;
+  background: #fff;
+  border-radius: 6px;
+}
+
+/* price slider wrapper */
+.price-slider-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+/* clear button styling (white border) */
+.clear-btn {
+  color: #fff;
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* responsive */
+@media (max-width: 992px) {
+  .filter-bar {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .filter-select {
+    min-width: 140px;
+    flex: 1 1 45%;
+  }
+
+  .price-slider-wrapper {
+    width: 100%;
+  }
+}
+
+.glocery-title{
+  color: #031576;
+  text-align: center;
+  font-weight: 700;
+}
+

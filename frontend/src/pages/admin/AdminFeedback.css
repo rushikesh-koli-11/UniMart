@@ -1,0 +1,96 @@
+:root {
+  --blue: #03076b;
+  --orange: #fe6e03;
+  --green: #3fad2e;
+  --white-d9: #ffffffd9;
+}
+
+/* PAGE */
+.admin-feedback-page {
+  width: 100%;
+}
+
+/* HEADER */
+.feedback-header {
+  background: linear-gradient(135deg, #03076b, #0629c2);
+  color: var(--white-d9);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+}
+
+.feedback-header h2 {
+  font-weight: 800;
+}
+
+/* TABLE CONTAINER */
+.feedback-table-box {
+  background: #fff;
+  border-radius: 14px;
+  padding: 15px;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.08);
+}
+
+/* TABLE HEAD */
+.feedback-table thead {
+  background: var(--orange);
+  color: #fff;
+}
+
+.feedback-table th {
+  padding: 12px;
+  font-weight: 700;
+}
+
+/* TABLE BODY */
+.feedback-table td {
+  background: #fafbff;
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* COMMENT FIX */
+.comment-cell {
+  max-width: 420px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+  background: red!important;
+  border: none !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+
+.delete-btn:hover {
+  background: #d75a02 !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .feedback-header {
+    padding: 20px;
+  }
+
+  .comment-cell {
+    max-width: 250px;
+  }
+
+  .feedback-table th,
+  .feedback-table td {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .comment-cell {
+    max-width: 180px;
+  }
+
+  .feedback-header h2 {
+    font-size: 20px;
+  }
+}

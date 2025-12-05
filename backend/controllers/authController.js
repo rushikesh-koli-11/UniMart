@@ -32,3 +32,24 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: e.message });
   }
 };
+const User = require("../models/User");
+
+exports.updateUser = async (req, res) => {
+  try {
+    const updates = {
+      name: req.body.name,
+      phone: req.body.phone,
+      address: req.body.address
+    };
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      updates,
+      { new: true }
+    );
+
+    res.json({ message: "Profile updated", user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

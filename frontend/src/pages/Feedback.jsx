@@ -6,10 +6,12 @@ import {
   Typography,
   Stack,
   Alert,
+  Box
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 import { UserAuthContext } from "../contexts/UserAuthContext";
+import "./Feedback.css";
 
 export default function Feedback() {
   const { user } = useContext(UserAuthContext);
@@ -37,76 +39,74 @@ export default function Feedback() {
 
       await API.post("/feedback", payload);
 
-      setMessage("✅ Thank you! Your feedback has been submitted successfully.");
+      setMessage("Thank you! Your feedback has been submitted successfully.");
       setComment("");
 
-      // ✅ Redirect to Home page after short delay (optional)
-      setTimeout(() => navigate("/"), 1500);
+      setTimeout(() => navigate("/"), 500);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send feedback");
     }
   };
 
   return (
-    <Paper
-      elevation={4}
-      sx={{
-        maxWidth: 600,
-        mx: "auto",
-        mt: 4,
-        p: 4,
-        borderRadius: 3,
-        background: "#fafafa",
-      }}
-    >
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-        💬 Send Us Your Feedback
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        We value your thoughts — please let us know how we can improve!
-      </Typography>
+    <Box className="feedback-wrapper">
+      <Paper elevation={4} className="feedback-card">
 
-      {message && <Alert severity="success">{message}</Alert>}
-      {error && <Alert severity="error">{error}</Alert>}
+        <Typography variant="h5" className="feedback-title">
+          💬 Send Us Your Feedback
+        </Typography>
 
-      <form onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          <TextField
-            label="Name"
-            fullWidth
-            value={user?.name || ""}
-            InputProps={{ readOnly: true }}
-          />
+        <Typography className="feedback-subtext mb-3">
+          We value your thoughts — please let us know how we can improve!
+        </Typography>
 
-          <TextField
-            label="Email"
-            fullWidth
-            value={user?.email || ""}
-            InputProps={{ readOnly: true }}
-          />
+        {message && <Alert severity="success" className="alert-msg">{message}</Alert>}
+        {error && <Alert severity="error" className="alert-msg">{error}</Alert>}
 
-          <TextField
-            label="Mobile Number"
-            fullWidth
-            value={user?.phone || ""}
-            InputProps={{ readOnly: true }}
-          />
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={2}>
 
-          <TextField
-            label="Your Feedback"
-            multiline
-            rows={4}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Type your comments here..."
-            fullWidth
-          />
+            <TextField
+              label="Name"
+              fullWidth
+              value={user?.name || ""}
+              InputProps={{ readOnly: true }}
+              className="input-field"
+            />
 
-          <Button type="submit" variant="contained" size="large">
-            Submit Feedback
-          </Button>
-        </Stack>
-      </form>
-    </Paper>
+            <TextField
+              label="Email"
+              fullWidth
+              value={user?.email || ""}
+              InputProps={{ readOnly: true }}
+              className="input-field"
+            />
+
+            <TextField
+              label="Mobile Number"
+              fullWidth
+              value={user?.phone || ""}
+              InputProps={{ readOnly: true }}
+              className="input-field"
+            />
+
+            <TextField
+              label="Your Feedback"
+              multiline
+              rows={4}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Type your comments here..."
+              fullWidth
+              className="input-field"
+            />
+
+            <Button type="submit" fullWidth className="feedback-btn">
+              Submit Feedback
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+    </Box>
   );
 }

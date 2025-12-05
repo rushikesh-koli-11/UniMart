@@ -1,0 +1,53 @@
+/* UserLogin.css */
+
+.login-container {
+  background: #f6f7fb;
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 450px;
+  border-top: 6px solid #fe6e03;
+}
+
+.heading {
+  color: #021473 !important;
+  font-weight: 700;
+}
+
+.input-box {
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.login-btn {
+  background: #fe6e03 !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #021473 !important;
+}
+
+.link-btn {
+  color: #fe6e03;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.register-link{
+    text-decoration: none;
+}

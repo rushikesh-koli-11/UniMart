@@ -1,0 +1,17 @@
+.subcategory-page {
+  padding: 20px;
+}
+
+.subcategory-title {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #031576;
+}
+
+.subcategory-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}

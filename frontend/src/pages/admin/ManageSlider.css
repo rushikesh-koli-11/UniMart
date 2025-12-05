@@ -1,0 +1,218 @@
+/* 🌟 Wrapper & Container */
+.slider-wrapper {
+  background: #f6f7fb !important;
+  min-height: 90vh;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.slider-container {
+  background: white !important;
+  padding: 30px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 1200px;
+  border-top: 6px solid #fe6e03 !important;
+}
+
+.slider-title {
+  color: #021473 !important;
+  font-weight: 700;
+  text-align: center;
+}
+
+.underline {
+  width: 80px;
+  height: 4px;
+  background-color: #fe6e03 !important;
+  border-radius: 5px;
+  margin: 8px auto 25px auto;
+}
+
+/* 🟠 Upload Section */
+.upload-box {
+  background: #fff9f3 !important;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #fe6e03 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.upload-input {
+  border-radius: 8px;
+}
+
+.upload-btn {
+  background: #fe6e03 !important;
+  color: white !important;
+  border-radius: 8px;
+  width: 100%;
+  border: none;
+  padding: 8px 18px;
+  transition: 0.3s;
+}
+
+.upload-btn:hover {
+  background: #3fad2e !important;
+}
+
+.img-note {
+  font-size: 14px;
+  color: #021473 !important;
+  opacity: 0.9;
+}
+
+/* 🖼 Image Grid Layout */
+.slider-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr); /* 1 on sm */
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .slider-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 on md */
+  }
+}
+
+@media (min-width: 992px) {
+  .slider-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 on lg */
+  }
+}
+
+/* 🖼 Image Cards */
+.image-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fafafa;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  transition: 0.3s;
+}
+
+.image-card:hover {
+  transform: scale(1.03);
+}
+
+.slider-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 🎛 Controls */
+.image-controls {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  padding: 4px 6px;
+}
+
+.save-btn {
+  background: #28a745 !important;
+  color: white !important;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.save-btn:hover {
+  background: #218838 !important;
+}
+
+/* 🧨 Delete Button (overlay style) */
+.delete-img-btn {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  background: rgba(255, 0, 0, 0.85) !important;
+  border: none;
+  color: white !important;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.delete-img-btn:hover {
+  background: #b02a27 !important;
+}
+
+/* 📱 Responsive fine-tuning */
+@media (max-width: 768px) {
+  .slider-img {
+    height: auto;
+  }
+
+  .image-controls {
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+    padding: 3px 4px;
+  }
+}
+/* 🎛 Image Controls - reorder + delete */
+.image-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 5px 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ⬆⬇ Arrow Buttons (up/down) */
+.image-controls .btn-outline-primary {
+  background: #021473 !important; /* orange */
+  border: none !important;
+  color: #fff !important;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(254, 110, 3, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.image-controls .btn-outline-primary:hover {
+  background:  #fe6e03!important; /* deep navy on hover */
+  transform: scale(1.1);
+}
+
+/* ❌ Delete Button */
+.image-controls .btn-outline-danger {
+  background: #ff3b30 !important;
+  color: white !important;
+  border: none !important;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(255, 59, 48, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.image-controls .btn-outline-danger:hover {
+  background: #b02a27 !important;
+  transform: scale(1.1);
+}
+
+/* 🧢 Disabled state (when arrow can't move) */
+.image-controls .btn[disabled] {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}

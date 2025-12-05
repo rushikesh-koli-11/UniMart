@@ -1,14 +1,32 @@
 import React, { useEffect, useState, useRef } from "react";
 import API from "../../api/api";
+
 import {
-  Typography, Button, TextField, Stack, Dialog, DialogContent, DialogTitle,
-  Card, CardMedia, CardContent, CardActions, Grid, IconButton, MenuItem, Alert
+  Typography,
+  Button,
+  TextField,
+  Stack,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  Alert,
+  Box,
 } from "@mui/material";
+
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+
+import "./AdminProducts.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([]);
-  const allProductsRef = useRef([]); // ✅ Store original product list
+  const [lowStock, setLowStock] = useState([]);
+
+  const allProductsRef = useRef([]);
   const [categories, setCategories] = useState([]);
   const [subcats, setSubcats] = useState([]);
 
@@ -23,13 +41,20 @@ export default function AdminProducts() {
     stock: 0,
     category: "",
     subcategory: { _id: "", name: "" },
-    images: []
+    images: [],
   });
+
+  // LOAD ALL DATA
+  useEffect(() => {
+    load();
+    loadCategories();
+  }, []);
 
   const load = async () => {
     const { data } = await API.get("/products");
     setProducts(data);
-    allProductsRef.current = data; // ✅ Keep full list
+    allProductsRef.current = data;
+    setLowStock(data.filter((p) => p.stock < 5));
   };
 
   const loadCategories = async () => {
@@ -37,21 +62,25 @@ export default function AdminProducts() {
     setCategories(data);
   };
 
-  useEffect(() => {
-    load();
-    loadCategories();
-  }, []);
-
-  const handleMultiUpload = async (e) => {
+  // MULTIPLE IMAGE UPLOAD
+  // MULTIPLE IMAGE UPLOAD
+const handleMultiUpload = async (e) => {
   const files = Array.from(e.target.files);
+
   for (const file of files) {
     const fd = new FormData();
-    fd.append("image", file); // ✅ must match backend upload.single("image")
+    fd.append("image", file);
+    fd.append("type", "product");   // ✅ tells backend: this is product image
+
     try {
-      const { data } = await API.post("/upload/image", fd, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      setForm(prev => ({ ...prev, images: [...prev.images, data] }));
+      const { data } = await API.post("/upload/image", fd); 
+      // DO NOT manually add headers, axios + interceptor handles it
+
+      setForm((prev) => ({
+        ...prev,
+        images: [...prev.images, data],
+      }));
+
     } catch (err) {
       console.error("Upload error:", err.response?.data || err.message);
       alert(err.response?.data?.message || "Upload failed");
@@ -61,34 +90,64 @@ export default function AdminProducts() {
 
 
   const removeImage = (i) =>
-    setForm(prev => ({ ...prev, images: prev.images.filter((_, idx) => idx !== i) }));
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== i),
+    }));
 
+  // SAVE PRODUCT
   const saveProduct = async () => {
-    try {
-      setError("");
-      if (!form.category) return setError("Category is required");
-      if (!form.subcategory._id) return setError("Subcategory is required");
+  try {
+    setError("");
 
-      if (editing) {
-        await API.put(`/products/${editing}`, form);
-      } else {
-        await API.post(`/products`, form);
-      }
+    if (!form.category) return setError("Category is required");
+    if (!form.subcategory._id) return setError("Subcategory is required");
 
-      setOpen(false);
-      setEditing(null);
-      setForm({
-        title: "", description: "", price: "", stock: 0,
-        category: "", subcategory: { _id: "", name: "" }, images: []
-      });
-      load();
-    } catch (err) {
-      setError(err.response?.data?.message || "Error saving product");
+    const payload = {
+      title: form.title,
+      description: form.description,
+      price: form.price,
+      stock: form.stock,
+      category: form.category,
+
+      // ⭐ CORRECT STRUCTURE
+      subcategory: {
+        _id: form.subcategory._id,
+        name: form.subcategory.name,
+      },
+
+      images: form.images,
+    };
+
+    if (editing) {
+      await API.put(`/products/${editing}`, payload);
+    } else {
+      await API.post("/products", payload);
     }
-  };
 
+    setOpen(false);
+    setEditing(null);
+
+    setForm({
+      title: "",
+      description: "",
+      price: "",
+      stock: 0,
+      category: "",
+      subcategory: { _id: "", name: "" },
+      images: [],
+    });
+
+    load();
+  } catch (err) {
+    setError(err.response?.data?.message || "Error saving product");
+  }
+};
+
+
+  // EDIT PRODUCT
   const editProduct = (p) => {
-    const cat = categories.find(c => c._id === p.category?._id);
+    const cat = categories.find((c) => c._id === p.category?._id);
     setSubcats(cat?.subcategories || []);
 
     setEditing(p._id);
@@ -98,11 +157,12 @@ export default function AdminProducts() {
       price: p.price,
       stock: p.stock || 0,
       category: p.category?._id || "",
-      subcategory: p.subcategory?._id
+      subcategory: p.subcategory
         ? { _id: p.subcategory._id, name: p.subcategory.name }
         : { _id: "", name: "" },
-      images: p.images || []
+      images: p.images || [],
     });
+
     setOpen(true);
   };
 
@@ -114,143 +174,398 @@ export default function AdminProducts() {
   };
 
   return (
-    <div>
-      <Typography variant="h5" sx={{ mb: 2 }}>Manage Products</Typography>
+    <div className="container-fluid admin-products-wrapper mt-3">
 
-      {/* ✅ FILTER BAR */}
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+      {/* HERO SECTION */}
+      <div className="admin-products-hero">
+        <h1>Products Dashboard</h1>
+        <p>Manage all products, categories, and stock levels</p>
+      </div>
 
-        <TextField label="Search Products" size="small"
-          onChange={(e) => {
-            const val = e.target.value.toLowerCase();
-            if (!val) return setProducts(allProductsRef.current);
-            const filtered = allProductsRef.current.filter(p =>
-              p.title.toLowerCase().includes(val) ||
-              (p.description || "").toLowerCase().includes(val)
-            );
-            setProducts(filtered);
-          }}
-        />
 
-        <TextField select size="small" label="Category" sx={{ minWidth: 160 }}
-          onChange={(e) => {
-            const catId = e.target.value;
-            if (!catId) {
-              setSubcats([]);
-              return setProducts(allProductsRef.current);
-            }
-            const cat = categories.find(c => c._id === catId);
-            setSubcats(cat?.subcategories || []);
-            setProducts(allProductsRef.current.filter(p => p.category?._id === catId));
-          }}
-        >
-          <MenuItem value="">All Categories</MenuItem>
-          {categories.map(c => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
-        </TextField>
+      {/* FILTER BAR */}
+      <div className="row g-3 filter-row justify-content-center">
 
-        {subcats.length > 0 && (
-          <TextField select size="small" label="Subcategory" sx={{ minWidth: 160 }}
+        {/* SEARCH */}
+        <div className="col-12 col-md-4">
+          <TextField
+            label="Search Products"
+            size="small"
+            fullWidth
+            className="filter-input"
             onChange={(e) => {
-              const subId = e.target.value;
-              if (!subId) return;
-              setProducts(allProductsRef.current.filter(p => p.subcategory?._id === subId));
+              const val = e.target.value.toLowerCase();
+              if (!val) {
+                setProducts(allProductsRef.current);
+                setLowStock(allProductsRef.current.filter((x) => x.stock < 5));
+                return;
+              }
+              const filtered = allProductsRef.current.filter(
+                (p) =>
+                  p.title.toLowerCase().includes(val) ||
+                  (p.description || "").toLowerCase().includes(val)
+              );
+              setProducts(filtered);
+              setLowStock(filtered.filter((x) => x.stock < 5));
+            }}
+          />
+        </div>
+
+        {/* CATEGORY */}
+        <div className="col-6 col-md-3">
+          <TextField
+            select
+            size="small"
+            label="Category"
+            fullWidth
+            onChange={(e) => {
+              const catId = e.target.value;
+
+              if (!catId) {
+                setSubcats([]);
+                setProducts(allProductsRef.current);
+                setLowStock(allProductsRef.current.filter((x) => x.stock < 5));
+                return;
+              }
+
+              const cat = categories.find((c) => c._id === catId);
+              setSubcats(cat?.subcategories || []);
+
+              const filtered = allProductsRef.current.filter(
+                (p) => p.category?._id === catId
+              );
+              setProducts(filtered);
+              setLowStock(filtered.filter((x) => x.stock < 5));
             }}
           >
-            <MenuItem value="">All Subcategories</MenuItem>
-            {subcats.map(s => <MenuItem key={s._id} value={s._id}>{s.name}</MenuItem>)}
+            <MenuItem value="">All</MenuItem>
+            {categories.map((c) => (
+              <MenuItem key={c._id} value={c._id}>
+                {c.name}
+              </MenuItem>
+            ))}
           </TextField>
-        )}
+        </div>
 
-        <Button variant="contained" onClick={() => {
-          setEditing(null);
-          setForm({
-            title: "", description: "", price: "", stock: 0,
-            category: "", subcategory: { _id: "", name: "" }, images: []
-          });
-          setSubcats([]);
-          setOpen(true);
-        }}>Add Product</Button>
-      </Stack>
+        {/* SUBCATEGORY */}
+        <div className="col-6 col-md-3">
+          {subcats.length > 0 && (
+            <TextField
+              select
+              size="small"
+              label="Subcategory"
+              fullWidth
+              onChange={(e) => {
+                const subId = e.target.value;
+                const filtered = allProductsRef.current.filter(
+                  (p) => p.subcategory?._id === subId
+                );
+                setProducts(filtered);
+                setLowStock(filtered.filter((x) => x.stock < 5));
+              }}
+            >
+              <MenuItem value="">All</MenuItem>
+              {subcats.map((s) => (
+                <MenuItem key={s._id} value={s._id}>
+                  {s.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        </div>
 
-      {/* ✅ PRODUCT LIST */}
-      <Grid container spacing={2}>
-        {products.map((p) => (
-          <Grid item xs={12} sm={6} md={4} key={p._id}>
-            <Card>
-              <CardMedia component="img" height="180" image={p.images?.[0]?.url} />
-              <CardContent>
-                <Typography variant="h6">{p.title}</Typography>
-                <Typography>₹{p.price}</Typography>
-                <Typography>Stock: {p.stock}</Typography>
-                <Typography variant="caption">{p.category?.name} → {p.subcategory?.name}</Typography>
-              </CardContent>
-              <CardActions>
-                <Button onClick={() => editProduct(p)}>Edit</Button>
-                <Button color="error" onClick={() => deleteProduct(p._id)}>Delete</Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+        {/* ADD PRODUCT BUTTON */}
+        <div className="col-12 col-md-2 text-md-end">
+          <Button
+            variant="contained"
+            fullWidth
+            className="add-btn"
+            onClick={() => {
+              setEditing(null);
+              setForm({
+                title: "",
+                description: "",
+                price: "",
+                stock: 0,
+                category: "",
+                subcategory: { _id: "", name: "" },
+                images: [],
+              });
+              setSubcats([]);
+              setOpen(true);
+            }}
+          >
+            Add Product
+          </Button>
+        </div>
+      </div>
 
-      {/* ✅ ADD / EDIT DIALOG */}
+      {/* LOW STOCK TABLE */}
+      {lowStock.length > 0 && (
+        <div className="low-stock-box">
+          <Typography className="low-stock-title">
+            ⚠ Low Stock Products ({lowStock.length})
+          </Typography>
+
+          <div className="table-responsive">
+            <table className="table table-bordered admin-products-table low-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title</th>
+                  <th>Stock</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {lowStock.map((p) => (
+                  <tr key={p._id}>
+                    <td>
+                      <img
+                        src={p.images?.[0]?.url}
+                        className="table-img"
+                        alt=""
+                      />
+                    </td>
+
+                    <td className="prod-title">{p.title}</td>
+
+                    <td>
+                      <span className="stock-badge low">{p.stock}</span>
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn-action edit"
+                        onClick={() => editProduct(p)}
+                      >
+                        <EditIcon fontSize="small" />
+                      </button>
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn-action delete"
+                        onClick={() => deleteProduct(p._id)}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* MAIN PRODUCT TABLE */}
+      <div className="table-responsive admin-products-table-box">
+        <table className="table table-bordered admin-products-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Category</th>
+              <th>Subcategory</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {products.map((p) => (
+              <tr key={p._id}>
+                <td>
+                  <img src={p.images?.[0]?.url} className="table-img" alt="" />
+                </td>
+
+                <td className="prod-title">{p.title}</td>
+
+                <td className="price">₹{p.price}</td>
+
+                <td>
+                  <span
+                    className={`stock-badge ${
+                      p.stock === 0
+                        ? "out"
+                        : p.stock < 5
+                        ? "low"
+                        : "good"
+                    }`}
+                  >
+                    {p.stock}
+                  </span>
+                </td>
+
+                <td>{p.category?.name}</td>
+                <td>{p.subcategory?.name}</td>
+
+                <td>
+                  <button
+                    className="btn-action edit"
+                    onClick={() => editProduct(p)}
+                  >
+                    <EditIcon fontSize="small" />
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    className="btn-action delete"
+                    onClick={() => deleteProduct(p._id)}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ADD / EDIT PRODUCT MODAL */}
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editing ? "Edit Product" : "Add Product"}</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="dialog-title">
+          {editing ? "Edit Product" : "Add Product"}
+        </DialogTitle>
 
+        <DialogContent>
           {error && <Alert severity="error">{error}</Alert>}
 
-          <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField label="Title" value={form.title}
-              onChange={e => setForm({ ...form, title: e.target.value })} />
+          <Stack spacing={2} sx={{ mt: 2 }}>
+            <TextField
+              fullWidth
+              label="Title"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
 
-            <TextField multiline rows={3} label="Description" value={form.description}
-              onChange={e => setForm({ ...form, description: e.target.value })} />
+            <TextField
+              fullWidth
+              rows={3}
+              multiline
+              label="Description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
 
-            <TextField label="Price" type="number" value={form.price}
-              onChange={e => setForm({ ...form, price: e.target.value })} />
+            <TextField
+              fullWidth
+              label="Price"
+              type="number"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+            />
 
-            <TextField label="Stock" type="number" value={form.stock}
-              onChange={e => setForm({ ...form, stock: e.target.value })} />
+            {/* STOCK INPUT */}
+            <Box className="stock-box">
+              <Button
+                className="stock-btn minus"
+                onClick={() => {
+                  if (form.stock > 0)
+                    setForm({
+                      ...form,
+                      stock: Number(form.stock) - 1,
+                    });
+                }}
+              >
+                -
+              </Button>
 
-            <TextField select label="Category" value={form.category}
+              <TextField
+                type="number"
+                className="stock-input"
+                value={form.stock}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setForm({ ...form, stock: val < 0 ? 0 : val });
+                }}
+              />
+
+              <Button
+                className="stock-btn plus"
+                onClick={() =>
+                  setForm({ ...form, stock: Number(form.stock) + 1 })
+                }
+              >
+                +
+              </Button>
+            </Box>
+
+            <TextField
+              select
+              fullWidth
+              label="Category"
+              value={form.category}
               onChange={(e) => {
                 const catId = e.target.value;
-                setForm({ ...form, category: catId, subcategory: { _id: "", name: "" } });
-                const found = categories.find(c => c._id === catId);
+                setForm({
+                  ...form,
+                  category: catId,
+                  subcategory: { _id: "", name: "" },
+                });
+
+                const found = categories.find((c) => c._id === catId);
                 setSubcats(found?.subcategories || []);
-              }}>
-              {categories.map(c => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+              }}
+            >
+              {categories.map((c) => (
+                <MenuItem key={c._id} value={c._id}>
+                  {c.name}
+                </MenuItem>
+              ))}
             </TextField>
 
             {subcats.length > 0 && (
-              <TextField select label="Subcategory" value={form.subcategory._id}
+              <TextField
+                select
+                fullWidth
+                label="Subcategory"
+                value={form.subcategory._id}
                 onChange={(e) => {
-                  const sub = subcats.find(s => s._id === e.target.value);
-                  setForm({ ...form, subcategory: { _id: sub._id, name: sub.name } });
-                }}>
-                {subcats.map(s => <MenuItem key={s._id} value={s._id}>{s.name}</MenuItem>)}
+                  const sub = subcats.find((s) => s._id === e.target.value);
+                  setForm({
+                    ...form,
+                    subcategory: { _id: sub._id, name: sub.name },
+                  });
+                }}
+              >
+                {subcats.map((s) => (
+                  <MenuItem key={s._id} value={s._id}>
+                    {s.name}
+                  </MenuItem>
+                ))}
               </TextField>
             )}
 
-            <Button component="label" variant="outlined">
-              Upload Images
+            <Button variant="outlined" component="label" className="upload-btn">
+              <AddPhotoAlternateIcon /> Upload Images
               <input type="file" hidden multiple onChange={handleMultiUpload} />
             </Button>
 
             <Stack direction="row" spacing={1} flexWrap="wrap">
               {form.images.map((img, i) => (
-                <Stack key={i} position="relative">
-                  <img src={img.url} alt="" style={{ width: 70, height: 70, borderRadius: 4 }} />
-                  <IconButton size="small" onClick={() => removeImage(i)}
-                    sx={{ position: "absolute", top: -8, right: -8, bgcolor: "white" }}>
+                <Box key={i} className="image-preview">
+                  <img src={img.url} alt="" className="preview-img" />
+                  <IconButton
+                    size="small"
+                    className="remove-img-btn"
+                    onClick={() => removeImage(i)}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
-                </Stack>
+                </Box>
               ))}
             </Stack>
 
-            <Button variant="contained" onClick={saveProduct}>
+            <Button variant="contained" className="save-btn" onClick={saveProduct}>
               {editing ? "Save Changes" : "Add Product"}
             </Button>
           </Stack>

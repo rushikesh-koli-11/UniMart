@@ -1,0 +1,167 @@
+:root {
+  --blue: #03076b;
+  --orange: #fe6e03;
+  --green: #3fad2e;
+  --white: #ffffffd9;
+}
+
+/* ---------- PAGE TITLE ---------- */
+.orders-title {
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--blue);
+  border-left: 5px solid var(--orange);
+  padding-left: 12px;
+}
+
+/* ---------- SEARCH INPUT ---------- */
+.search-input {
+  border: 2px solid var(--blue);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+.search-input:focus {
+  box-shadow: 0 0 6px rgba(3, 7, 107, 0.3);
+  border-color: var(--orange);
+}
+
+/* ---------- TABLE STYLE ---------- */
+.admin-table thead.table-header {
+  background: var(--blue);
+  color: white;
+  font-weight: 600;
+}
+
+.admin-table td {
+  vertical-align: middle;
+}
+
+/* Address column */
+.address-col {
+  max-width: 150px;
+  word-wrap: break-word;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn-view {
+  background: var(--blue);
+  color: white;
+  font-weight: 600;
+}
+.btn-view:hover {
+  background: #02054d;
+}
+
+.btn-pdf {
+  background: var(--green);
+  color: white;
+  font-weight: 600;
+}
+.btn-pdf:hover {
+  background: #2f8d24;
+}
+
+.btn-delete {
+  background: var(--orange);
+  color: white;
+  font-weight: 600;
+}
+.btn-delete:hover {
+  background: #c95803;
+}
+
+/* Align action buttons in row */
+.actions-col {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+/* ---------- ORDER ITEMS MODAL ---------- */
+.modal-header-custom {
+  background: var(--blue);
+  color: white;
+}
+
+.item-box {
+  background: #f8f9ff;
+  border-left: 4px solid var(--blue);
+  border-radius: 6px;
+}
+
+.item-img {
+  border-radius: 8px;
+}
+
+/* ---------- RESPONSIVENESS ---------- */
+@media (max-width: 768px) {
+  .orders-title {
+    font-size: 22px;
+  }
+
+  .actions-col {
+    flex-direction: column;
+  }
+
+  .btn-view, .btn-delete, .btn-pdf {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    width: 100%;
+  }
+
+  .orders-title {
+    font-size: 20px;
+  }
+}
+/* ---------------- HERO SECTION ---------------- */
+.admin-orders-hero {
+  background: linear-gradient(135deg, #03076b, #0839e6);
+  padding: 45px 25px;
+  border-radius: 18px;
+  color: #ffffffd9;
+  margin-bottom: 35px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.18);
+  text-align: center;
+}
+
+.admin-orders-hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.admin-orders-hero p {
+  margin-top: 8px;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* Responsive Hero */
+@media (max-width: 768px) {
+  .admin-orders-hero {
+    padding: 35px 20px;
+  }
+
+  .admin-orders-hero h1 {
+    font-size: 28px;
+  }
+
+  .admin-orders-hero p {
+    font-size: 14px;
+  }
+}
+.search-input {
+  border: 2px solid var(--blue);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: 0.2s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 6px rgba(3, 7, 107, 0.35);
+}

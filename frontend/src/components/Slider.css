@@ -1,0 +1,79 @@
+/* IMAGE WRAPPER */
+.slider-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;          /* Let image decide height */
+}
+
+/* MAIN RESPONSIVE IMAGE */
+.slider-img-responsive {
+  width: 100%;
+  display: block;        /* IMPORTANT */
+  height: 100%;
+  max-height: 420px;
+  object-fit: cover;     /* Instead of contain */
+  object-position: center;
+}
+
+
+/* TIMER BAR (Inside Image) */
+.slider-timer-bar {
+  position: absolute;
+  bottom: 10px;           /* inside image bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.slider-timer-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: #ff7a00;
+  border-radius: 50px;
+  animation: tinyTimer 2s linear forwards;
+}
+
+.carousel-item.active .slider-timer-bar::after {
+  animation: tinyTimer 2s linear forwards;
+}
+
+/* TIMER ANIMATION */
+@keyframes tinyTimer {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* TABLET */
+@media (max-width: 992px) {
+  .slider-img-responsive {
+    max-height: 320px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 576px) {
+  .slider-img-responsive {
+    max-height: 220px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 400px) {
+  .slider-img-responsive {
+    max-height: 180px;
+  }
+}
+
+#esevaSlider {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}

@@ -1,95 +1,114 @@
-import React, { useEffect, useState } from 'react';
-import API from '../api/api';
-import ProductCard from '../components/ProductCard';
-import { Grid, TextField, Button, MenuItem, Stack, Typography } from '@mui/material';
+// frontend/src/pages/Home.jsx
+import React, { useEffect, useState } from "react";
+import API from "../api/api";
+import Slider from "../components/Slider";
+import MostlyUsedLinks from "../components/MostlyUsedLinks";
+import ProductCard from "../components/ProductCard";
+import GrocerySubcategories from "../components/GrocerySubcategories"; // ⭐ NEW
+import { Typography } from "@mui/material";
+import { Link, useSearchParams } from "react-router-dom";
+import "./Home.css";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [subcats, setSubcats] = useState([]);
+  const [sliderImages, setSliderImages] = useState([]);
+  const [searchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState({
-    q: "",
-    category: "",
-    subcategory: ""
-  });
-
-  const load = async () => {
-    const { data } = await API.get(`/products?q=${encodeURIComponent(filters.q)}`);
-    setProducts(data);
+  const loadSlider = async () => {
+    try {
+      const { data } = await API.get("/slider");
+      setSliderImages(data);
+    } catch (err) {
+      console.error("Slider error:", err);
+    }
   };
 
-  const loadCategories = async () => {
-    const { data } = await API.get("/categories");
-    setCategories(data);
+  const loadProducts = async () => {
+    const q = searchParams.get("q");
+    const category = searchParams.get("category");
+    const subcategory = searchParams.get("subcategory");
+
+    let url = `/products?`;
+
+    if (q) url += `q=${encodeURIComponent(q)}&`;
+    if (category) url += `category=${encodeURIComponent(category)}&`;
+    if (subcategory) url += `subcategory=${encodeURIComponent(subcategory)}&`;
+
+    try {
+      const { data } = await API.get(url);
+      setProducts(data);
+    } catch (err) {
+      console.error("Products error:", err);
+    }
   };
 
   useEffect(() => {
-    load();
-    loadCategories();
-  }, []);
+    loadSlider();
+    loadProducts();
+  }, [searchParams]);
 
-  const applyFilters = () => {
-    let result = [...products];
+  const grouped = () => {
+    const map = {};
 
-    if (filters.category) {
-      result = result.filter(p => p.category?._id === filters.category);
-    }
+    products.forEach((p) => {
+      const cat = p.category?.name || "Other";
+      const sub = p.subcategory?.name || "Other";
 
-    if (filters.subcategory) {
-      result = result.filter(p => p.subcategory?._id === filters.subcategory);
-    }
+      if (!map[cat]) map[cat] = {};
+      if (!map[cat][sub]) map[cat][sub] = [];
 
-    return result;
+      map[cat][sub].push(p);
+    });
+
+    return map;
   };
 
   return (
     <div>
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+    
+    {/* 🔹 SLIDER */}
+      <Slider sliderImages={sliderImages} />
 
-        {/* Search */}
-        <TextField label="Search" 
-          value={filters.q} 
-          onChange={e => setFilters({...filters, q: e.target.value })} 
-        />
-        <Button variant="contained" onClick={load}>Search</Button>
+      {/* 🔹 GROCERY SUBCATEGORY SECTION */}
+      <GrocerySubcategories />
+      <hr />
 
-        {/* Category */}
-        <TextField select label="Category" value={filters.category}
-          onChange={(e) => {
-            const catId = e.target.value;
-            setFilters({ ...filters, category: catId, subcategory: "" });
-            const found = categories.find(c => c._id === catId);
-            setSubcats(found?.subcategories || []);
-          }}
-        >
-          <MenuItem value="">All</MenuItem>
-          {categories.map(c => (
-            <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>
-          ))}
-        </TextField>
+      {/* 🔹 PRODUCTS SECTION */}
+      {Object.entries(grouped()).map(([categoryName, subgroups]) => (
+        <div key={categoryName} style={{ marginBottom: 40 }}>
 
-        {/* Subcategory */}
-        {subcats.length > 0 && (
-          <TextField select label="Subcategory" value={filters.subcategory}
-            onChange={(e) => setFilters({ ...filters, subcategory: e.target.value })}
+          <h2
+            variant="h5"
+            sx={{ mb: 2, fontWeight: 700 }}
+            className="glocery-title"
           >
-            <MenuItem value="">All</MenuItem>
-            {subcats.map(s => (
-              <MenuItem key={s._id} value={s._id}>{s.name}</MenuItem>
-            ))}
-          </TextField>
-        )}
+           
+          </h2>
 
-      </Stack>
+          {Object.entries(subgroups).map(([subName, items]) => (
+            <div key={subName} style={{ marginBottom: 25 }}>
 
-      <Grid container spacing={2}>
-        {applyFilters().map(p => (
-          <Grid item xs={12} sm={6} md={4} key={p._id}>
-            <ProductCard product={p} />
-          </Grid>
-        ))}
-      </Grid>
+              <h3 className="subcat-title">{subName}</h3>
+
+              <div className="product-row">
+                {items.map((product) => (
+                  <Link
+                    key={product._id}
+                    to={`/product/${product._id}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <ProductCard product={product} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      {/* 🔹 MOSTLY USED LINKS */}
+      <MostlyUsedLinks />
+
     </div>
   );
 }

@@ -1,6 +1,7 @@
 // frontend/src/App.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
@@ -16,38 +17,58 @@ import AdminRegister from "./pages/AdminRegister";
 
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-import UserOrders from "./pages/UserOrders";
 import MyOrders from "./pages/MyOrders";
+import Contact from "./pages/Contact";
 
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import AdminCategories from "./pages/admin/AdminCategories";
+import AdminOffers from "./pages/admin/AdminOffers";
+
+
+import ManageSlider from "./pages/admin/ManageSlider";
+import AdminMostlyUsed from "./pages/admin/AdminMostlyUsed";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import About from "./pages/About";
 import ProtectedUserRoute from "./components/ProtectedUserRoute";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
-
-import AdminLayout from "./layouts/AdminLayout";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import SubcategoryProducts from "./pages/SubcategoryProducts";
+import SearchResults from "./pages/SearchResults";
 
 import { Container } from "@mui/material";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
-      <Container sx={{ mt: 3, minHeight: "70vh" }}>
+
+      <Container >
         <Routes>
 
-          {/* Public Pages */}
+          {/* ================= PUBLIC ROUTES ================= */}
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/subcategory/:subcategoryId" element={<SubcategoryProducts />} />
+          <Route path="/search" element={<SearchResults />} />
 
-          {/* Checkout (User Only) */}
+          {/* ================= USER AUTH ================= */}
+          <Route path="/user/login" element={<UserLogin />} />
+          <Route path="/user/register" element={<Register />} />
+
+          {/* ================= USER PROTECTED ROUTES ================= */}
           <Route
             path="/checkout"
             element={
@@ -75,12 +96,6 @@ export default function App() {
             }
           />
 
-
-
-
-          {/* User Auth */}
-          <Route path="/user/login" element={<UserLogin />} />
-          <Route path="/user/register" element={<Register />} />
           <Route
             path="/user/dashboard"
             element={
@@ -90,11 +105,13 @@ export default function App() {
             }
           />
 
-          {/* Admin Auth */}
+          {/* ================= ADMIN AUTH ================= */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
 
-          {/* Admin Panel */}
+
+          {/* ================= ADMIN PROTECTED ROUTES ================= */}
+
           <Route
             path="/admin/dashboard"
             element={
@@ -132,7 +149,7 @@ export default function App() {
           />
 
           <Route
-            path="/admin/feedback"
+            path="/admin/feedbacks"
             element={
               <ProtectedAdminRoute>
                 <AdminFeedback />
@@ -144,15 +161,42 @@ export default function App() {
             path="/admin/categories"
             element={
               <ProtectedAdminRoute>
-
                 <AdminCategories />
-
               </ProtectedAdminRoute>
             }
           />
 
+          <Route
+            path="/admin/manage-slider"
+            element={
+              <ProtectedAdminRoute>
+                <ManageSlider />
+              </ProtectedAdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/mostly-used"
+            element={
+              <ProtectedAdminRoute>
+                <AdminMostlyUsed />
+              </ProtectedAdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/offers"
+            element={
+              <ProtectedAdminRoute>
+                <AdminOffers />
+              </ProtectedAdminRoute>
+            }
+          />
+
+
         </Routes>
       </Container>
+
       <Footer />
     </>
   );

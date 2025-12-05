@@ -1,0 +1,92 @@
+:root {
+  --blue: #03076b;
+  --orange: #fe6e03;
+  --green: #3fad2e;
+  --white: #ffffffd9;
+}
+
+/* HERO SECTION */
+.dashboard-hero {
+  background: linear-gradient(135deg, #03076b, #fe6e03);
+  color: var(--white);
+  padding: 60px 20px;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* STAT CARDS */
+.stat-card {
+  border-radius: 14px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding-top: 10px;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ICON STYLE */
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.stat-icon.products {
+  background: var(--blue);
+}
+
+.stat-icon.orders {
+  background: var(--orange);
+}
+
+.stat-icon.users {
+  background: var(--green);
+}
+
+.stat-icon.revenue {
+  background: #20a4ff;
+}
+
+.stat-label {
+  font-weight: 600;
+  color: #4a4a4a;
+  margin-top: 5px;
+}
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+/* SECTION TITLES */
+.section-title {
+  color: var(--blue);
+  border-left: 5px solid var(--orange);
+  padding-left: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 26px;
+  }
+  .stat-value {
+    font-size: 22px;
+  }
+}

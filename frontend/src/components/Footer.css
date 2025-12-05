@@ -1,0 +1,139 @@
+:root {
+  --primary-blue: #031576 !important;
+  --primary-orange: #fd6e04 !important;
+  --success-green: #42b231 !important;
+  --white: #ffffff !important;
+}
+
+/* MAIN FOOTER */
+.footer-wrapper {
+  background: var(--primary-blue) !important;
+  padding: 40px 20px !important;
+  margin-top: 50px !important;
+  color: var(--white) !important;
+}
+
+.footer-grid {
+  padding: 0 30px !important;
+}
+
+/* LOGO */
+.footer-logo-box {
+  margin-bottom: 10px !important;
+}
+
+.footer-logo {
+  width: 160px !important;
+  height: auto !important;
+}
+
+/* TEXT */
+.footer-text {
+  color: #d9d9d9 !important;
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+}
+
+/* TITLES */
+.footer-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin-bottom: 10px !important;
+  color: #fd6e04 !important;
+}
+
+/* LINKS */
+.footer-link {
+  display: block !important;
+  color: #e6e6e6 !important;
+  text-decoration: none !important;
+  margin: 6px 0 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: 0.3s !important;
+}
+
+.footer-link:hover {
+  color: var(--primary-orange) !important;
+  transform: translateX(4px) !important;
+}
+
+/* SOCIAL ICONS */
+.footer-social {
+  display: flex !important;
+  gap: 15px !important;
+  margin-bottom: 10px !important;
+}
+
+.social-icon {
+  color: var(--white) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 50% !important;
+  transition: 0.3s !important;
+}
+
+.social-icon:hover {
+  background: var(--primary-orange) !important;
+}
+
+/* COPYRIGHT */
+.footer-bottom {
+  margin-top: 25px !important;
+  color: #cfcfcf !important;
+  font-size: 14px !important;
+}
+
+/* DEVELOPER CREDIT */
+.developer-credit {
+  margin-top: 5px !important;
+  font-size: 15px !important;
+  color: #e9e9e9 !important;
+  opacity: 0.75 !important;
+}
+
+.developer-credit span {
+  color: var(--primary-orange) !important;
+  font-weight: 100 !important;
+  text-decoration: underline !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 576px) {
+  .footer-wrapper {
+    text-align: center !important;
+  }
+
+  .footer-grid {
+    padding: 0 10px !important;
+  }
+
+  .footer-social {
+    justify-content: center !important;
+  }
+}
+
+.name{
+  text-decoration: none !important;
+  color: #fd6e04!important;
+  font-weight: 500 !important;
+  
+}
+
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #ddd;
+}
+
+.footer-icon {
+  font-size: 18px;
+  color: #ff9800;
+}
