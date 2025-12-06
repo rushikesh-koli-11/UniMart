@@ -8,7 +8,18 @@ const otpRoutes = require("./routes/otp");
 const app = express();
 connectDB();
 
-app.use(cors({ origin: process.env.CLIENT_URL || "*" }));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://uni-mart-seven.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
