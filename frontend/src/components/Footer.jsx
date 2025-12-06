@@ -7,9 +7,7 @@ import {
   IconButton
 } from "@mui/material";
 import {
-  Facebook,
-  Instagram,
-  Twitter,
+   LinkedIn, Instagram, WhatsApp,
   Email,
   Phone,
   LocationOn
@@ -84,22 +82,44 @@ export default function Footer() {
 
         {/* SOCIAL ICONS */}
         <Grid item xs={12} md={2}>
-          <Typography className="footer-title">Follow Us</Typography>
+  <Typography className="footer-title">Follow Us</Typography>
 
-          <div className="footer-social">
-            <IconButton className="social-icon">
-              <Twitter />
-            </IconButton>
+  <div className="footer-social">
+    {/* LinkedIn */}
+    <IconButton
+      className="social-icon"
+      component="a"
+      href="https://www.linkedin.com/in/rushikeshkoli"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <LinkedIn />
+    </IconButton>
 
-            <IconButton className="social-icon">
-              <Facebook />
-            </IconButton>
+    {/* Instagram */}
+    <IconButton
+      className="social-icon"
+      component="a"
+      href="https://www.instagram.com/rushikeshkoli2358?igsh=YnRkcXQ0aW8zeXk4&utm_source=qr"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Instagram />
+    </IconButton>
 
-            <IconButton className="social-icon">
-              <Instagram />
-            </IconButton>
-          </div>
-        </Grid>
+    {/* WhatsApp */}
+    <IconButton
+      className="social-icon"
+      component="a"
+      href="https://wa.me/9579695273"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <WhatsApp />
+    </IconButton>
+  </div>
+</Grid>
+
       </Grid>
 
       {/* COPYRIGHT */}

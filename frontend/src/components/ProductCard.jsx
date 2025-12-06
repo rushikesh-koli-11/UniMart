@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
-import { Rating } from "@mui/material";
 import API from "../api/api";
 import "./ProductCard.css";
 
@@ -84,11 +83,11 @@ export default function ProductCard({ product }) {
 
     const productForCart = appliedOffer
       ? {
-          ...product,
-          originalPrice: product.price,
-          price: finalPrice,
-          appliedOffer,
-        }
+        ...product,
+        originalPrice: product.price,
+        price: finalPrice,
+        appliedOffer,
+      }
       : product;
 
     addToCart(productForCart);
@@ -98,68 +97,60 @@ export default function ProductCard({ product }) {
     product.reviews?.length > 0 ? product.avgRating?.toFixed(1) : "5.0";
 
   return (
-    <Link
-      to={`/product/${product._id}`}
-      className="card-click-wrapper"
-      style={{ textDecoration: "none", color: "inherit" }}
+    <div
+      className="small-card translate-safe mb-2"
+      onClick={() => navigate(`/product/${product._id}`)}
+      style={{ cursor: "pointer" }}
     >
-      <div className="small-card">
+      <div className="rating-number-badge">{effectiveRating} ★</div>
 
-        <div className="rating-number-badge">{effectiveRating} ★</div>
+      {appliedOffer && (
+        <div className="offer-badge">
+          {appliedOffer.discountType === "percentage"
+            ? `${appliedOffer.discountValue}% OFF`
+            : `₹${appliedOffer.discountValue} OFF`}
+        </div>
+      )}
 
-        {appliedOffer && (
-          <div className="offer-badge">
-            {appliedOffer.discountType === "percentage"
-              ? `${appliedOffer.discountValue}% OFF`
-              : `₹${appliedOffer.discountValue} OFF`}
-          </div>
-        )}
+      <img src={product.images?.[0]?.url || "/placeholder.png"} alt={product.title} />
 
-        <img
-          src={product.images?.[0]?.url || "/placeholder.png"}
-          alt={product.title}
-        />
+      <div className="small-card-content">
+        <div className="small-title">{product.title}</div>
 
-        <div className="small-card-content">
-          <div className="small-title">{product.title}</div>
-
-          <div className="small-price">
-            {appliedOffer ? (
-              <>
-                <span className="old-price">₹{product.price}</span>
-                <span className="new-price ms-1">₹{finalPrice}</span>
-              </>
-            ) : (
-              <>₹{product.price}</>
-            )}
-          </div>
-
-          {product.stock <= 10 && product.stock > 0 && (
-            <div className="small-stock-warning">Only {product.stock} left!</div>
-          )}
-
-          {product.stock === 0 && (
-            <div className="small-out-stock">Out of Stock</div>
+        <div className="small-price">
+          {appliedOffer ? (
+            <>
+              <span className="old-price">₹{product.price}</span>
+              <span className="new-price">₹{finalPrice}</span>
+            </>
+          ) : (
+            <>₹{product.price}</>
           )}
         </div>
-
-        <div className="small-actions">
-
-          {/* FIXED VIEW BUTTON (no <Link> inside Link) */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/product/${product._id}`);
-            }}
-          >
-            View
-          </button>
-
-          {/* ADD BUTTON */}
-          <button className="add-btns" onClick={handleAddToCart}>Add</button>
-        </div>
-
       </div>
-    </Link>
+
+      <div className="small-actions">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/product/${product._id}`);
+          }}
+        >
+          View
+        </button>
+
+        <button
+          className="add-btns"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddToCart(e);
+          }}
+        >
+          Add
+        </button>
+      </div>
+    </div>
+
   );
+
 }

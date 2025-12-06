@@ -19,6 +19,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 import "./AdminProducts.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -63,31 +65,27 @@ export default function AdminProducts() {
   };
 
   // MULTIPLE IMAGE UPLOAD
-  // MULTIPLE IMAGE UPLOAD
-const handleMultiUpload = async (e) => {
-  const files = Array.from(e.target.files);
+  const handleMultiUpload = async (e) => {
+    const files = Array.from(e.target.files);
 
-  for (const file of files) {
-    const fd = new FormData();
-    fd.append("image", file);
-    fd.append("type", "product");   // ✅ tells backend: this is product image
+    for (const file of files) {
+      const fd = new FormData();
+      fd.append("image", file);
+      fd.append("type", "product");
 
-    try {
-      const { data } = await API.post("/upload/image", fd); 
-      // DO NOT manually add headers, axios + interceptor handles it
+      try {
+        const { data } = await API.post("/upload/image", fd);
 
-      setForm((prev) => ({
-        ...prev,
-        images: [...prev.images, data],
-      }));
-
-    } catch (err) {
-      console.error("Upload error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Upload failed");
+        setForm((prev) => ({
+          ...prev,
+          images: [...prev.images, data],
+        }));
+      } catch (err) {
+        console.error("Upload error:", err.response?.data || err.message);
+        alert(err.response?.data?.message || "Upload failed");
+      }
     }
-  }
-};
-
+  };
 
   const removeImage = (i) =>
     setForm((prev) => ({
@@ -95,55 +93,78 @@ const handleMultiUpload = async (e) => {
       images: prev.images.filter((_, idx) => idx !== i),
     }));
 
+  // ----------- DRAG & DROP IMAGE SORTING -----------
+
+  const reorder = (list, startIndex, endIndex) => {
+    const result = [...list];
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+    return result;
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const items = reorder(
+      form.images,
+      result.source.index,
+      result.destination.index
+    );
+
+    setForm((prev) => ({
+      ...prev,
+      images: items,
+    }));
+  };
+
   // SAVE PRODUCT
   const saveProduct = async () => {
-  try {
-    setError("");
+    try {
+      setError("");
 
-    if (!form.category) return setError("Category is required");
-    if (!form.subcategory._id) return setError("Subcategory is required");
+      if (!form.category) return setError("Category is required");
+      if (!form.subcategory._id)
+        return setError("Subcategory is required");
 
-    const payload = {
-      title: form.title,
-      description: form.description,
-      price: form.price,
-      stock: form.stock,
-      category: form.category,
+      const payload = {
+        title: form.title,
+        description: form.description,
+        price: form.price,
+        stock: form.stock,
+        category: form.category,
 
-      // ⭐ CORRECT STRUCTURE
-      subcategory: {
-        _id: form.subcategory._id,
-        name: form.subcategory.name,
-      },
+        subcategory: {
+          _id: form.subcategory._id,
+          name: form.subcategory.name,
+        },
 
-      images: form.images,
-    };
+        images: form.images,
+      };
 
-    if (editing) {
-      await API.put(`/products/${editing}`, payload);
-    } else {
-      await API.post("/products", payload);
+      if (editing) {
+        await API.put(`/products/${editing}`, payload);
+      } else {
+        await API.post("/products", payload);
+      }
+
+      setOpen(false);
+      setEditing(null);
+
+      setForm({
+        title: "",
+        description: "",
+        price: "",
+        stock: 0,
+        category: "",
+        subcategory: { _id: "", name: "" },
+        images: [],
+      });
+
+      load();
+    } catch (err) {
+      setError(err.response?.data?.message || "Error saving product");
     }
-
-    setOpen(false);
-    setEditing(null);
-
-    setForm({
-      title: "",
-      description: "",
-      price: "",
-      stock: 0,
-      category: "",
-      subcategory: { _id: "", name: "" },
-      images: [],
-    });
-
-    load();
-  } catch (err) {
-    setError(err.response?.data?.message || "Error saving product");
-  }
-};
-
+  };
 
   // EDIT PRODUCT
   const editProduct = (p) => {
@@ -175,18 +196,14 @@ const handleMultiUpload = async (e) => {
 
   return (
     <div className="container-fluid admin-products-wrapper mt-3">
-
-      {/* HERO SECTION */}
+      {/* HERO */}
       <div className="admin-products-hero">
         <h1>Products Dashboard</h1>
         <p>Manage all products, categories, and stock levels</p>
       </div>
 
-
       {/* FILTER BAR */}
       <div className="row g-3 filter-row justify-content-center">
-
-        {/* SEARCH */}
         <div className="col-12 col-md-4">
           <TextField
             label="Search Products"
@@ -197,14 +214,18 @@ const handleMultiUpload = async (e) => {
               const val = e.target.value.toLowerCase();
               if (!val) {
                 setProducts(allProductsRef.current);
-                setLowStock(allProductsRef.current.filter((x) => x.stock < 5));
+                setLowStock(
+                  allProductsRef.current.filter((x) => x.stock < 5)
+                );
                 return;
               }
+
               const filtered = allProductsRef.current.filter(
                 (p) =>
                   p.title.toLowerCase().includes(val) ||
                   (p.description || "").toLowerCase().includes(val)
               );
+
               setProducts(filtered);
               setLowStock(filtered.filter((x) => x.stock < 5));
             }}
@@ -224,7 +245,9 @@ const handleMultiUpload = async (e) => {
               if (!catId) {
                 setSubcats([]);
                 setProducts(allProductsRef.current);
-                setLowStock(allProductsRef.current.filter((x) => x.stock < 5));
+                setLowStock(
+                  allProductsRef.current.filter((x) => x.stock < 5)
+                );
                 return;
               }
 
@@ -274,7 +297,7 @@ const handleMultiUpload = async (e) => {
           )}
         </div>
 
-        {/* ADD PRODUCT BUTTON */}
+        {/* ADD PRODUCT */}
         <div className="col-12 col-md-2 text-md-end">
           <Button
             variant="contained"
@@ -300,7 +323,7 @@ const handleMultiUpload = async (e) => {
         </div>
       </div>
 
-      {/* LOW STOCK TABLE */}
+      {/* LOW STOCK LIST */}
       {lowStock.length > 0 && (
         <div className="low-stock-box">
           <Typography className="low-stock-title">
@@ -545,25 +568,60 @@ const handleMultiUpload = async (e) => {
               </TextField>
             )}
 
+            {/* UPLOAD IMAGE BUTTON */}
             <Button variant="outlined" component="label" className="upload-btn">
               <AddPhotoAlternateIcon /> Upload Images
               <input type="file" hidden multiple onChange={handleMultiUpload} />
             </Button>
 
-            <Stack direction="row" spacing={1} flexWrap="wrap">
-              {form.images.map((img, i) => (
-                <Box key={i} className="image-preview">
-                  <img src={img.url} alt="" className="preview-img" />
-                  <IconButton
-                    size="small"
-                    className="remove-img-btn"
-                    onClick={() => removeImage(i)}
+            {/* DRAGGABLE IMAGES */}
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="images" direction="horizontal">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "12px",
+                      marginTop: "10px",
+                    }}
                   >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              ))}
-            </Stack>
+                    {form.images.map((img, index) => (
+                      <Draggable key={img.url} draggableId={img.url} index={index}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              userSelect: "none",
+                              opacity: snapshot.isDragging ? 0.4 : 1,
+                              transform: snapshot.isDragging ? "rotate(2deg)" : "none",
+                              transition: "0.2s",
+                              ...provided.draggableProps.style,
+                            }}
+                            className="image-preview"
+                          >
+                            <img src={img.url} alt="" className="preview-img" />
+
+                            <IconButton
+                              size="small"
+                              className="remove-img-btn"
+                              onClick={() => removeImage(index)}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
 
             <Button variant="contained" className="save-btn" onClick={saveProduct}>
               {editing ? "Save Changes" : "Add Product"}
@@ -571,7 +629,6 @@ const handleMultiUpload = async (e) => {
           </Stack>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

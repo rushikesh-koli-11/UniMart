@@ -18,10 +18,11 @@
 }
 
 .subcat-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--primary-orange);
+  /* font-size: 25px; */
+  font-weight: 700;
+  color: #031576;
   margin-bottom: 10px;
+  /* text-align: center; */
 }
 
 /* ---------------------------------------------------
@@ -246,3 +247,7 @@
   font-weight: 700;
 }
 
+.translate-safe {
+  unicode-bidi: plaintext !important;
+  isolation: isolate !important;
+}

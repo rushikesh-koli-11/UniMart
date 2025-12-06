@@ -1,63 +1,24 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const axios = require("axios");
 
 const Admin = require("../models/Admin");
 const Order = require("../models/Order");
+const OTP = require("../models/OTP");         // ⭐ Required for OTP verification
 const { protectAdmin } = require("../middleware/auth");
 
 /* ===========================================================
-   VERIFY ADMIN TOKEN MIDDLEWARE
+   GENERATE TOKEN
 =========================================================== */
-function verifyAdmin(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "No token provided" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded.isAdmin)
-      return res.status(403).json({ message: "Access denied. Not admin." });
-
-    req.admin = decoded;
-    next();
-  } catch {
-    return res.status(401).json({ message: "Invalid token" });
-  }
-}
+const generateAdminToken = (admin) =>
+  jwt.sign(
+    { id: admin._id, isAdmin: true },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
 
 /* ===========================================================
-   SEND FIXED TEST OTP VIA FAST2SMS
-=========================================================== */
-router.post("/send-code-sms", async (req, res) => {
-  try {
-    const { phone } = req.body;
-
-    const code = "416779";
-    const message = `UniMart Admin verification code: ${code}.`;
-
-    await axios.post(
-      "https://www.fast2sms.com/dev/bulkV2",
-      {
-        route: "q",
-        message,
-        numbers: phone,
-      },
-      {
-        headers: {
-          authorization: process.env.FAST2SMS_API_KEY,
-        },
-      }
-    );
-
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to send SMS" });
-  }
-});
-
-/* ===========================================================
-   ADMIN REGISTER
+   ADMIN REGISTER (Requires OTP Verification)
 =========================================================== */
 router.post("/register", async (req, res) => {
   try {
@@ -72,20 +33,36 @@ router.post("/register", async (req, res) => {
     if (!/^\d{10}$/.test(phone))
       return res.status(400).json({ message: "Phone must be 10 digits" });
 
+    // Email unique check
     const existsEmail = await Admin.findOne({ email });
     if (existsEmail)
       return res.status(400).json({ message: "Email already registered" });
 
+    // Phone unique check
     const existsPhone = await Admin.findOne({ phone });
     if (existsPhone)
-      return res.status(400).json({ message: "Phone already registered" });
+      return res.status(400).json({ message: "Phone number already registered" });
 
-    // password gets hashed by model hook
-    await Admin.create({ name, email, phone, password });
+    // ⭐ OTP must be verified → OTP record MUST NOT exist
+    const pendingOtp = await OTP.findOne({ phoneNumber: phone });
+    if (pendingOtp) {
+      return res.status(400).json({
+        message: "Please verify OTP before registering admin",
+      });
+    }
+
+    // Create admin
+    const admin = await Admin.create({
+      name,
+      email,
+      phone,
+      password, // will be hashed by pre-save hook
+    });
 
     res.json({ message: "Admin registered successfully" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Admin Register Error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -107,38 +84,43 @@ router.post("/login", async (req, res) => {
     if (!match)
       return res.status(400).json({ message: "Incorrect number or password" });
 
-    const token = jwt.sign(
-      { id: admin._id, isAdmin: true },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = generateAdminToken(admin);
 
     res.json({ token, admin });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Admin Login Error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 /* ===========================================================
-   ADMIN RESET PASSWORD (AFTER OTP VERIFIED)
+   ADMIN RESET PASSWORD (After OTP Verified)
 =========================================================== */
 router.post("/reset-password", async (req, res) => {
   try {
     const { phone, newPassword } = req.body;
 
     if (!phone || !newPassword)
-      return res.status(400).json({ message: "Phone & password required" });
+      return res.status(400).json({ message: "Phone & new password required" });
 
     const admin = await Admin.findOne({ phone });
     if (!admin)
       return res.status(404).json({ message: "Admin not found" });
 
-    admin.password = newPassword;
+    // ⭐ OTP must be verified → OTP document MUST NOT exist
+    const pendingOtp = await OTP.findOne({ phoneNumber: phone });
+    if (pendingOtp) {
+      return res.status(400).json({
+        message: "Please verify OTP before resetting password",
+      });
+    }
+
+    admin.password = newPassword; // hashed by hook
     await admin.save();
 
     res.json({ success: true, message: "Password reset successfully" });
   } catch (err) {
-    console.error("Reset Error:", err);
+    console.error("Admin Reset Password Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -146,39 +128,59 @@ router.post("/reset-password", async (req, res) => {
 /* ===========================================================
    GET ALL ORDERS (ADMIN ONLY)
 =========================================================== */
-router.get("/orders", verifyAdmin, async (req, res) => {
-  const orders = await Order.find()
-    .populate("user", "name email phone")
-    .populate("items.product", "title price images");
+router.get("/orders", protectAdmin, async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email phone")
+      .populate("items.product", "title price images");
 
-  res.json(orders);
+    res.json(orders);
+  } catch (err) {
+    console.error("Fetch Orders Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 /* ===========================================================
    UPDATE ORDER STATUS
 =========================================================== */
-router.put("/orders/:id/status", verifyAdmin, async (req, res) => {
-  const { status } = req.body;
+router.put("/orders/:id/status", protectAdmin, async (req, res) => {
+  try {
+    const { status } = req.body;
 
-  let order = await Order.findById(req.params.id);
-  if (!order) return res.status(404).json({ message: "Order not found" });
+    let order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
 
-  order.status = status;
+    order.status = status;
+    if (status === "delivered" && !order.deliveredAt)
+      order.deliveredAt = Date.now();
 
-  if (status === "delivered" && !order.deliveredAt)
-    order.deliveredAt = Date.now();
+    await order.save();
 
-  await order.save();
-
-  res.json(order);
+    res.json(order);
+  } catch (err) {
+    console.error("Update Status Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 /* ===========================================================
    DELETE ORDER
 =========================================================== */
 router.delete("/orders/:id", protectAdmin, async (req, res) => {
-  await Order.findByIdAndDelete(req.params.id);
-  res.json({ message: "Order deleted" });
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.json({ message: "Order deleted" });
+  } catch (err) {
+    console.error("Delete Order Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
+router.get("/me", protectAdmin, async (req, res) => {
+  const admin = await Admin.findById(req.admin.id).select("-password");
+  res.json({ admin });
+});
+
 
 module.exports = router;

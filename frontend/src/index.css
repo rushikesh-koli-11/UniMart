@@ -11,3 +11,99 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* ---- SAFE GOOGLE TRANSLATE WRAPPER FIX ---- */
+
+/* Hide Google widget but keep functionality */
+#google_translate_element {
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Prevent React DOM destruction */
+#react-root {
+  isolation: isolate;     /* 🚀 Google can’t edit internal structure */
+  position: relative;
+  z-index: 0;
+}
+
+/* Prevent Translate from injecting spans/fonts into interactive elements */
+button, input, textarea, select {
+  all: revert !important;       /* Keeps React safe */
+  unicode-bidi: plaintext !important;
+}
+
+/* Stop Google highlight overlay */
+.goog-text-highlight {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Hide top banner completely */
+.goog-te-banner-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+
+/* Hide watermark/logo */
+.goog-logo-link {
+  display: none !important;
+}
+.goog-te-gadget-simple {
+  display: none !important;
+}
+
+/* Remove Translate tooltip popup */
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-te-menu-frame {
+  display: none !important;
+}
+/* ============================================================
+   SAFE GOOGLE TRANSLATE INJECTION BLOCKER (DO NOT MODIFY)
+=========================================================== */
+
+/* Prevent Translate from altering React DOM nodes */
+#translate-root * {
+  unicode-bidi: plaintext !important;
+  isolation: isolate !important;
+}
+
+/* Prevent Google from wrapping React elements in <span> or <font> */
+.goog-text-highlight,
+.goog-te-gadget-simple,
+.goog-te-banner-frame,
+.goog-te-balloon-frame {
+  display: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent DOM restructuring on UI elements */
+button, a, input, textarea, select, svg, span[role="img"] {
+  translate: no !important;
+}
+
+/* Remove layout shift Google adds */
+body {
+  top: 0 !important;
+}
+/* Remove Google top bar FULLY */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  border: none !important;
+}
+
+.goog-te-banner {
+  display: none !important;
+}
+
+body {
+  top: 0px !important ;
+}

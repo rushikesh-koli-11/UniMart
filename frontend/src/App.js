@@ -51,7 +51,7 @@ export default function App() {
       <Navbar />
 
       <Container >
-        <Routes>
+        <Routes >
 
           {/* ================= PUBLIC ROUTES ================= */}
           <Route path="/" element={<Home />} />

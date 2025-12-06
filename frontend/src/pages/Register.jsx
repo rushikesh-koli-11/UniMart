@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Alert } from "@mui/material";
 import API from "../api/api";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, setupRecaptcha } from "../firebase";
-import { signInWithPhoneNumber } from "firebase/auth";
 import "./Register.css";
 
 export default function Register() {
@@ -22,95 +20,65 @@ export default function Register() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
 
-  const [timer, setTimer] = useState(0); // 5 minutes = 300 sec
+  const [timer, setTimer] = useState(0);
 
-  // TIMER EFFECT
+  // TIMER
   useEffect(() => {
     if (timer <= 0) return;
-
     const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [timer]);
 
-  // VALIDATIONS
-  const validateInputs = () => {
+  // INPUT VALIDATION BEFORE SENDING OTP
+  const validateBeforeOtp = () => {
     if (!form.name) return "Enter full name";
-
     if (!form.email.endsWith("@gmail.com"))
       return "Email must end with @gmail.com";
-
     if (!/^\d{10}$/.test(form.phone))
       return "Phone must be 10 digits";
-
-    if (!form.password) return "Enter password";
-
-    if (form.password !== form.confirmPassword)
-      return "Passwords do not match";
-
     return null;
   };
 
-  // SEND FIXED TEST CODE (416779)
-  const sendUserCode = async () => {
-    const validationError = validateInputs();
-    if (validationError) return setMsg(validationError);
+  // SEND OTP
+  const sendOTP = async () => {
+    const err = validateBeforeOtp();
+    if (err) return setMsg(err);
 
     try {
-      window.userCode = "416779";
+      await API.post("/otp/send-otp", {
+        phoneNumber: form.phone,
+        purpose: "signup",
+      });
 
-      await API.post("/auth/send-code-sms", { phone: form.phone });
-
-      setMsg("📩 Code sent to your phone");
       setOtpSent(true);
-      setTimer(300);
+      setTimer(120);
+      setMsg("📩 OTP sent successfully");
     } catch (err) {
-      setMsg("Failed to send code SMS");
+      setMsg(err.response?.data?.message || "Failed to send OTP");
     }
   };
 
-  // RESEND CODE
-  const resendCode = async () => {
+  // VERIFY OTP
+  const verifyOTP = async () => {
     try {
-      await API.post("/auth/send-code-sms", { phone: form.phone });
-      setMsg("📩 Code re-sent");
-      setTimer(300);
-    } catch {
-      setMsg("Failed to resend code");
-    }
-  };
-
-  // VERIFY ENTERED CODE THEN DO FIREBASE TEST VERIFICATION
-  const verifyUserCode = async () => {
-    if (timer <= 0) return setMsg("⏳ OTP expired. Please resend.");
-
-    if (otp !== "416779") {
-      return setMsg("❌ Incorrect code");
-    }
-
-    try {
-      setupRecaptcha();
-
-      const testPhone = "+919579695273";
-
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        testPhone,
-        window.recaptchaVerifier
-      );
-
-      await confirmation.confirm("416779");
+      await API.post("/otp/verify-otp", {
+        phoneNumber: form.phone,
+        otp,
+      });
 
       setOtpVerified(true);
-      setMsg("✅ Phone verified");
+      setMsg("✅ Mobile number verified!");
     } catch (err) {
-      console.log(err);
-      setMsg("Firebase phone verification failed");
+      setMsg(err.response?.data?.message || "Invalid OTP");
     }
   };
 
   // REGISTER USER
   const submit = async () => {
     if (!otpVerified) return setMsg("⚠️ Please verify phone first");
+
+    if (form.password !== form.confirmPassword)
+      return setMsg("Passwords do not match");
 
     try {
       await API.post("/auth/register", form);
@@ -121,7 +89,6 @@ export default function Register() {
     }
   };
 
-  // FORMAT TIMER
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60).toString().padStart(2, "0");
     const s = (sec % 60).toString().padStart(2, "0");
@@ -132,8 +99,6 @@ export default function Register() {
     <div className="signup-container">
       <div className="signup-card shadow-lg">
         <h3 className="text-center mb-4 heading">Create User Account</h3>
-
-        <div id="recaptcha-container"></div>
 
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
@@ -151,50 +116,34 @@ export default function Register() {
           onChange={(e) => {
             const email = e.target.value;
             setForm({ ...form, email });
-
-            // INLINE WARNING
-            if (email && !email.endsWith("@gmail.com")) {
-              setMsg("⚠️ Please enter a valid Gmail address to continue.");
-            } else {
-              setMsg("");
-            }
+            if (!email.endsWith("@gmail.com")) setMsg("⚠️ Enter valid Gmail");
+            else setMsg("");
           }}
         />
-        {!form.email.endsWith("@gmail.com") && form.email.length > 0 && (
-          <small className="text-danger">Email must end with @gmail.com</small>
-        )}
 
-        {/* PHONE */}
+        {/* PHONE + SEND OTP */}
         <div className="otp-box mt-3 mb-1">
           <input
             className="form-control input-box"
-            placeholder="Phone Number (10 digits)"
-            disabled={!form.email.endsWith("@gmail.com")}
+            placeholder="Phone Number"
             maxLength={10}
             value={form.phone}
             onChange={(e) => {
               const val = e.target.value;
-              if (!/^\d*$/.test(val)) return;
-              setForm({ ...form, phone: val });
+              if (/^\d*$/.test(val))
+                setForm({ ...form, phone: val });
             }}
           />
+
           {!otpSent && (
-            <button
-              className="btn signup-btn"
-              onClick={sendUserCode}
-              disabled={!/^\d{10}$/.test(form.phone)}
-            >
-              Send Code
+            <button className="btn signup-btn" onClick={sendOTP}>
+              Send OTP
             </button>
           )}
         </div>
 
-        {!/^\d{10}$/.test(form.phone) && form.phone.length > 0 && (
-          <small className="text-danger">Phone must be 10 digits</small>
-        )}
-
         {/* OTP SECTION */}
-        {otpSent && (
+        {otpSent && !otpVerified && (
           <>
             <div className="otp-box mb-2 mt-3">
               <input
@@ -203,64 +152,59 @@ export default function Register() {
                 onChange={(e) => setOtp(e.target.value)}
               />
 
-              {!otpVerified ? (
-                <button className="btn signup-btn" onClick={verifyUserCode}>
-                  Verify
-                </button>
-              ) : (
-                <Alert severity="success" className="w-100">
-                  Phone Verified
-                </Alert>
-              )}
+              <button className="btn signup-btn" onClick={verifyOTP}>
+                Verify
+              </button>
             </div>
 
-            {/* TIMER + RESEND */}
+            {/* TIMER / RESEND */}
             <div className="text-center mb-3">
               {timer > 0 ? (
                 <p className="text-muted">OTP expires in {formatTime(timer)}</p>
               ) : (
-                <button className="btn btn-link" onClick={resendCode}>
-                  Resend Code
+                <button className="btn btn-link" onClick={sendOTP}>
+                  Resend OTP
                 </button>
               )}
             </div>
           </>
         )}
 
-        {/* PASSWORD */}
-        <input
-          type="password"
-          className="form-control input-box mb-1"
-          placeholder="Password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
+        {/* PASSWORD FIELDS — ONLY AFTER OTP VERIFIED */}
+        {otpVerified && (
+          <>
+            <input
+              type="password"
+              className="form-control input-box mb-1"
+              placeholder="Create Password"
+              onChange={(e) =>
+                setForm({ ...form, password: e.target.value })
+              }
+            />
 
-        {/* RE-ENTER PASSWORD */}
-        <input
-          type="password"
-          className="form-control input-box mb-0"
-          placeholder="Re-enter Password"
-          onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-        />
+            <input
+              type="password"
+              className="form-control input-box mb-0"
+              placeholder="Confirm Password"
+              onChange={(e) =>
+                setForm({ ...form, confirmPassword: e.target.value })
+              }
+            />
 
-        {form.confirmPassword &&
-          form.password !== form.confirmPassword && (
-            <small className="text-danger">Passwords do not match</small>
-          )}
+            {form.confirmPassword &&
+              form.password !== form.confirmPassword && (
+                <small className="text-danger">Passwords do not match</small>
+              )}
 
-        <button
-          className="signup-btn mt-3"
-          disabled={!otpVerified}
-          onClick={submit}
-        >
-          Register
-        </button>
+            <button className="signup-btn mt-3" onClick={submit}>
+              Register
+            </button>
+          </>
+        )}
 
         <p className="text-center mt-3">
-          Already have an account?{" "}
-          <Link className="register-link" to="/user/login">
-            Login
-          </Link>
+          Already have an account?
+          <Link className="register-link" to="/user/login"> Login</Link>
         </p>
       </div>
     </div>

@@ -50,9 +50,46 @@ export default function Navbar() {
 
   const [recentSearches, setRecentSearches] = useState([]);
 
-  /* ---------------------------------------------
-     Active class handler
-     --------------------------------------------- */
+  const [language, setLanguage] = useState(localStorage.getItem("lang") || "en");
+
+  /* ========================================================
+      🌍 GOOGLE TRANSLATE LANGUAGE HANDLER
+  ======================================================== */
+const handleLanguageChange = (lang) => {
+  setLanguage(lang);                    // update dropdown instantly
+  localStorage.setItem("lang", lang);   // persist it
+
+  const select = document.querySelector(".goog-te-combo");
+  if (select) {
+    select.value = lang;
+    select.dispatchEvent(new Event("change"));
+  }
+};
+
+
+
+
+ useEffect(() => {
+  const savedLang = localStorage.getItem("lang");
+  if (!savedLang) return;
+
+  setLanguage(savedLang); // <-- update dropdown immediately
+
+  let attempts = 0;
+  const interval = setInterval(() => {
+    const combo = document.querySelector(".goog-te-combo");
+    if (combo) {
+      combo.value = savedLang;
+      combo.dispatchEvent(new Event("change"));
+      clearInterval(interval);
+    }
+    if (attempts++ > 20) clearInterval(interval);
+  }, 300);
+}, []);
+
+
+
+  /* --------------------------------------------- */
   const activeClass = (path) => {
     const current = location.pathname;
     if (current === path) return "active-nav";
@@ -61,9 +98,7 @@ export default function Navbar() {
     return "";
   };
 
-  /* ---------------------------------------------
-     Load categories + restore filters
-     --------------------------------------------- */
+  /* --------------------------------------------- */
   useEffect(() => {
     let mounted = true;
 
@@ -91,9 +126,7 @@ export default function Navbar() {
     };
   }, []);
 
-  /* --------------------------------------------------
-     ⭐ NEW: Auto-load subcategories when category changes
-     -------------------------------------------------- */
+  /* -------------------------------------------------- */
   useEffect(() => {
     if (!categoryId) {
       setSubcategories([]);
@@ -104,9 +137,7 @@ export default function Navbar() {
     setSubcategories(cat?.subcategories || []);
   }, [categoryId, categories]);
 
-  /* ---------------------------------------------
-     Save recent searches
-     --------------------------------------------- */
+  /* --------------------------------------------- */
   const saveSearchHistory = (term) => {
     if (!term.trim()) return;
     const updated = [term, ...recentSearches.filter((x) => x !== term)].slice(
@@ -117,9 +148,7 @@ export default function Navbar() {
     localStorage.setItem("recentSearches", JSON.stringify(updated));
   };
 
-  /* ---------------------------------------------
-     Apply filters
-     --------------------------------------------- */
+  /* --------------------------------------------- */
   const applyFilters = (forcedSubId = null, forcedQ = null, forcedCat = null) => {
     const params = new URLSearchParams();
 
@@ -134,17 +163,13 @@ export default function Navbar() {
     if (cVal) params.set("category", cVal);
     if (sVal) params.set("subcategory", sVal);
 
-    // ⭐ Redirect to NEW dedicated search page
     navigate(`/search?${params.toString()}`);
 
     setFiltersMenuAnchor(null);
     setMenuOpen(false);
   };
 
-
-  /* ---------------------------------------------
-     Clear filters
-     --------------------------------------------- */
+  /* --------------------------------------------- */
   const clearFilters = () => {
     setSearch("");
     setSubcatId("");
@@ -210,6 +235,24 @@ export default function Navbar() {
           </Button>
         )}
 
+        {/* =============== 🌍 LANGUAGE DROPDOWN (DESKTOP) =============== */}
+        <Box className="desktop-only" sx={{ ml: 2 }}>
+          <select
+            className="language-dropdown"
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+          >
+            <option value="en">English</option>
+            <option value="mr">Marathi</option>
+            <option value="hi">Hindi</option>
+            <option value="bn">Bengali</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+            <option value="gu">Gujarati</option>
+            <option value="kn">Kannada</option>
+          </select>
+        </Box>
+
         {/* FILTER MENU */}
         <Menu
           anchorEl={filtersMenuAnchor}
@@ -222,9 +265,6 @@ export default function Navbar() {
 
           <Divider sx={{ my: 1 }} />
 
-          {/* -----------------------------------------
-               ⭐ ADDED CATEGORY FILTER SECTION
-             ----------------------------------------- */}
           <MenuItem disabled sx={{ fontWeight: 700 }}>
             Category
           </MenuItem>
@@ -245,7 +285,6 @@ export default function Navbar() {
 
           <Divider sx={{ my: 1 }} />
 
-          {/* SUBCATEGORY */}
           <MenuItem disabled sx={{ fontWeight: 700 }}>
             Subcategory
           </MenuItem>
@@ -263,7 +302,6 @@ export default function Navbar() {
                 setFiltersMenuAnchor(null);
                 setMenuOpen(false);
               }}
-
             >
               {s.name}
             </MenuItem>
@@ -315,7 +353,6 @@ export default function Navbar() {
               >
                 Hello, {user.name}
               </Button>
-
 
               <Menu
                 anchorEl={userMenuAnchor}
@@ -473,6 +510,23 @@ export default function Navbar() {
       {menuOpen && (
         <Box className="mobile-menu">
 
+          {/* 🌍 LANGUAGE DROPDOWN (MOBILE) */}
+          <select
+            className="language-dropdown"
+            value={localStorage.getItem("lang") || "en"}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            style={{ width: "90%", margin: "10px auto", display: "block" }}
+          >
+            <option value="en">English</option>
+            <option value="mr">Marathi</option>
+            <option value="hi">Hindi</option>
+            <option value="bn">Bengali</option>
+            <option value="ta">Tamil</option>
+            <option value="te">Telugu</option>
+            <option value="gu">Gujarati</option>
+            <option value="kn">Kannada</option>
+          </select>
+
           {!admin && (
             <Button
               className="mobile-menu-btn"
@@ -612,7 +666,6 @@ export default function Navbar() {
               >
                 Manage Used Links
               </Button>
-
 
               <Button
                 component={Link}

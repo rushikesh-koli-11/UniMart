@@ -250,3 +250,62 @@
 .nav-icon-btn:hover {
   color: white !important;
 }
+.language-dropdown {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Hide Google default ugly bar */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget-simple {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+
+body {
+  top: 0px !important;
+}
+
+
+/* ============================================================
+   CUSTOM BEAUTIFUL LANGUAGE DROPDOWN (MATCH UNI MART THEME)
+============================================================ */
+.language-dropdown {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 2px solid #fd6e04;     /* Orange border */
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #031576;                /* Dark blue text */
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.language-dropdown:hover {
+  border-color: #e26000;         /* Darker orange */
+}
+
+.language-dropdown:focus {
+  border-color: #031576;         /* Blue border on focus */
+  box-shadow: 0 0 4px rgba(3, 21, 118, 0.4);
+}
+
+.language-dropdown option {
+  font-weight: 500;
+  padding: 10px;
+}
+/* Mobile version spacing */
+.mobile-menu .language-dropdown {
+  width: 100%;
+  margin-bottom: 12px;
+}

@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const { auth } = require("./middleware/auth"); // ⭐ ADD THIS
+const otpRoutes = require("./routes/otp");
 
 const app = express();
 connectDB();
@@ -14,6 +15,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(auth);  // ⭐ VERY IMPORTANT – decode token globally
 
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/otp", otpRoutes);
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/products", require("./routes/products"));
 app.use("/api/orders", require("./routes/orders"));

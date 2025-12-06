@@ -12,7 +12,10 @@ import { CartProvider } from "./contexts/CartContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <BrowserRouter>
+  <BrowserRouter future={{
+    v7_startTransition: true,
+    v7_relativeSplatPath: true,
+  }}>
     <AdminAuthProvider>     {/* ✅ Admin first */}
       <UserAuthProvider>    {/* ✅ Then user */}
         <CartProvider>      {/* ✅ Cart last */}

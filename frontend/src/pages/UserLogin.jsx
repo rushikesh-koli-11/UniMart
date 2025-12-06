@@ -3,8 +3,6 @@ import { Alert } from "@mui/material";
 import { UserAuthContext } from "../contexts/UserAuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/api";
-import { auth, setupRecaptcha } from "../firebase";
-import { signInWithPhoneNumber } from "firebase/auth";
 import "./UserLogin.css";
 
 export default function UserLogin() {
@@ -33,54 +31,44 @@ export default function UserLogin() {
       await loginUser(form.phone, form.password);
       navigate("/");
     } catch (err) {
-      setMsg("❌ Login failed. Check your number or password.");
+      setMsg(err.response?.data?.message || "❌ Invalid phone or password");
     }
   };
 
   /* ================================================
-     SEND FIXED OTP (416779) USING FAST2SMS
+     SEND REAL OTP using /otp/send-otp
   ================================================= */
   const sendOTP = async () => {
     if (!/^\d{10}$/.test(phone))
       return setMsg("Enter valid 10-digit registered phone number");
 
     try {
-      // Send code 416779 via Fast2SMS
-      await API.post("/auth/send-code-sms", { phone });
-
-      window.userCode = "416779";
+      await API.post("/otp/send-otp", {
+        phoneNumber: phone,
+        purpose: "forgot",
+      });
 
       setOtpSent(true);
-      setMsg("📩 Code sent to your phone");
+      setMsg("📩 OTP sent to your phone");
     } catch (err) {
-      setMsg("❌ Failed to send SMS");
+      setMsg(err.response?.data?.message || "❌ Failed to send OTP");
     }
   };
 
   /* ================================================
-     VERIFY USER ENTERED CODE (416779)
-     Then verify Firebase test number (9579695273)
+     VERIFY OTP using /otp/verify-otp
   ================================================= */
   const verifyOTP = async () => {
-    if (otp !== "416779")
-      return setMsg("❌ Incorrect code");
-
     try {
-      setupRecaptcha();
-
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        "+919579695273",  // Firebase test mobile
-        window.recaptchaVerifier
-      );
-
-      await confirmation.confirm("416779"); // Firebase test OTP
+      await API.post("/otp/verify-otp", {
+        phoneNumber: phone,
+        otp,
+      });
 
       setOtpVerified(true);
       setMsg("✅ OTP Verified! Set your new password.");
     } catch (err) {
-      console.log(err);
-      setMsg("❌ Firebase verification failed");
+      setMsg(err.response?.data?.message || "❌ Incorrect or expired OTP");
     }
   };
 
@@ -97,6 +85,7 @@ export default function UserLogin() {
       });
 
       setMsg("✅ Password updated successfully!");
+
       setTimeout(() => {
         setForgot(false);
         setOtpSent(false);
@@ -104,7 +93,7 @@ export default function UserLogin() {
         navigate("/user/login");
       }, 1500);
     } catch (err) {
-      setMsg("❌ Failed to update password.");
+      setMsg(err.response?.data?.message || "❌ Failed to update password.");
     }
   };
 
@@ -117,8 +106,6 @@ export default function UserLogin() {
         <h3 className="text-center mb-4 heading">
           {forgot ? "Reset Password" : "User Login"}
         </h3>
-
-        <div id="recaptcha-container"></div>
 
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
@@ -154,7 +141,8 @@ export default function UserLogin() {
             </p>
 
             <p className="text-center mt-2">
-              Don’t have an account? <Link className="register-link" to="/user/register">Register</Link>
+              Don’t have an account?{" "}
+              <Link className="register-link" to="/user/register">Register</Link>
             </p>
           </>
         ) : (
@@ -174,7 +162,7 @@ export default function UserLogin() {
                 />
 
                 <button className="login-btn" onClick={sendOTP}>
-                  Send Code
+                  Send OTP
                 </button>
               </>
             )}
@@ -184,13 +172,13 @@ export default function UserLogin() {
               <>
                 <input
                   className="form-control input-box mb-3"
-                  placeholder="Enter Code"
+                  placeholder="Enter OTP"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                 />
 
                 <button className="login-btn" onClick={verifyOTP}>
-                  Verify Code
+                  Verify OTP
                 </button>
               </>
             )}

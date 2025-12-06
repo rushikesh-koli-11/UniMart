@@ -3,34 +3,71 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { protectUser } = require("../middleware/auth");
-const axios = require("axios");
+const OTP = require("../models/OTP"); // 🔥 NEW: to check OTP status
 
 /* ============================================
-   USER REGISTER
+   HELPER – Generate JWT
+============================================= */
+const generateToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+/* ============================================
+   USER REGISTER (PHONE + PASSWORD, AFTER OTP)
 ============================================= */
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
-    const exists = await User.findOne({ email });
-    if (exists)
-      return res.status(400).json({ message: "Email already registered" });
+    if (!name || !email || !phone || !password) {
+      return res
+        .status(400)
+        .json({ message: "Name, email, phone & password are required" });
+    }
 
-    await User.create({
+    // Email unique
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // Phone unique
+    const phoneExists = await User.findOne({ phone });
+    if (phoneExists) {
+      return res
+        .status(400)
+        .json({ message: "Phone already registered. Please login." });
+    }
+
+    // ✅ OTP must be VERIFIED before register
+    // In our flow: OTP is deleted from DB AFTER successful verify.
+    const pendingOtp = await OTP.findOne({ phoneNumber: phone });
+    if (pendingOtp) {
+      return res
+        .status(400)
+        .json({ message: "Please verify OTP before registration" });
+    }
+
+    // NOTE: password is plain, pre-save hook on User will hash it
+    const user = await User.create({
       name,
       email,
       phone,
-      password,  // ❗ PLAIN PASSWORD (hook will hash)
-      addresses: []
+      password,
+      addresses: [],
     });
 
-    res.json({ message: "Registered successfully" });
+    const token = generateToken(user._id);
+
+    res.json({
+      message: "Registered successfully",
+      token,
+      user,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Register error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
-
-
 
 /* ============================================
    USER LOGIN (Using Phone Instead of Email)
@@ -39,34 +76,26 @@ router.post("/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
 
-    // Validate
     if (!phone || !password) {
       return res.status(400).json({ message: "Phone & password required" });
     }
 
-    // Find user by PHONE (not email)
     const user = await User.findOne({ phone });
     if (!user) {
       return res.status(400).json({ message: "Incorrect login details" });
     }
 
-    // Compare passwords
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(400).json({ message: "Incorrect login details" });
     }
 
-    // Generate token
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = generateToken(user._id);
 
     res.json({ token, user });
-
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -84,6 +113,7 @@ router.put("/update", protectUser, async (req, res) => {
 
     res.json({ message: "Profile updated", user: req.user });
   } catch (err) {
+    console.error("Update profile error:", err);
     res.status(500).json({ message: err.message });
   }
 });
@@ -97,7 +127,7 @@ router.post("/address/add", protectUser, async (req, res) => {
   const newAddr = {
     label,
     address,
-    isDefault: req.user.addresses.length === 0
+    isDefault: req.user.addresses.length === 0,
   };
 
   req.user.addresses.push(newAddr);
@@ -129,8 +159,10 @@ router.delete("/address/remove/:id", protectUser, async (req, res) => {
     (a) => a._id.toString() !== id
   );
 
-  if (req.user.addresses.length > 0 &&
-    !req.user.addresses.some((a) => a.isDefault)) {
+  if (
+    req.user.addresses.length > 0 &&
+    !req.user.addresses.some((a) => a.isDefault)
+  ) {
     req.user.addresses[0].isDefault = true;
   }
 
@@ -169,7 +201,7 @@ router.post("/address/save-from-checkout", protectUser, async (req, res) => {
     req.user.addresses.push({
       label,
       address,
-      isDefault: req.user.addresses.length === 0
+      isDefault: req.user.addresses.length === 0,
     });
   }
 
@@ -178,65 +210,44 @@ router.post("/address/save-from-checkout", protectUser, async (req, res) => {
 });
 
 /* ============================================
-   RESET PASSWORD (After Firebase OTP Verified)
-============================================ */
+   RESET PASSWORD (AFTER OTP VERIFIED)
+============================================= */
 router.post("/reset-password", async (req, res) => {
   try {
     const { phone, newPassword } = req.body;
 
     if (!phone || !newPassword) {
-      return res.status(400).json({ message: "Phone & new password required" });
+      return res
+        .status(400)
+        .json({ message: "Phone & new password required" });
     }
 
     const user = await User.findOne({ phone });
     if (!user) {
-      return res.status(404).json({ message: "User not found for this phone" });
+      return res
+        .status(404)
+        .json({ message: "User not found for this phone" });
     }
 
-    user.password = newPassword;
+    // ✅ Ensure OTP was verified → OTP must be deleted already
+    const pendingOtp = await OTP.findOne({ phoneNumber: phone });
+    if (pendingOtp) {
+      return res
+        .status(400)
+        .json({ message: "Please verify OTP before resetting password" });
+    }
+
+    user.password = newPassword; // pre-save hook will hash
     await user.save();
 
     res.json({
       success: true,
-      message: "Password reset successfully"
+      message: "Password reset successfully",
     });
-
   } catch (err) {
     console.error("Reset Password Error:", err);
     res.status(500).json({ message: "Server error occurred" });
   }
 });
-
-
-/* ============================================
-   SEND INFO SMS (NOT OTP) USING FAST2SMS
-============================================= */
-router.post("/send-code-sms", async (req, res) => {
-  try {
-    const { phone } = req.body;
-
-    const code = "416779"; // FIXED TEST OTP
-
-    const message = `Your UniMart Verification code is ${code}. Please do not share it with anybody.`;
-
-    const options = {
-      method: "POST",
-      url: "https://www.fast2sms.com/dev/bulkV2",
-      headers: { authorization: process.env.FAST2SMS_API_KEY },
-      data: {
-        route: "q",
-        message,
-        numbers: phone
-      }
-    };
-
-    await axios.request(options);
-
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ message: "SMS sending error" });
-  }
-});
-
 
 module.exports = router;

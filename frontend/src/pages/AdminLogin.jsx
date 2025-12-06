@@ -3,8 +3,6 @@ import { Alert } from "@mui/material";
 import { AdminAuthContext } from "../contexts/AdminAuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/api";
-import { auth, setupRecaptcha } from "../firebase";
-import { signInWithPhoneNumber } from "firebase/auth";
 import "./AdminLogin.css";
 
 export default function AdminLogin() {
@@ -22,9 +20,7 @@ export default function AdminLogin() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [newPass, setNewPass] = useState("");
 
-  /* ================================
-        LOGIN USING MOBILE + PASSWORD
-  =================================*/
+  /* ============= LOGIN ============= */
   const submitLogin = async () => {
     if (!/^\d{10}$/.test(form.phone))
       return setMsg("❌ Enter valid 10-digit mobile number");
@@ -33,56 +29,44 @@ export default function AdminLogin() {
       await loginAdmin(form.phone, form.password);
       navigate("/admin/dashboard");
     } catch {
-      setMsg("❌ Incorrect mobile number or password");
+      setMsg("❌ Incorrect number or password");
     }
   };
 
-  /* ================================
-      SEND FIXED TEST OTP VIA Fast2SMS
-  =================================*/
+  /* ============= SEND OTP FOR FORGOT PASSWORD ============= */
   const sendOTP = async () => {
     if (!/^\d{10}$/.test(phone))
-      return setMsg("❌ Enter valid 10-digit phone number");
+      return setMsg("Enter valid admin phone");
 
     try {
-      await API.post("/admin/send-code-sms", { phone });
+      await API.post("/otp/send-otp", {
+        phoneNumber: phone,
+        purpose: "admin-forgot",
+      });
 
-      window.adminCode = "416779";
       setOtpSent(true);
-      setMsg("📩 Code sent to your phone");
+      setMsg("📩 OTP sent to admin phone");
     } catch {
-      setMsg("❌ Failed to send SMS");
+      setMsg("❌ Failed to send OTP");
     }
   };
 
-  /* ================================
-      VERIFY OTP THEN FIREBASE TEST
-  =================================*/
+  /* ============= VERIFY OTP ============= */
   const verifyOTP = async () => {
-    if (otp !== "416779")
-      return setMsg("❌ Incorrect code");
-
     try {
-      setupRecaptcha();
-
-      const confirmation = await signInWithPhoneNumber(
-        auth,
-        "+919579695273", // your Firebase test phone
-        window.recaptchaVerifier
-      );
-
-      await confirmation.confirm("416779");
+      await API.post("/otp/verify-otp", {
+        phoneNumber: phone,
+        otp,
+      });
 
       setOtpVerified(true);
-      setMsg("✅ OTP Verified! Set new password.");
-    } catch {
-      setMsg("❌ Firebase verification failed");
+      setMsg("✅ OTP verified! Set new password.");
+    } catch (err) {
+      setMsg(err.response?.data?.message || "❌ Invalid OTP");
     }
   };
 
-  /* ================================
-      RESET PASSWORD IN BACKEND
-  =================================*/
+  /* ============= UPDATE PASSWORD ============= */
   const resetPassword = async () => {
     if (!newPass) return setMsg("Enter new password");
 
@@ -92,7 +76,7 @@ export default function AdminLogin() {
         newPassword: newPass,
       });
 
-      setMsg("✅ Password updated successfully!");
+      setMsg("✅ Password updated!");
 
       setTimeout(() => {
         setForgot(false);
@@ -113,15 +97,13 @@ export default function AdminLogin() {
           {forgot ? "Reset Admin Password" : "Admin Login"}
         </h3>
 
-        <div id="recaptcha-container"></div>
-
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
         {!forgot ? (
           <>
             <input
               className="form-control input-box mb-3"
-              placeholder="Mobile Number (10 digits)"
+              placeholder="Admin Phone"
               maxLength={10}
               value={form.phone}
               onChange={(e) => {
@@ -148,7 +130,7 @@ export default function AdminLogin() {
             </p>
 
             <p className="text-center">
-              Need an admin account?{" "}
+              New admin?{" "}
               <Link className="register-link" to="/admin/register">
                 Register
               </Link>
@@ -161,7 +143,7 @@ export default function AdminLogin() {
               <>
                 <input
                   className="form-control input-box mb-3"
-                  placeholder="Registered Phone Number"
+                  placeholder="Registered Admin Phone"
                   maxLength={10}
                   value={phone}
                   onChange={(e) => {
@@ -169,7 +151,7 @@ export default function AdminLogin() {
                   }}
                 />
                 <button className="login-btn" onClick={sendOTP}>
-                  Send Code
+                  Send OTP
                 </button>
               </>
             )}
@@ -179,13 +161,13 @@ export default function AdminLogin() {
               <>
                 <input
                   className="form-control input-box mb-3"
-                  placeholder="Enter Code"
+                  placeholder="Enter OTP"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                 />
 
                 <button className="login-btn" onClick={verifyOTP}>
-                  Verify Code
+                  Verify OTP
                 </button>
               </>
             )}

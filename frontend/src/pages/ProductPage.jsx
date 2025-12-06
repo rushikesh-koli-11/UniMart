@@ -13,6 +13,8 @@ import Swal from "sweetalert2";
 import { UserAuthContext } from "../contexts/UserAuthContext";
 import { CartContext } from "../contexts/CartContext";
 
+import ProductCard from "../components/ProductCard"; // ⭐ REQUIRED
+
 import "./ProductPage.css";
 
 /* ===========================================
@@ -27,12 +29,10 @@ const applyOffersToProduct = (product, offers) => {
   offers.forEach((offer) => {
     if (!offer.active) return;
 
-    // ✅ Product-level offer
     if (offer.scopeType === "product" && offer.product === product._id) {
       appliedOffer = offer;
     }
 
-    // ✅ Subcategory-level offer
     if (
       offer.scopeType === "subcategory" &&
       product.subcategory &&
@@ -41,7 +41,6 @@ const applyOffersToProduct = (product, offers) => {
       appliedOffer = offer;
     }
 
-    // ✅ Category-level offer
     if (
       offer.scopeType === "category" &&
       product.category &&
@@ -51,11 +50,8 @@ const applyOffersToProduct = (product, offers) => {
     }
   });
 
-  if (!appliedOffer) {
-    return { finalPrice, appliedOffer: null };
-  }
+  if (!appliedOffer) return { finalPrice, appliedOffer: null };
 
-  // Apply discount
   if (appliedOffer.discountType === "percentage") {
     finalPrice = Math.round(
       finalPrice - (finalPrice * appliedOffer.discountValue) / 100
@@ -80,13 +76,15 @@ export default function ProductPage() {
   const { addToCart } = useContext(CartContext);
   const { user } = useContext(UserAuthContext);
 
+  // ⭐ NEW: Similar products state
+  const [similarProducts, setSimilarProducts] = useState([]);
+
   useEffect(() => {
     const loadProductWithOffers = async () => {
       try {
-        // ✅ Load product and active offers together
         const [prodRes, offersRes] = await Promise.all([
           API.get(`/products/${id}`),
-          API.get("/offers/active").catch(() => ({ data: [] })), // fallback if no offers route
+          API.get("/offers/active").catch(() => ({ data: [] })),
         ]);
 
         const product = prodRes.data;
@@ -99,12 +97,27 @@ export default function ProductPage() {
 
         setP({
           ...product,
-          originalPrice: product.price,   // keep original MRP
-          price: finalPrice,              // overwrite price with discounted
+          originalPrice: product.price,
+          price: finalPrice,
           appliedOffer,
         });
 
         setMainImg(product?.images?.[0]?.url);
+
+        /* ⭐ FETCH SIMILAR PRODUCTS (same subcategory) */
+        if (product.subcategory?._id) {
+  const simRes = await API.get(
+    `/products?subcategory=${product.subcategory._id}`
+  );
+
+
+          // remove current product from list
+          const filtered = simRes.data.filter(
+            (item) => item._id !== product._id
+          );
+
+          setSimilarProducts(filtered);
+        }
       } catch (err) {
         console.error("Error loading product/offers:", err);
       }
@@ -115,7 +128,7 @@ export default function ProductPage() {
 
   if (!p) return <div className="loading">Loading...</div>;
 
-  // SweetAlert Toast
+  /* SWEET ALERT */
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -124,12 +137,9 @@ export default function ProductPage() {
     timerProgressBar: true,
     background: "#fff",
     color: "#031576",
-    customClass: {
-      popup: "toast-below-navbar",
-    },
+    customClass: { popup: "toast-below-navbar" },
   });
 
-  // Validate Stock
   const validateStockBeforeAdd = () => {
     if (p.stock <= 0) {
       Toast.fire({ icon: "error", title: "Out of Stock!" });
@@ -138,29 +148,20 @@ export default function ProductPage() {
     return true;
   };
 
-  // Add to Cart (uses discounted price stored in p.price)
   const handleAddToCart = () => {
     addToCart(p);
     Toast.fire({ icon: "success", title: "Added to cart" });
   };
 
-  // Buy Now
   const handleBuyNow = () => {
     addToCart(p);
     navigate("/cart");
   };
 
-  // Submit Review
   const submitReview = async () => {
-    if (!user) {
-      Toast.fire({ icon: "error", title: "Login required" });
-      return;
-    }
-
-    if (!comment.trim()) {
-      Toast.fire({ icon: "error", title: "Comment is required" });
-      return;
-    }
+    if (!user) return Toast.fire({ icon: "error", title: "Login required" });
+    if (!comment.trim())
+      return Toast.fire({ icon: "error", title: "Comment is required" });
 
     try {
       const res = await API.post(`/products/${id}/reviews`, {
@@ -168,7 +169,6 @@ export default function ProductPage() {
         comment,
       });
 
-      // Update frontend
       setP((prev) => ({
         ...prev,
         reviews: res.data.reviews,
@@ -206,8 +206,8 @@ export default function ProductPage() {
 
   return (
     <div className="container product-page">
+      {/* MAIN PRODUCT SECTION */}
       <div className="row g-4 product-wrapper">
-        {/* LEFT: IMAGE GALLERY */}
         <div className="col-12 col-md-6 col-lg-5">
           <div className="product-img-box">
             <img src={mainImg} alt={p.title} className="product-img" />
@@ -228,7 +228,6 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* RIGHT: PRODUCT DETAILS */}
         <div className="col-12 col-md-6 col-lg-7">
           <Typography variant="h4" className="product-title">
             {p.title}
@@ -245,7 +244,7 @@ export default function ProductPage() {
 
           <Divider className="divider" />
 
-          {/* ⭐ PRICE WITH OFFER */}
+          {/* PRICE SECTION */}
           <Typography variant="h5" className="product-price">
             {p.appliedOffer ? (
               <>
@@ -300,20 +299,32 @@ export default function ProductPage() {
         </div>
       </div>
 
+      {/* ⭐ SIMILAR PRODUCTS SECTION */}
+      {similarProducts.length > 0 && (
+        <div className="similar-products mt-5">
+          <h3 className="review-heading">Similar Products</h3>
+          <Divider className="mb-3" />
+
+          <div className="product-row">
+            {similarProducts.map((prod) => (
+              <ProductCard key={prod._id} product={prod} />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ⭐ REVIEWS SECTION */}
       <div className="reviews-section text-center mt-5">
         <h3 className="review-heading">Customer Reviews</h3>
         <Divider className="mb-3" />
 
-        <div className="avg-rating-box ">
+        <div className="avg-rating-box">
           <h4>⭐ {p.avgRating?.toFixed(1) || 0} / 5</h4>
           <span>({p.reviews?.length || 0} Reviews)</span>
         </div>
 
-        {/* If no reviews */}
         {p.reviews?.length === 0 && <p>No reviews yet</p>}
 
-        {/* ⭐ HORIZONTAL SCROLL REVIEWS */}
         <div className="review-slider">
           {p.reviews?.map((rev, i) => (
             <div key={i} className="review-card">
@@ -331,7 +342,6 @@ export default function ProductPage() {
               </div>
 
               <Rating value={rev.rating} readOnly size="small" />
-
               <p className="review-comment text-start">{rev.comment}</p>
               <small className="review-date">
                 {new Date(rev.createdAt).toLocaleDateString()}
@@ -340,8 +350,7 @@ export default function ProductPage() {
           ))}
         </div>
 
-        {/* ADD REVIEW */}
-        {user && (
+        {user ? (
           <div className="add-review mt-4">
             <h4 className="add-review-title">Write a Review</h4>
 
@@ -367,9 +376,7 @@ export default function ProductPage() {
               Submit Review
             </Button>
           </div>
-        )}
-
-        {!user && (
+        ) : (
           <p className="text-muted mt-4">
             <i>Please login to write a review.</i>
           </p>

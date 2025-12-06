@@ -65,8 +65,8 @@ export default function Home() {
 
   return (
     <div>
-    
-    {/* 🔹 SLIDER */}
+
+      {/* 🔹 SLIDER */}
       <Slider sliderImages={sliderImages} />
 
       {/* 🔹 GROCERY SUBCATEGORY SECTION */}
@@ -74,16 +74,10 @@ export default function Home() {
       <hr />
 
       {/* 🔹 PRODUCTS SECTION */}
+      <div className="translate-safe">
       {Object.entries(grouped()).map(([categoryName, subgroups]) => (
         <div key={categoryName} style={{ marginBottom: 40 }}>
 
-          <h2
-            variant="h5"
-            sx={{ mb: 2, fontWeight: 700 }}
-            className="glocery-title"
-          >
-           
-          </h2>
 
           {Object.entries(subgroups).map(([subName, items]) => (
             <div key={subName} style={{ marginBottom: 25 }}>
@@ -92,19 +86,16 @@ export default function Home() {
 
               <div className="product-row">
                 {items.map((product) => (
-                  <Link
-                    key={product._id}
-                    to={`/product/${product._id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <ProductCard product={product} />
-                  </Link>
+                  <ProductCard key={product._id} product={product} />
                 ))}
               </div>
+
             </div>
           ))}
+          
         </div>
       ))}
+      </div>
 
       {/* 🔹 MOSTLY USED LINKS */}
       <MostlyUsedLinks />
