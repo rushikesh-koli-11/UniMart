@@ -97,7 +97,7 @@ const Contact = () => {
 
           <div className="contact-detail">
             <i className="bi bi-geo-alt-fill"></i>
-            <span>UniMart HQ, Pune, Maharashtra, India</span>
+            <span>UniMart HQ, Solapur, Maharashtra, India</span>
           </div>
 
           <div className="contact-detail">

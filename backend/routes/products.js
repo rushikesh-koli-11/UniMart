@@ -1,9 +1,10 @@
-const router = require('express').Router();
-const productController = require('../controllers/productController');
-const { protectAdmin, protectUser } = require('../middleware/auth');
+// backend/routes/products.js
+const router = require("express").Router();
+const productController = require("../controllers/productController");
+const { protectAdmin, protectUser } = require("../middleware/auth");
 const Product = require("../models/Product");
 
-// ⭐ SEARCH MUST BE FIRST (before /:id)
+// ⭐ SEARCH (by query/category/subcategory)
 router.get("/search", async (req, res) => {
   try {
     const { q, category, subcategory } = req.query;
@@ -31,10 +32,9 @@ router.get("/search", async (req, res) => {
   }
 });
 
-
 // ⭐ PUBLIC ROUTES
-router.get('/', productController.listProducts);
-router.get('/:id', productController.getProduct);
+router.get("/", productController.listProducts);      // supports sort, limit, filters
+router.get("/:id", productController.getProduct);
 
 // ⭐ REVIEWS
 router.post("/:id/reviews", protectUser, productController.addReview);
@@ -49,11 +49,12 @@ router.delete(
 );
 
 // ⭐ ADMIN ROUTES
-router.post('/', protectAdmin, productController.createProduct);
-router.put('/:id', protectAdmin, productController.updateProduct);
-router.delete('/:id', protectAdmin, productController.deleteProduct);
+router.post("/", protectAdmin, productController.createProduct);
+router.put("/:id", protectAdmin, productController.updateProduct);
+router.delete("/:id", protectAdmin, productController.deleteProduct);
 
-router.get("/products/low-stock", async (req, res) => {
+// LOW STOCK (path: /products/low-stock)
+router.get("/low-stock/list", async (req, res) => {
   const lowStock = await Product.find({ stock: { $lte: 5 } });
   res.json(lowStock);
 });

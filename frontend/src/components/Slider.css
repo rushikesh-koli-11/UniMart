@@ -1,25 +1,41 @@
-/* IMAGE WRAPPER */
-.slider-img-wrapper {
-  position: relative;
-  width: 100%;
-  height: auto;          /* Let image decide height */
+/* FULL WIDTH SLIDER */
+#esevaSlider {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
-/* MAIN RESPONSIVE IMAGE */
+/* WRAPPER AUTO HEIGHT */
+.slider-img-wrapper {
+  width: 100%;
+  height: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* IMAGE — FULL WIDTH, NO CROP, AUTO HEIGHT */
 .slider-img-responsive {
   width: 100%;
-  display: block;        /* IMPORTANT */
-  height: 100%;
-  max-height: 420px;
-  object-fit: cover;     /* Instead of contain */
-  object-position: center;
+  height: auto !important;
+  object-fit: contain !important;  /* show full image */
+  object-position: center !important;
+  display: block;
 }
 
+/* REMOVE ALL MAX-HEIGHT BREAKPOINTS */
+@media (min-width: 0px) {
+  .slider-img-wrapper {
+    max-height: none !important;
+  }
+}
 
-/* TIMER BAR (Inside Image) */
+/* TIMER BAR */
 .slider-timer-bar {
   position: absolute;
-  bottom: 10px;           /* inside image bottom */
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 45px;
@@ -46,34 +62,7 @@
   animation: tinyTimer 2s linear forwards;
 }
 
-/* TIMER ANIMATION */
 @keyframes tinyTimer {
   from { width: 0%; }
   to { width: 100%; }
-}
-
-/* TABLET */
-@media (max-width: 992px) {
-  .slider-img-responsive {
-    max-height: 320px;
-  }
-}
-
-/* MOBILE */
-@media (max-width: 576px) {
-  .slider-img-responsive {
-    max-height: 220px;
-  }
-}
-
-/* SMALL MOBILE */
-@media (max-width: 400px) {
-  .slider-img-responsive {
-    max-height: 180px;
-  }
-}
-
-#esevaSlider {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
 }

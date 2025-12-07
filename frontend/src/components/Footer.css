@@ -137,3 +137,28 @@
   font-size: 18px;
   color: #ff9800;
 }
+@media (max-width: 576px) {
+  .footer-wrapper {
+    text-align: left !important;   /* ← FIXED */
+    padding: 25px 15px !important;
+  }
+
+  .footer-grid {
+    padding: 0 !important;
+  }
+
+  .footer-social {
+    justify-content: flex-start !important;  /* icons left */
+  }
+
+  .footer-contact-item {
+    justify-content: flex-start !important;  /* contact items left */
+  }
+}
+@media (max-width: 576px) {
+  .footer-grid > .MuiGrid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important; /* ← SHIFT LEFT */
+  }
+}

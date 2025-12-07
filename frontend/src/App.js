@@ -1,20 +1,18 @@
 // frontend/src/App.jsx
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
-
 import UserLogin from "./pages/UserLogin";
 import Register from "./pages/Register";
 import Feedback from "./pages/Feedback";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminRegister from "./pages/AdminRegister";
-
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import MyOrders from "./pages/MyOrders";
@@ -26,8 +24,6 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 import AdminCategories from "./pages/admin/AdminCategories";
 import AdminOffers from "./pages/admin/AdminOffers";
-
-
 import ManageSlider from "./pages/admin/ManageSlider";
 import AdminMostlyUsed from "./pages/admin/AdminMostlyUsed";
 
@@ -43,17 +39,22 @@ import SearchResults from "./pages/SearchResults";
 
 import { Container } from "@mui/material";
 import ScrollToTop from "./components/ScrollToTop";
+import SliderWrapper from "./components/SliderWrapper";
 
 export default function App() {
+  const location = useLocation();
+
   return (
     <>
       <ScrollToTop />
       <Navbar />
 
-      <Container >
-        <Routes >
+      {/* ⭐ Show slider only on homepage */}
+      {location.pathname === "/" && <SliderWrapper />}
 
-          {/* ================= PUBLIC ROUTES ================= */}
+      <Container >
+        <Routes>
+          {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
@@ -64,11 +65,11 @@ export default function App() {
           <Route path="/subcategory/:subcategoryId" element={<SubcategoryProducts />} />
           <Route path="/search" element={<SearchResults />} />
 
-          {/* ================= USER AUTH ================= */}
+          {/* USER AUTH */}
           <Route path="/user/login" element={<UserLogin />} />
           <Route path="/user/register" element={<Register />} />
 
-          {/* ================= USER PROTECTED ROUTES ================= */}
+          {/* USER PROTECTED ROUTES */}
           <Route
             path="/checkout"
             element={
@@ -105,13 +106,11 @@ export default function App() {
             }
           />
 
-          {/* ================= ADMIN AUTH ================= */}
+          {/* ADMIN AUTH */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
 
-
-          {/* ================= ADMIN PROTECTED ROUTES ================= */}
-
+          {/* ADMIN PROTECTED ROUTES */}
           <Route
             path="/admin/dashboard"
             element={
@@ -192,8 +191,6 @@ export default function App() {
               </ProtectedAdminRoute>
             }
           />
-
-
         </Routes>
       </Container>
 

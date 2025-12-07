@@ -32,7 +32,7 @@ const Slider = ({ sliderImages }) => {
       id="esevaSlider"
       className="carousel slide"
       data-bs-ride="carousel"
-      data-bs-interval="2500"
+      data-bs-interval="3000"
       data-bs-pause="false"
     >
       <div className="carousel-inner">

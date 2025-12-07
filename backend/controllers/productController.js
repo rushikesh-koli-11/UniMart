@@ -1,16 +1,15 @@
 // backend/controllers/productController.js
-const Product = require('../models/Product');
-const Category = require('../models/Category');
+const Product = require("../models/Product");
+const Category = require("../models/Category");
 
+// CREATE PRODUCT
 exports.createProduct = async (req, res) => {
   try {
-    const { title, description, price, stock, category, subcategory, images } = req.body;
+    const { title, description, price, stock, category, subcategory, images, offer } = req.body;
 
-    // Ensure category exists
     const cat = await Category.findById(category);
     if (!cat) return res.status(400).json({ message: "Invalid category" });
 
-    // Ensure subcategory exists inside category
     const sub = cat.subcategories.id(subcategory._id);
     if (!sub) return res.status(400).json({ message: "Invalid subcategory" });
 
@@ -21,18 +20,21 @@ exports.createProduct = async (req, res) => {
       stock,
       category,
       subcategory: { _id: sub._id.toString(), name: sub.name },
-      images
+      images,
+      offer: offer || null,
     });
 
     res.json(product);
   } catch (err) {
+    console.error("Create product error:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
   try {
-    const { title, description, price, stock, category, subcategory, images } = req.body;
+    const { title, description, price, stock, category, subcategory, images, offer } = req.body;
 
     const cat = await Category.findById(category);
     if (!cat) return res.status(400).json({ message: "Invalid category" });
@@ -49,49 +51,61 @@ exports.updateProduct = async (req, res) => {
         stock,
         category,
         subcategory: { _id: sub._id.toString(), name: sub.name },
-        images
+        images,
+        offer: offer || null,
       },
       { new: true }
     );
 
     res.json(updated);
   } catch (err) {
+    console.error("Update product error:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Deleted' });
+    res.json({ message: "Deleted" });
   } catch (err) {
+    console.error("Delete product error:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
+// GET SINGLE PRODUCT
 exports.getProduct = async (req, res) => {
-  const p = await Product.findById(req.params.id).populate('category');
-  res.json(p);
+  try {
+    const p = await Product.findById(req.params.id)
+      .populate("category")
+      .populate("offer");
+    res.json(p);
+  } catch (err) {
+    console.error("Get product error:", err);
+    res.status(500).json({ message: err.message });
+  }
 };
 
+// LIST PRODUCTS (supports search + filters + sorting)
 exports.listProducts = async (req, res) => {
   try {
-    const { q, category, subcategory } = req.query;
+    const { q, category, subcategory, sort, limit } = req.query;
 
     const filter = {};
 
     // SEARCH
     if (q) {
-      // find categories matching search
       const matchedCategories = await Category.find({
-        name: { $regex: q, $options: "i" }
+        name: { $regex: q, $options: "i" },
       }).distinct("_id");
 
       filter.$or = [
         { title: { $regex: q, $options: "i" } },
         { description: { $regex: q, $options: "i" } },
         { "subcategory.name": { $regex: q, $options: "i" } },
-        { category: { $in: matchedCategories } }
+        { category: { $in: matchedCategories } },
       ];
     }
 
@@ -105,17 +119,37 @@ exports.listProducts = async (req, res) => {
       filter["subcategory._id"] = subcategory;
     }
 
-    const products = await Product.find(filter)
-      .populate("category")
-      .limit(200);
+    // OFFERS filter (for /products?sort=offers on homepage)
+    if (sort === "offers") {
+      filter.offer = { $ne: null };
+    }
+
+    let query = Product.find(filter).populate("category").populate("offer");
+
+    // ⭐ SORTING LOGIC
+    if (sort === "top-rated") {
+      query = query.sort({ avgRating: -1, numReviews: -1, createdAt: -1 });
+    } else if (sort === "trending") {
+      // "Trending" = many reviews + good rating + recent
+      query = query.sort({ numReviews: -1, avgRating: -1, createdAt: -1 });
+    } else if (sort === "new") {
+      query = query.sort({ createdAt: -1 });
+    } else {
+      // Default: newest first
+      query = query.sort({ createdAt: -1 });
+    }
+
+    const max = Number(limit) || 200;
+    const products = await query.limit(max);
 
     res.json(products);
-
   } catch (err) {
     console.error("Products load error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ADD REVIEW
 exports.addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
@@ -124,8 +158,9 @@ exports.addReview = async (req, res) => {
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    // Optional: prevent multiple reviews by same user
-    const already = product.reviews.find(r => r.user.toString() === req.user._id);
+    const already = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
     if (already) {
       return res.status(400).json({ message: "You already reviewed this product" });
     }
@@ -134,51 +169,62 @@ exports.addReview = async (req, res) => {
       user: req.user._id,
       name: req.user.name,
       rating,
-      comment
+      comment,
     };
 
     product.reviews.push(review);
 
-    // ⭐ Recalculate average rating
+    // ⭐ Update numReviews + avgRating
+    product.numReviews = product.reviews.length;
     product.avgRating =
-      product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length;
+      product.reviews.reduce((acc, r) => acc + r.rating, 0) /
+      product.reviews.length;
 
     await product.save();
 
-    res.json({ message: "Review added", reviews: product.reviews, avgRating: product.avgRating });
+    res.json({
+      message: "Review added",
+      reviews: product.reviews,
+      avgRating: product.avgRating,
+      numReviews: product.numReviews,
+    });
   } catch (err) {
+    console.error("Add review error:", err);
     res.status(500).json({ message: err.message });
   }
 };
+
+// DELETE REVIEW
 exports.deleteReview = async (req, res) => {
   try {
     const { id, reviewId } = req.params;
 
     const product = await Product.findById(id);
-    if (!product)
-      return res.status(404).json({ message: "Product not found" });
+    if (!product) return res.status(404).json({ message: "Product not found" });
 
     const review = product.reviews.id(reviewId);
-    if (!review)
-      return res.status(404).json({ message: "Review not found" });
+    if (!review) return res.status(404).json({ message: "Review not found" });
 
-    // ⭐ USER: allow only if review owner matches
-    // ⭐ ADMIN: always allowed
-    if (!req.user.isAdmin && review.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "You are not allowed to delete this review" });
+    if (
+      !req.user.isAdmin &&
+      review.user.toString() !== req.user._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to delete this review" });
     }
 
-    // ⭐ REMOVE REVIEW (safe for Mongoose 7+)
     product.reviews = product.reviews.filter(
       (r) => r._id.toString() !== reviewId
     );
 
-    // Recalculate avg rating
     if (product.reviews.length > 0) {
+      product.numReviews = product.reviews.length;
       product.avgRating =
         product.reviews.reduce((acc, r) => acc + r.rating, 0) /
         product.reviews.length;
     } else {
+      product.numReviews = 0;
       product.avgRating = 0;
     }
 
@@ -188,10 +234,10 @@ exports.deleteReview = async (req, res) => {
       message: "Review deleted",
       reviews: product.reviews,
       avgRating: product.avgRating,
+      numReviews: product.numReviews,
     });
-
   } catch (err) {
-    console.log("DELETE REVIEW ERROR:", err);
+    console.error("DELETE REVIEW ERROR:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
