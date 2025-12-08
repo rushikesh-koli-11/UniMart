@@ -5,7 +5,6 @@ import autoTable from "jspdf-autotable";
 import {
   Typography,
   Button,
-  Stack,
   Divider,
   Chip,
   Stepper,
@@ -21,10 +20,16 @@ export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [openOrder, setOpenOrder] = useState(null);
 
+  // ⭐ countdown state for all orders
+  const [countdowns, setCountdowns] = useState({});
+
   const loadOrders = async () => {
     try {
       const { data } = await API.get("/orders/my");
-      setOrders(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      const sorted = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setOrders(sorted);
     } catch (err) {
       console.error("Failed to load orders", err);
     }
@@ -35,6 +40,41 @@ export default function MyOrders() {
   }, []);
 
   /* =====================================================
+       COUNTDOWN HELPER
+  ===================================================== */
+  const formatTime = (ms) => {
+    if (ms <= 0) return "Arriving soon";
+
+    const totalSeconds = Math.floor(ms / 1000);
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    return `${hrs}h ${mins}m ${secs}s`;
+  };
+
+  // ⭐ update countdown every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const updated = {};
+
+      orders.forEach((order) => {
+        if (!order.deliveredAt) {
+          const created = new Date(order.createdAt).getTime();
+          const deliveryETA = created + 180 * 60 * 1000; // 180 min max ETA
+          const remaining = deliveryETA - Date.now();
+
+          updated[order._id] = formatTime(remaining);
+        }
+      });
+
+      setCountdowns(updated);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [orders]);
+
+  /* =====================================================
        STATUS TRACKING
   ===================================================== */
   const steps = ["Ordered", "Packed", "Shipped", "Delivered"];
@@ -42,10 +82,10 @@ export default function MyOrders() {
     status === "packed"
       ? 1
       : status === "shipped"
-      ? 2
-      : status === "delivered"
-      ? 3
-      : 0;
+        ? 2
+        : status === "delivered"
+          ? 3
+          : 0;
 
   /* =====================================================
        DELIVERY TIME CALCULATOR
@@ -149,6 +189,19 @@ export default function MyOrders() {
                 <strong>Placed on:</strong> {new Date(order.createdAt).toLocaleString()}
               </div>
 
+              {/* ⭐ SHOW ETA ONLY WHEN NOT DELIVERED */}
+              {/* ⭐ SHOW ETA ONLY WHEN NOT DELIVERED & NOT CANCELLED */}
+              {!order.deliveredAt && order.status !== "cancelled" && (
+                <div
+                  className="delivery-eta mb-2"
+                  style={{ fontSize: "15px", fontWeight: "600", color: "#0a7c14" }}
+                >
+                  🚚 Expected Delivery In:{" "}
+                  <strong>{countdowns[order._id] || "Calculating..."}</strong>
+                </div>
+              )}
+
+
               {order.deliveredAt && (
                 <>
                   <div className="text-success mb-1">
@@ -186,7 +239,7 @@ export default function MyOrders() {
 
               <Divider className="my-3" />
 
-              {/* DROPDOWN BUTTON */}
+              {/* ITEMS TOGGLE */}
               <Button
                 variant="outlined"
                 fullWidth
@@ -238,7 +291,6 @@ export default function MyOrders() {
 
               {/* ACTION BUTTONS */}
               <div className="d-flex gap-2 mt-3 flex-wrap">
-
                 <Button
                   variant="contained"
                   className="invoice-btn"
@@ -256,7 +308,6 @@ export default function MyOrders() {
                     Cancel Order
                   </Button>
                 )}
-
               </div>
 
             </div>

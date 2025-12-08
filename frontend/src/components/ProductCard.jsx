@@ -129,6 +129,7 @@ export default function ProductCard({ product }) {
         </div>
       </div>
 
+      {/* ⭐ NEW BUTTONS (Buy + Add) */}
       <div className="small-actions">
         <button
           onClick={(e) => {
@@ -136,7 +137,7 @@ export default function ProductCard({ product }) {
             navigate(`/product/${product._id}`);
           }}
         >
-          View
+          Buy Now
         </button>
 
         <button
@@ -146,11 +147,12 @@ export default function ProductCard({ product }) {
             handleAddToCart(e);
           }}
         >
-          Add
+          Add to Cart
         </button>
       </div>
     </div>
-
   );
-
 }
+
+
+

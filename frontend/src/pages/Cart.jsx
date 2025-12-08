@@ -10,16 +10,16 @@ import { Link } from "react-router-dom";
 import API from "../api/api";
 import "./Cart.css";
 
+// ⭐ REQUIRED for similar products
+import ProductCard from "../components/ProductCard";
+
 /* =====================================================
    OFFER ENGINE HELPERS
-   - product / category / subcategory offers
-   - cart-level offers
 ===================================================== */
 
 const getId = (val) =>
   typeof val === "object" && val !== null ? val._id : val || null;
 
-// Apply product / category / subcategory offer to a single item
 const applyOffersToItem = (item, offers) => {
   let finalPrice = item.price;
   let appliedOffer = null;
@@ -31,7 +31,6 @@ const applyOffersToItem = (item, offers) => {
   offers.forEach((offer) => {
     if (!offer.active) return;
 
-    // Product-level offer
     if (
       offer.scopeType === "product" &&
       offer.product &&
@@ -40,7 +39,6 @@ const applyOffersToItem = (item, offers) => {
       appliedOffer = offer;
     }
 
-    // Subcategory-level offer
     if (
       offer.scopeType === "subcategory" &&
       offer.subcategoryId &&
@@ -50,7 +48,6 @@ const applyOffersToItem = (item, offers) => {
       appliedOffer = offer;
     }
 
-    // Category-level offer
     if (
       offer.scopeType === "category" &&
       offer.category &&
@@ -61,11 +58,8 @@ const applyOffersToItem = (item, offers) => {
     }
   });
 
-  if (!appliedOffer) {
-    return { finalPrice, appliedOffer: null };
-  }
+  if (!appliedOffer) return { finalPrice, appliedOffer: null };
 
-  // If minMrp specified and price is below it, skip discount
   if (appliedOffer.minMrp && item.price < appliedOffer.minMrp) {
     return { finalPrice, appliedOffer: null };
   }
@@ -81,7 +75,6 @@ const applyOffersToItem = (item, offers) => {
   return { finalPrice, appliedOffer };
 };
 
-// Apply best cart-level offer (scopeType = "cart")
 const applyCartOffer = (cartTotal, offers) => {
   const cartOffers = offers.filter(
     (o) => o.scopeType === "cart" && o.active
@@ -125,7 +118,40 @@ export default function Cart() {
 
   const [offers, setOffers] = useState([]);
 
-  // Load active offers once
+  // ⭐ SIMILAR PRODUCTS STATE
+  const [similarProducts, setSimilarProducts] = useState([]);
+
+  // ⭐ LOAD SIMILAR PRODUCTS (based on first cart item)
+  useEffect(() => {
+    const loadSimilarProducts = async () => {
+      if (cart.length === 0) return;
+
+      const firstItem = cart[0];
+
+      const subId =
+        typeof firstItem.subcategory === "object"
+          ? firstItem.subcategory._id
+          : firstItem.subcategory;
+
+      if (!subId) return;
+
+      try {
+        const res = await API.get(`/products?subcategory=${subId}`);
+
+        const filtered = res.data.filter(
+          (p) => !cart.some((c) => c._id === p._id)
+        );
+
+        setSimilarProducts(filtered);
+      } catch (err) {
+        console.error("Failed to load similar products", err);
+      }
+    };
+
+    loadSimilarProducts();
+  }, [cart]);
+
+  // Load offers
   useEffect(() => {
     const loadOffers = async () => {
       try {
@@ -163,7 +189,6 @@ export default function Cart() {
     window.location.reload();
   };
 
-  // Calculate totals with offers
   const totals = cart.reduce(
     (acc, item) => {
       const { finalPrice } = applyOffersToItem(item, offers);
@@ -192,14 +217,21 @@ export default function Cart() {
 
   return (
     <div className="container cart-page">
-
       {/* HERO SECTION */}
-      <div className="cart-hero mb-4">
-        <h1>
-          Your <span>Cart</span>
-        </h1>
-        <p>Review your items before checkout.</p>
-      </div>
+      {/* HERO SECTION */}
+<div className="cart-hero mb-4">
+  <h1>
+    Your <span>Cart</span>
+  </h1>
+
+  <p>Review your items before checkout.</p>
+
+  {/* Delivery Time */}
+  <p className="delivery-time mt-2" style={{ fontSize: "15px", fontWeight: "600", color: "#e67e22" }}>
+    🚚 Fast Delivery: Expected within <strong>120 – 180 minutes</strong>
+  </p>
+</div>
+
 
       {/* EMPTY CART */}
       {cart.length === 0 && (
@@ -220,8 +252,6 @@ export default function Cart() {
       {/* CART ITEMS */}
       {cart.length > 0 && (
         <div className="cart-card shadow-sm p-3 rounded">
-
-          {/* DESKTOP TABLE VIEW */}
           <div className="d-none d-md-block">
             <table className="table improved-table align-middle text-center">
               <thead>
@@ -439,8 +469,6 @@ export default function Cart() {
 
           {/* FOOTER */}
           <div className="cart-footer text-center mt-4">
-
-            {/* Breakdown */}
             <div className="mb-2">
               <div>Cart value (before offers): ₹{totals.base}</div>
               {itemLevelSavings > 0 && (
@@ -494,7 +522,21 @@ export default function Cart() {
               </div>
             </div>
           </div>
+        </div>
+      )}
 
+
+      {/* ⭐ SIMILAR PRODUCTS SECTION */}
+      {similarProducts.length > 0 && (
+        <div className="similar-products mt-5">
+          <h3 className="review-heading">You May Also Like</h3>
+          <hr className="mb-3" />
+
+          <div className="product-row">
+            {similarProducts.map((prod) => (
+              <ProductCard key={prod._id} product={prod} />
+            ))}
+          </div>
         </div>
       )}
     </div>

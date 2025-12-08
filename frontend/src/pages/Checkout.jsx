@@ -11,6 +11,7 @@ import { CartContext } from "../contexts/CartContext";
 import { UserAuthContext } from "../contexts/UserAuthContext";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import "./Checkout.css"; // ⭐ NEW CSS FILE
 
 export default function Checkout() {
   const { cart, clearCart } = useContext(CartContext);
@@ -20,12 +21,10 @@ export default function Checkout() {
   const addresses = user?.addresses || [];
   const defaultAddr = addresses.find((a) => a.isDefault);
 
-  // Saved address selection
   const [selectedAddress, setSelectedAddress] = useState(
     defaultAddr?._id || ""
   );
 
-  // Old fields
   const [form, setForm] = useState({
     name: user?.name || "",
     surname: "",
@@ -33,7 +32,6 @@ export default function Checkout() {
     address: defaultAddr?.address || "",
   });
 
-  // Sync address form when user selects a saved address
   useEffect(() => {
     if (!selectedAddress) return;
     const chosen = addresses.find((a) => a._id === selectedAddress);
@@ -55,6 +53,13 @@ export default function Checkout() {
       return;
     }
 
+    // ⭐ CITY VALIDATION — ONLY ALLOW SOLAPUR
+    const addressLower = form.address.toLowerCase();
+    if (!addressLower.includes("solapur")) {
+      setMsg("❌ We currently deliver only within Solapur city.");
+      return;
+    }
+
     try {
       // STEP 1 — SAVE TYPED ADDRESS IF NEW
       const exists = addresses.some(
@@ -67,7 +72,6 @@ export default function Checkout() {
           address: form.address,
         });
 
-        // update user context
         setUser(res.data.user);
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
@@ -92,72 +96,104 @@ export default function Checkout() {
   };
 
   return (
-    <div>
-      <Typography variant="h5">Checkout</Typography>
+    <div className="checkout-page">
 
-      <Typography sx={{ mt: 2 }}>Select Delivery Address</Typography>
+      {/* HERO */}
+      <div className="checkout-hero">
+        <h1>Checkout</h1>
+        <p>Almost there! Complete your delivery details to confirm your order.</p>
+      </div>
 
-      {addresses.length === 0 && (
-        <Alert severity="info" sx={{ my: 2 }}>
-          No saved addresses. Add one in your Dashboard.
-        </Alert>
-      )}
+      {/* ADDRESS SELECTION */}
+      <div className="checkout-container">
+        <Typography variant="h6" className="section-title">
+          Select Delivery Address
+        </Typography>
 
-      {addresses.map((a) => (
-        <Card key={a._id} sx={{ p: 2, my: 1 }}>
-          <label style={{ display: "flex", gap: "10px" }}>
-            <input
-              type="radio"
-              checked={selectedAddress === a._id}
-              onChange={() => setSelectedAddress(a._id)}
+        {addresses.length === 0 && (
+          <Alert severity="info" sx={{ my: 2 }}>
+            No saved addresses. Add one in your Dashboard.
+          </Alert>
+        )}
+
+        {addresses.map((a) => (
+          <Card key={a._id} className="address-card">
+            <label className="address-label">
+              <input
+                type="radio"
+                checked={selectedAddress === a._id}
+                onChange={() => setSelectedAddress(a._id)}
+              />
+              <div>
+                <Typography className="address-title">
+                  <b>{a.label}</b> {a.isDefault && "(Default)"}
+                </Typography>
+                <Typography className="address-text">{a.address}</Typography>
+              </div>
+            </label>
+          </Card>
+        ))}
+
+        {/* DELIVERY DETAILS FORM */}
+        <Typography variant="h6" className="section-title mt-4">
+          Enter Delivery Details
+        </Typography>
+
+        {msg && <Alert severity="error">{msg}</Alert>}
+
+        <Card className="details-card">
+          <Stack spacing={2}>
+            <TextField
+              label="First Name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              fullWidth
             />
-            <div>
-              <Typography>
-                <b>{a.label}</b> {a.isDefault && "(Default)"}
-              </Typography>
-              <Typography>{a.address}</Typography>
-            </div>
-          </label>
+
+            <TextField
+              label="Surname"
+              value={form.surname}
+              onChange={(e) => setForm({ ...form, surname: e.target.value })}
+              fullWidth
+            />
+
+            <TextField
+              label="Mobile Number"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              fullWidth
+            />
+
+            <TextField
+              label="Address"
+              multiline
+              rows={3}
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              fullWidth
+            />
+          </Stack>
         </Card>
-      ))}
 
-      <Typography sx={{ mt: 2, mb: 1 }}>Enter Delivery Details</Typography>
+        {/* SUMMARY BOX */}
+        <Card className="summary-card">
+          <Typography className="summary-title">Order Summary</Typography>
 
-      {msg && <Alert severity="error">{msg}</Alert>}
+          <div className="summary-line">
+            <span>Items Total:</span>
+            <span>₹{total}</span>
+          </div>
 
-      <Stack spacing={2} sx={{ maxWidth: 400 }}>
-        <TextField
-          label="First Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
+          <div className="summary-line total">
+            <span>Payable Amount:</span>
+            <span>₹{total}</span>
+          </div>
 
-        <TextField
-          label="Surname"
-          value={form.surname}
-          onChange={(e) => setForm({ ...form, surname: e.target.value })}
-        />
-
-        <TextField
-          label="Mobile Number"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-        />
-
-        <TextField
-          label="Address"
-          multiline
-          rows={3}
-          value={form.address}
-          onChange={(e) => setForm({ ...form, address: e.target.value })}
-        />
-
-        <Typography>Total Amount: ₹{total}</Typography>
-
-        <Button variant="contained" onClick={placeOrder}>
-          Place Order
-        </Button>
-      </Stack>
+          <Button className="place-order-btn" fullWidth onClick={placeOrder}>
+            Place Order
+          </Button>
+        </Card>
+      </div>
     </div>
   );
 }

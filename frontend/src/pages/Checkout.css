@@ -1,0 +1,119 @@
+/* THEME COLORS */
+:root {
+  --primary-blue: #031576;
+  --primary-orange: #fd6e04;
+  --success-green: #42b231;
+  --white: #ffffff;
+}
+
+/* MAIN WRAPPER */
+.checkout-page {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Inter", sans-serif;
+}
+
+/* HERO */
+.checkout-hero {
+  text-align: center;
+  padding: 45px 20px;
+  background: linear-gradient(135deg, #031576, #0839e6);
+  color: #fff;
+  border-radius: 16px;
+  margin-bottom: 35px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.checkout-hero h1 {
+  font-size: 38px;
+  font-weight: 800;
+}
+
+.checkout-hero p {
+  margin-top: 10px;
+  font-size: 17px;
+}
+
+/* CONTAINER */
+.checkout-container {
+  max-width: 750px;
+  margin: auto;
+}
+
+/* SECTION TITLE */
+.section-title {
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 8px;
+}
+
+/* ADDRESS CARD */
+.address-card {
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.address-label {
+  display: flex;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.address-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.address-text {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* DETAILS CARD */
+.details-card {
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* SUMMARY CARD */
+.summary-card {
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 25px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+  background: #fff;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 12px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 16px;
+}
+
+.summary-line.total {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* PLACE ORDER BUTTON */
+.place-order-btn {
+  margin-top: 15px;
+  background: linear-gradient(135deg, var(--primary-orange), #ff9f00) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 12px 0 !important;
+  border-radius: 12px !important;
+}
