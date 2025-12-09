@@ -3,29 +3,50 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>React App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <title>Unimart – Online Grocery Shopping</title>
 
-  <!-- REMOVE GOOGLE TRANSLATE BANNER -->
+  <!-- Favicon / App Icons -->
+  <link rel="icon" href="%PUBLIC_URL%/Unimart.png" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/Unimart.png" />
+
+  <!-- App Manifest (for PWA support) -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="Unimart – Online Grocery Shopping" />
+  <meta name="description"
+    content="Buy groceries online from Unimart. Fresh vegetables, fruits, daily essentials delivered fast to your doorstep." />
+  <meta name="theme-color" content="#4CAF50" />
+
+  <!-- OpenGraph (Social Sharing) -->
+  <meta property="og:title" content="Unimart – Online Grocery Shopping" />
+  <meta property="og:description"
+    content="Fresh groceries delivered fast. Shop fruits, vegetables, staples and more." />
+  <meta property="og:image" content="%PUBLIC_URL%/Unimart.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://unimart.com" />
+
+  <!-- REMOVE Google Translate Banner -->
   <style>
     .goog-te-banner-frame {
       display: none !important;
-    }
-
-    body {
-      top: 0px !important;
     }
 
     .skiptranslate {
       display: none !important;
     }
 
-    body > .skiptranslate {
+    body {
+      top: 0 !important;
+    }
+
+    body>.skiptranslate {
       display: none !important;
     }
   </style>
 
-  <!-- Fix Google Async CSS -->
+  <!-- Fix Google Translate async CSS load issue -->
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const links = document.querySelectorAll('link[rel="stylesheet"]');
@@ -46,6 +67,7 @@
 
 <body>
 
+  <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 
   <!-- Hidden Google Translate widget -->
@@ -60,6 +82,7 @@
     }
   </script>
 
+  <!-- Google Translate -->
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
