@@ -180,12 +180,26 @@ def home():
     return render_template("chatbox.html")
 
 # ====================================================
-# START SERVER
+# HEALTH CHECK (IMPORTANT FOR RENDER)
 # ====================================================
+@app.route("/health")
+def health():
+    return "OK", 200
+
+
 # ====================================================
-# START SERVER (PRODUCTION)
+# START SERVER (RENDER PRODUCTION)
 # ====================================================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    print(f"🚀 UniMart Assistant running on port {port}")
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🚀 UniMart Assistant starting on port {port}")
+
+    # ✅ START SERVER FIRST
+    from threading import Thread
+
+    def init_rag():
+        ensure_rag_ready()
+
+    Thread(target=init_rag).start()
+
     app.run(host="0.0.0.0", port=port, debug=False)
