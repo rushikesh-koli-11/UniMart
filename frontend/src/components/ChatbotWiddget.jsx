@@ -9,11 +9,11 @@ const BOT_BASE_URL = "https://unimart-bot.onrender.com";
 export default function ChatbotWidget() {
   const [open, setOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [botStatus, setBotStatus] = useState("offline"); // ✅ new
+  const [botStatus, setBotStatus] = useState("offline");
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      text: "I am UniMart Assistant. I can help you find groceries, offers, and order support.",
+      text: "I am UniMart Assistant. I help you shop groceries and assist with your orders.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -21,14 +21,14 @@ export default function ChatbotWidget() {
 
   const chatBodyRef = useRef(null);
 
-  /* ✅ Auto scroll */
+  /* ✅ Auto-scroll */
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
-  /* ✅ Tooltip */
+  /* ✅ Tooltip animation */
   useEffect(() => {
     if (open) return;
 
@@ -40,25 +40,37 @@ export default function ChatbotWidget() {
     return () => clearInterval(interval);
   }, [open]);
 
-  /* ✅ Ping bot when widget opens */
+  /* ✅ REAL bot readiness (NO time limit) */
   useEffect(() => {
     if (!open) return;
 
-    const checkBotStatus = async () => {
-      try {
-        setBotStatus("waking");
-        await axios.get(`${BOT_BASE_URL}/health`, { timeout: 5000 });
-        setBotStatus("online");
-      } catch {
-        setBotStatus("offline");
+    let cancelled = false;
+    setBotStatus("waking");
+
+    const waitUntilReady = async () => {
+      while (!cancelled) {
+        try {
+          const res = await axios.get(`${BOT_BASE_URL}/health`);
+          if (res.data?.status === "ok") {
+            setBotStatus("online");
+            return;
+          }
+        } catch {
+          await new Promise((r) => setTimeout(r, 3000));
+        }
       }
     };
 
-    checkBotStatus();
+    waitUntilReady();
+
+    return () => {
+      cancelled = true;
+    };
   }, [open]);
 
+  /* ✅ Send message */
   const sendMessage = async () => {
-    if (!input.trim() || loading || botStatus !== "online") return;
+    if (!input.trim() || loading || botStatus === "offline") return;
 
     const userText = input.trim();
     setInput("");
@@ -74,13 +86,12 @@ export default function ChatbotWidget() {
       ]);
     } catch (error) {
       console.error("Chatbot error:", error);
-      setBotStatus("offline");
 
       setMessages((prev) => [
         ...prev,
         {
           role: "bot",
-          text: "The assistant is temporarily unavailable. Please try again shortly.",
+          text: "The assistant is starting up. Please try again in a moment.",
         },
       ]);
     } finally {
@@ -91,7 +102,7 @@ export default function ChatbotWidget() {
   /* ✅ Status label */
   const statusLabel = {
     online: "🟢 Online",
-    waking: "🟡 Waking up",
+    waking: "🟡 Starting…",
     offline: "🔴 Offline",
   }[botStatus];
 
@@ -99,7 +110,8 @@ export default function ChatbotWidget() {
     <>
       {!open && showTooltip && (
         <div className="chatbot-tooltip">
-          Hi! I'm UniMart Assistant.<br />
+          Hi! I'm UniMart Assistant.
+          <br />
           How can I help?
         </div>
       )}
@@ -147,16 +159,16 @@ export default function ChatbotWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={
-                botStatus === "online"
-                  ? "Ask about groceries, offers, orders..."
-                  : "Assistant is not ready yet"
+                botStatus === "offline"
+                  ? "Assistant is offline"
+                  : "Ask about groceries, offers, orders..."
               }
-              disabled={loading || botStatus !== "online"}
+              disabled={loading || botStatus === "offline"}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
             <button
               onClick={sendMessage}
-              disabled={loading || botStatus !== "online"}
+              disabled={loading || botStatus === "offline"}
             >
               ➤
             </button>

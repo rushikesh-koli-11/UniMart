@@ -3,16 +3,16 @@ import traceback
 import gc
 from threading import Thread
 
-from dotenv import load_dotenv  # type: ignore
-from flask import Flask, request, jsonify  # type: ignore
-from flask_compress import Compress  # type: ignore
-from flask_cors import CORS  # type: ignore
-import google.generativeai as genai  # type: ignore
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_compress import Compress
+from flask_cors import CORS
+import google.generativeai as genai
 
 # ====================================================
 # GLOBALS
 # ====================================================
-rag = None  # Lazy-loaded RAG
+rag = None
 
 # ====================================================
 # LOAD ENV
@@ -21,7 +21,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    raise RuntimeError("❌ GEMINI_API_KEY missing")
+    raise RuntimeError("GEMINI_API_KEY missing")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -30,7 +30,6 @@ genai.configure(api_key=GEMINI_API_KEY)
 # ====================================================
 app = Flask(__name__)
 
-# ✅ STABLE CORS CONFIG
 CORS(
     app,
     resources={r"/*": {"origins": "*"}},
@@ -39,7 +38,6 @@ CORS(
     methods=["GET", "POST", "OPTIONS"],
 )
 
-# ✅ FORCE CORS HEADERS ON ALL RESPONSES
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
@@ -61,144 +59,101 @@ gemini_model = genai.GenerativeModel(model_name=MODEL_NAME)
 MASTER_PROMPT = """
 You are UniMart Assistant — the official AI assistant for UniMart Grocery E-Commerce Platform.
 
-Purpose:
-- Help customers with grocery selection, product recommendations, offers, orders, delivery, and support.
-
 Rules:
 1. Only answer UniMart grocery-related queries.
-2. Keep answers under 120 words.
+2. Max 120 words.
 3. English only.
 4. No greetings.
 5. Identity reply:
    "I am UniMart Assistant. I help you shop groceries and assist with your orders."
-6. Use only provided context.
 """
 
 # ====================================================
-# RAG INITIALIZATION (LAZY + SAFE)
+# RAG INITIALIZATION
 # ====================================================
 def ensure_rag_ready():
     global rag
-    print("🔁 RAG init starting…")
-
     try:
-        from rag_utils import RAGStore  # heavy import delayed
+        from rag_utils import RAGStore
         rag = RAGStore()
 
-        idx = os.path.exists("vector_index.faiss")
-        meta = os.path.exists("vector_meta.pkl")
-        print(f"🔎 Index exists={idx}, meta exists={meta}")
-
-        if not idx or not meta:
-            print("⚙️ Building RAG index from knowledge/")
-            rag.ingest_folder("knowledge")
-            print("✅ RAG index created")
-        else:
+        if os.path.exists("vector_index.faiss") and os.path.exists("vector_meta.pkl"):
             rag.load_index()
-            print("✅ RAG index loaded")
+        else:
+            rag.ingest_folder("knowledge")
 
         print("✅ RAG READY")
 
     except Exception as e:
-        print("❌ RAG init failed:", e)
-        traceback.print_exc()
+        print("⚠️ RAG failed, Gemini-only mode:", e)
         rag = None
 
 # ====================================================
 # HELPERS
 # ====================================================
-def build_prompt(user_message: str, context_text: str) -> str:
-    ctx = f"\n--- CONTEXT ---\n{context_text}\n--- END ---\n" if context_text else ""
-    return f"{MASTER_PROMPT}\n{ctx}\nUser: {user_message}\nReply clearly under 100 words."
+def build_prompt(user_message: str, context: str) -> str:
+    ctx = f"\n--- CONTEXT ---\n{context}\n--- END ---\n" if context else ""
+    return f"{MASTER_PROMPT}\n{ctx}\nUser: {user_message}\nReply clearly."
 
 def generate_with_gemini(prompt: str) -> str:
     try:
         res = gemini_model.generate_content(
             prompt,
-            generation_config={"max_output_tokens": 400, "temperature": 0.3},
-            request_options={"timeout": 15},
+            generation_config={
+                "max_output_tokens": 400,
+                "temperature": 0.3,
+            },
+            request_options={"timeout": 300},
         )
-        return getattr(res, "text", "").strip() or "Unable to generate a response."
+        return res.text.strip()
     except Exception as e:
-        print("⚠️ Gemini error:", e)
-        return "Assistant is temporarily unavailable."
+        print("⚠️ Gemini warming up:", repr(e))
+        return "The assistant is starting up. Please try again in a moment."
 
 # ====================================================
-# HEALTH CHECK
+# HEALTH
 # ====================================================
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok"}), 200
-
-# ====================================================
-# BOT STATUS (FOR UI)
-# ====================================================
-@app.route("/status")
-def status():
     return jsonify({
-        "server": "online",
+        "status": "ok",
         "rag_ready": rag is not None
     }), 200
 
 # ====================================================
-# RAG STATUS (DEBUG)
-# ====================================================
-@app.route("/rag-status")
-def rag_status():
-    return jsonify({
-        "rag_loaded": rag is not None,
-        "index_exists": os.path.exists("vector_index.faiss"),
-        "meta_exists": os.path.exists("vector_meta.pkl"),
-    })
-
-# ====================================================
-# CHAT API (✅ CORS FIXED)
+# CHAT
 # ====================================================
 @app.route("/chat", methods=["POST", "OPTIONS"])
 def chat():
-    global rag
-
-    # ✅ Proper OPTIONS handling (CRITICAL FIX)
     if request.method == "OPTIONS":
-        response = app.make_response("")
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-        return response
-
-    data = request.get_json(force=True)
-    user_message = data.get("message", "").strip()
-
-    if not user_message:
-        return jsonify({"response": "Please enter a message."}), 400
-
-    # ✅ Gemini-only fallback if RAG not ready
-    if rag is None:
-        prompt = build_prompt(user_message, "")
-        reply = generate_with_gemini(prompt)
-        return jsonify({"response": reply, "sources": []})
+        return "", 200
 
     try:
-        retrieved_text, items = rag.retrieve_text_for_prompt(user_message, top_k=4)
-        prompt = build_prompt(user_message, retrieved_text)
+        data = request.get_json(force=True)
+        message = data.get("message", "").strip()
+
+        if not message:
+            return jsonify({"response": "Please enter a message."}), 200
+
+        context = ""
+        if rag:
+            try:
+                context, _ = rag.retrieve_text_for_prompt(message, top_k=4)
+            except Exception:
+                context = ""
+
+        prompt = build_prompt(message, context)
         reply = generate_with_gemini(prompt)
 
-        sources = [
-            {
-                "source": it.get("source"),
-                "score": float(it.get("score", 0)),
-                "snippet": it.get("text_snippet", "")
-            }
-            for it in items
-        ]
-
         gc.collect()
-        return jsonify({"response": reply, "sources": sources})
+        return jsonify({"response": reply, "sources": []}), 200
 
     except Exception as e:
-        print("❌ /chat error:", e)
+        print("❌ Fatal /chat error:", e)
         traceback.print_exc()
-        return jsonify({"response": "Internal server error."}), 500
+        return jsonify({
+            "response": "The assistant is starting up. Please try again."
+        }), 200
 
 # ====================================================
 # ROOT
@@ -208,11 +163,9 @@ def home():
     return "UniMart Assistant is running."
 
 # ====================================================
-# START SERVER (RENDER SAFE)
+# START
 # ====================================================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    print(f"🚀 UniMart Assistant starting on port {port}")
-
     Thread(target=ensure_rag_ready, daemon=True).start()
     app.run(host="0.0.0.0", port=port, debug=False)
