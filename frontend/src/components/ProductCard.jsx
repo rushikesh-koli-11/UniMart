@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../contexts/CartContext";
 import API from "../api/api";
 import "./ProductCard.css";
@@ -19,7 +19,6 @@ function applyOffersToProduct(product, offers) {
 
     if (
       offer.scopeType === "subcategory" &&
-      product.subcategory &&
       product.subcategory === offer.subcategoryId
     ) {
       appliedOffer = offer;
@@ -27,7 +26,6 @@ function applyOffersToProduct(product, offers) {
 
     if (
       offer.scopeType === "category" &&
-      product.category &&
       product.category === offer.category
     ) {
       appliedOffer = offer;
@@ -62,11 +60,11 @@ export default function ProductCard({ product }) {
         const { data } = await API.get("/offers/active");
         if (!isMounted) return;
 
-        const { finalPrice, appliedOffer } = applyOffersToProduct(product, data);
-        setFinalPrice(finalPrice);
-        setAppliedOffer(appliedOffer);
+        const result = applyOffersToProduct(product, data);
+        setFinalPrice(result.finalPrice);
+        setAppliedOffer(result.appliedOffer);
       } catch (err) {
-        console.error("Failed to load offers for product card:", err);
+        console.error("Failed to load offers:", err);
       }
     };
 
@@ -77,20 +75,25 @@ export default function ProductCard({ product }) {
     };
   }, [product._id]);
 
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    const productForCart = appliedOffer
+  const getProductForCart = () =>
+    appliedOffer
       ? {
-        ...product,
-        originalPrice: product.price,
-        price: finalPrice,
-        appliedOffer,
-      }
+          ...product,
+          originalPrice: product.price,
+          price: finalPrice,
+          appliedOffer,
+        }
       : product;
 
-    addToCart(productForCart);
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    addToCart(getProductForCart());
+  };
+
+  const handleBuyNow = (e) => {
+    e.stopPropagation();
+    addToCart(getProductForCart());
+    navigate("/cart");
   };
 
   const effectiveRating =
@@ -112,7 +115,10 @@ export default function ProductCard({ product }) {
         </div>
       )}
 
-      <img src={product.images?.[0]?.url || "/placeholder.png"} alt={product.title} />
+      <img
+        src={product.images?.[0]?.url || "/placeholder.png"}
+        alt={product.title}
+      />
 
       <div className="small-card-content">
         <div className="small-title">{product.title}</div>
@@ -129,30 +135,13 @@ export default function ProductCard({ product }) {
         </div>
       </div>
 
-      {/* ⭐ NEW BUTTONS (Buy + Add) */}
       <div className="small-actions">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/product/${product._id}`);
-          }}
-        >
-          Buy Now
-        </button>
+        <button onClick={handleBuyNow}>Buy Now</button>
 
-        <button
-          className="add-btns"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddToCart(e);
-          }}
-        >
+        <button className="add-btns" onClick={handleAddToCart}>
           Add to Cart
         </button>
       </div>
     </div>
   );
 }
-
-
-
