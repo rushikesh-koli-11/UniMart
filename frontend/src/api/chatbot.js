@@ -2,18 +2,36 @@ import axios from "axios";
 
 const chatbotAPI = axios.create({
   baseURL: "https://unimart-bot.onrender.com",
-  timeout: 60000, // ✅ VERY IMPORTANT (cold starts)
+  timeout: 60000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+/* ✅ Retry once on cold start */
+chatbotAPI.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.code === "ECONNABORTED" &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      console.warn("Cold start detected. Retrying request...");
+      return chatbotAPI(originalRequest);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const sendMessageToBot = async (message) => {
   const res = await chatbotAPI.post("/chat", { message });
 
-  // Optional: handle warm-up gracefully
-  if (res.data?.response?.includes("warming up")) {
-    throw new Error("Bot is warming up");
+  if (!res?.data?.response) {
+    throw new Error("Invalid chatbot response");
   }
 
   return res.data;

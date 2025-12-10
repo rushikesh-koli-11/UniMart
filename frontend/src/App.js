@@ -1,8 +1,11 @@
 // frontend/src/App.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import axios from "axios";
+
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "leaflet/dist/leaflet.css";
+
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
@@ -40,19 +43,29 @@ import SearchResults from "./pages/SearchResults";
 import { Container } from "@mui/material";
 import ScrollToTop from "./components/ScrollToTop";
 import SliderWrapper from "./components/SliderWrapper";
+import ChatbotWidget from "./components/ChatbotWiddget";
 
 export default function App() {
   const location = useLocation();
+
+  /* ✅ BACKEND WARM-UP (RUNS ONCE) */
+  useEffect(() => {
+    axios
+      .get("https://unimart-bot.onrender.com")
+      .catch(() => {
+        // silent warm-up, ignore errors
+      });
+  }, []);
 
   return (
     <>
       <ScrollToTop />
       <Navbar />
 
-      {/* ⭐ Show slider only on homepage */}
+      {/* ✅ Show slider only on homepage */}
       {location.pathname === "/" && <SliderWrapper />}
 
-      <Container >
+      <Container>
         <Routes>
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
@@ -62,14 +75,17 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsAndConditions />} />
-          <Route path="/subcategory/:subcategoryId" element={<SubcategoryProducts />} />
+          <Route
+            path="/subcategory/:subcategoryId"
+            element={<SubcategoryProducts />}
+          />
           <Route path="/search" element={<SearchResults />} />
 
           {/* USER AUTH */}
           <Route path="/user/login" element={<UserLogin />} />
           <Route path="/user/register" element={<Register />} />
 
-          {/* USER PROTECTED ROUTES */}
+          {/* USER PROTECTED */}
           <Route
             path="/checkout"
             element={
@@ -110,7 +126,7 @@ export default function App() {
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
 
-          {/* ADMIN PROTECTED ROUTES */}
+          {/* ADMIN PROTECTED */}
           <Route
             path="/admin/dashboard"
             element={
@@ -193,7 +209,8 @@ export default function App() {
           />
         </Routes>
       </Container>
-
+            <ChatbotWidget />
+      
       <Footer />
     </>
   );
