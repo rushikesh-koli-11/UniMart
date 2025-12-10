@@ -1,0 +1,56 @@
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# Python Cache
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# Virtual Environments
+# =========================
+venv/
+.venv/
+env/
+ENV/
+
+# =========================
+# OS / Editor Junk
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Build / Temp Files
+# =========================
+*.tmp
+*.bak
+*.swp
+
+# =========================
+# Node (if any)
+# =========================
+node_modules/
+
+# =========================
+# Ignore Large Regenerated Files (OPTIONAL)
+# =========================
+# Uncomment ONLY if you want to regenerate RAG index on deploy
+# vector_index.faiss
+# vector_meta.pkl
+# embeddings.npy
+# chunk_info.pkl

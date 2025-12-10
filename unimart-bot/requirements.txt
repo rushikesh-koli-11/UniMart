@@ -1,0 +1,12 @@
+Flask
+flask-cors
+Flask-Compress
+python-dotenv
+google-generativeai
+sentence-transformers
+torch
+faiss-cpu
+numpy
+PyMuPDF
+tqdm
+scikit-learn

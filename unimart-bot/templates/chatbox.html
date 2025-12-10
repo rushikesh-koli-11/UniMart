@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniMart Assistant</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='image.png') }}" />
+
+  <!-- Bootstrap 4 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background: #f3f4f6;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    .chat-wrapper {
+      max-width: 750px;
+      margin: 20px auto;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header {
+      background: #0f172a;
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-logo {
+      height: 50px;
+      border-radius: 8px;
+    }
+
+    .chatbox {
+      padding: 20px;
+      overflow-y: auto;
+      flex-grow: 1;
+      scroll-behavior: smooth;
+      background: #f9fafb;
+    }
+
+    .user-message {
+      background: #2563eb;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 18px 18px 0 18px;
+      max-width: 70%;
+      margin: 10px 0 10px auto;
+    }
+
+    .bot-message {
+      background: #e5e7eb;
+      color: #111;
+      padding: 12px 16px;
+      border-radius: 18px 18px 18px 0;
+      max-width: 75%;
+      margin: 10px auto 10px 0;
+    }
+
+    .chat-input-area {
+      display: flex;
+      padding: 12px;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+    }
+
+    #message {
+      flex-grow: 1;
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+    }
+
+    #sendBtn {
+      margin-left: 10px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: #2563eb;
+      border: none;
+      color: white;
+      font-size: 18px;
+      width: 60px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .typing span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 4px;
+      background: #666;
+      border-radius: 50%;
+      animation: blink 1.4s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes blink {
+      0% { opacity: 0.2; }
+      20% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+
+    .source-item {
+      background: #f3f4f6;
+      border-left: 4px solid #2563eb;
+      padding: 6px 10px;
+      margin-top: 4px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chat-wrapper">
+
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="flex items-center">
+        <div class="ml-3">
+          <h4 class="m-0 font-bold">UniMart Assistant</h4>
+          <small class="text-gray-300">Your Grocery Shopping Guide</small>
+        </div>
+      </div>
+      <span class="text-green-400 font-semibold">● Online</span>
+    </header>
+
+    <!-- Chat Area -->
+    <main id="chatbox" class="chatbox">
+      <div class="bot-message fade-in">
+        Hi! I’m your UniMart Assistant.<br />
+        Ask me anything about groceries, fresh fruits, vegetables, dairy, snacks, offers, or your order status.
+      </div>
+    </main>
+
+    <!-- Input -->
+    <footer class="chat-input-area">
+      <input id="message" type="text" placeholder="Type your message..." />
+      <button id="sendBtn">➤</button>
+    </footer>
+
+  </div>
+
+  <!-- JS -->
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const input = document.getElementById("message");
+    const sendBtn = document.getElementById("sendBtn");
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      input.value = "";
+
+      const typingEl = appendMessage(
+        "bot",
+        `<div class="typing"><span></span><span></span><span></span></div>`
+      );
+
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text }),
+        });
+
+        const data = await res.json();
+
+        typingEl.remove();
+        appendMessage("bot", data.response);
+
+        if (data.sources && data.sources.length) {
+          const box = document.createElement("div");
+          box.className = "bot-message fade-in";
+          box.innerHTML =
+            `<b>📚 Sources:</b><br>` +
+            data.sources
+              .slice(0, 3)
+              .map(
+                (s) =>
+                  `<div class="source-item">
+                     <strong>${s.source}</strong> — ${s.snippet.slice(0, 150)}...
+                   </div>`
+              )
+              .join("");
+          chatbox.appendChild(box);
+        }
+
+      } catch (err) {
+        typingEl.remove();
+        appendMessage("bot", "⚠️ Unable to connect. Please try again.");
+      }
+    }
+
+    function appendMessage(sender, text) {
+      const div = document.createElement("div");
+      div.classList.add(sender === "user" ? "user-message" : "bot-message", "fade-in");
+      div.innerHTML = text;
+      chatbox.appendChild(div);
+      chatbox.scrollTop = chatbox.scrollHeight;
+      return div;
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>

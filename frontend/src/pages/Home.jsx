@@ -6,6 +6,7 @@ import ProductCard from "../components/ProductCard";
 import GrocerySubcategories from "../components/GrocerySubcategories";
 import { useSearchParams } from "react-router-dom";
 import "./Home.css";
+import ChatbotWidget from "../components/ChatbotWiddget";
 
 // ⭐ Reusable section component
 const SectionRow = ({ title, products }) => {
@@ -127,6 +128,8 @@ export default function Home() {
       </div>
 
       <MostlyUsedLinks />
+      <ChatbotWidget />
+
     </div>
   );
 }

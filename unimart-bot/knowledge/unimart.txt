@@ -1,0 +1,148 @@
+UniMart– Grocery E-Commerce Platform
+Citizen / Customer User Manual
+Version: 1.0
+Date: December 2025
+Author: UniMart Product & Development Team
+1. Welcome to UniMart
+UniMart is a modern online grocery shopping platform designed to make everyday essentials easily
+accessible to everyone. From fresh fruits and vegetables to household and personal care products,
+UniMart brings an entire supermarket to your fingertips.
+The platform offers:
+ Fastsearchand filtering
+ Easycategory navigation
+ Securecheckoutand payment
+ Ordertracking
+ Offersanddiscounts
+ Smoothmobileandwebexperience
+This manual will help new users understand how to use UniMart, browse items, add products to cart,
+apply offers, place orders, and manage their account with ease.
+2. Platform Overview
+UniMart is a complete digital solution for grocery shopping, ensuring a simple, fast, and secure
+shopping experience.
+Key Features
+ Widerangeofgrocery products
+ Smartsearchandcategory-based navigation
+ Addtocart,wishlist, and compare features
+ Securepaymentgatewayintegration
+ Fastcheckout process
+ Ordertracking and notifications
+ Offermanagement(coupons, discounts, membership offers)
+ Mobile-friendly responsive design
+UniMart does not store sensitive financial data. All payment processing is handled securely by
+authorized payment gateways.
+3. Getting Started
+UniMart can be accessed directly from your browser or mobile device.
+Steps to Begin
+1. Openyourpreferred browser (Chrome, Safari, Firefox, Edge).
+2. Enterthe UniMart website URL(or open the mobile app).
+3. Thehomepageloadswithproduct categories, deals, banners, and search options.
+Supported Devices
+ Mobilephones
+ Tablets
+ Laptops
+ Desktopcomputers
+UniMart is optimized for all screen sizes.
+4. Navigating the Dashboard
+The HomepageDashboard displays everything a customer needs to start shopping.
+A. Featured Products & Latest Offers
+This auto-updated section shows:
+ Newarrivals
+ Trendinggrocery items
+ Limited-time offers
+ Seasonaldeals
+Example:
+ FreshVegetables– UP TO20%OFF
+ WeeklyEssentials Combo–SAVE₹100
+ New:OrganicProducts Section
+B. Search Bar
+Users can search for products such as:
+ “Basmatirice”
+ “Toordal”
+ “Bread”
+ “Soap”
+ “Babycareproducts”
+Search results instantly show matching products with filters.
+C. Grocery Categories
+UniMart divides products into clear, simple categories.
+Main Categories:
+1. Fruits & Vegetables
+2. FoodGrains &Pulses
+3. Edible Oils & Ghee
+4. Snacks &Beverages
+5. Dairy &Bakery
+6. Cleaning & Household Supplies
+7. Personal Care
+8. BabyCare
+9. Frozen&Instant Foods
+10. Kitchen & Home Essentials
+Each category includes subcategories for better navigation.
+5. Using the Platform (Shopping Process)
+Every product page includes:
+ Productimage
+ Price&discount
+ Weight/sizeoptions
+ AddtoCart/BuyNowbuttons
+ Productdescription
+ Delivery/availability details
+A. Add to Cart
+1. Browseorsearch aproduct
+2. Select quantity/variant
+3. Click Add toCart
+4. Cartupdates instantly
+B. Wishlist
+Users can save items to buy later.
+C. Checkout
+1. Openyourcart
+2. Reviewproducts
+3. Applyavailable coupons
+4. Enterdelivery address
+5. Choosepaymentmethod
+6. Confirm order
+D. Payment Methods
+ UPI
+ Credit/Debit Cards
+ NetBanking
+ CashonDelivery(optional based on region)
+6. Example– Ordering Fresh Vegetables
+1. OpenFruits &Vegetables category
+2. ChooseTomatoes, Onions, Potatoes, etc.
+3. Select quantity (e.g., 1kg, 500g)
+4. Click Add toCart
+5. Gotothecartand click Proceed to Checkout
+6. Addaddress→Select payment method→PlaceOrder
+7. Track your order from the Orders section
+7. Example– Using Offers & Discounts
+1. GotoOffers section
+2. Chooseanactive coupon (e.g., “SAVE50– Get ₹50 off above ₹499”)
+3. Addeligible products to cart
+4. Applycodeat checkout
+5. Discount is automatically applied
+8. Safety & Security Notes
+UniMart follows strict security guidelines:
+ Paymentdetails are processed securely via certified gateways
+ UniMartdoesnotstorecard numbers, CVV,or banking data
+ Useraccountsareprotected with encrypted authentication
+ Allcustomeraddresses and contact details remain private
+9. Help & Support
+Users can get help via:
+ FAQSection
+ ChatSupportorContactForm
+ CustomerCareEmail/Phone (your actual support info can be added)
+Support includes:
+ Order-related issues
+ Paymentfailures
+ Refundqueries
+ Incorrect or missing items
+ App/websitebugs
+Support does not include:
+ Groceryrecommendations or medical advice
+ Externaldelivery services not linked with UniMart
+10. Future Enhancements
+UniMart aims to expand with:
+ Subscription-based monthly grocery plans
+ AI-basedproduct recommendations
+ Voicesearch for shopping
+ Multi-language support
+ Same-dayexpressdelivery
+ Digital receipts and invoices
+ Loyaltyrewards &points system
