@@ -1,11 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
 import { sendMessageToBot } from "../api/chatbot";
 import botIcon from "../assets/unimart-bot.png";
 import "./ChatbotWidget.css";
 
+const BOT_BASE_URL = "https://unimart-bot.onrender.com";
+
 export default function ChatbotWidget() {
   const [open, setOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [botStatus, setBotStatus] = useState("offline"); // ✅ new
   const [messages, setMessages] = useState([
     {
       role: "bot",
@@ -17,14 +21,14 @@ export default function ChatbotWidget() {
 
   const chatBodyRef = useRef(null);
 
-  /* ✅ Auto scroll to bottom */
+  /* ✅ Auto scroll */
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
-  /* ✅ Tooltip every 5 seconds (auto-hide) */
+  /* ✅ Tooltip */
   useEffect(() => {
     if (open) return;
 
@@ -36,21 +40,33 @@ export default function ChatbotWidget() {
     return () => clearInterval(interval);
   }, [open]);
 
+  /* ✅ Ping bot when widget opens */
+  useEffect(() => {
+    if (!open) return;
+
+    const checkBotStatus = async () => {
+      try {
+        setBotStatus("waking");
+        await axios.get(`${BOT_BASE_URL}/health`, { timeout: 5000 });
+        setBotStatus("online");
+      } catch {
+        setBotStatus("offline");
+      }
+    };
+
+    checkBotStatus();
+  }, [open]);
+
   const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || botStatus !== "online") return;
 
     const userText = input.trim();
     setInput("");
-
     setMessages((prev) => [...prev, { role: "user", text: userText }]);
     setLoading(true);
 
     try {
       const res = await sendMessageToBot(userText);
-
-      if (!res || typeof res.response !== "string") {
-        throw new Error("Invalid chatbot response");
-      }
 
       setMessages((prev) => [
         ...prev,
@@ -58,12 +74,13 @@ export default function ChatbotWidget() {
       ]);
     } catch (error) {
       console.error("Chatbot error:", error);
+      setBotStatus("offline");
 
       setMessages((prev) => [
         ...prev,
         {
           role: "bot",
-          text: "Sorry, UniMart Assistant is currently unavailable. Please try again in a moment.",
+          text: "The assistant is temporarily unavailable. Please try again shortly.",
         },
       ]);
     } finally {
@@ -71,9 +88,15 @@ export default function ChatbotWidget() {
     }
   };
 
+  /* ✅ Status label */
+  const statusLabel = {
+    online: "🟢 Online",
+    waking: "🟡 Waking up",
+    offline: "🔴 Offline",
+  }[botStatus];
+
   return (
     <>
-      {/* ✅ Tooltip */}
       {!open && showTooltip && (
         <div className="chatbot-tooltip">
           Hi! I'm UniMart Assistant.<br />
@@ -81,14 +104,12 @@ export default function ChatbotWidget() {
         </div>
       )}
 
-      {/* ✅ Floating Button */}
       {!open && (
         <div className="chatbot-fab" onClick={() => setOpen(true)}>
           <img src={botIcon} alt="UniMart Bot" />
         </div>
       )}
 
-      {/* ✅ Chat Window */}
       {open && (
         <div className="chatbot-window">
           <div className="chatbot-header">
@@ -97,6 +118,9 @@ export default function ChatbotWidget() {
               <div>
                 <strong>UniMart Assistant</strong>
                 <div className="sub">Grocery AI Support</div>
+                <div className={`bot-status ${botStatus}`}>
+                  {statusLabel}
+                </div>
               </div>
             </div>
             <span className="close" onClick={() => setOpen(false)}>
@@ -122,11 +146,18 @@ export default function ChatbotWidget() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about groceries, offers, orders..."
+              placeholder={
+                botStatus === "online"
+                  ? "Ask about groceries, offers, orders..."
+                  : "Assistant is not ready yet"
+              }
+              disabled={loading || botStatus !== "online"}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              disabled={loading}
             />
-            <button onClick={sendMessage} disabled={loading}>
+            <button
+              onClick={sendMessage}
+              disabled={loading || botStatus !== "online"}
+            >
               ➤
             </button>
           </div>

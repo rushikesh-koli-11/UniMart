@@ -208,3 +208,19 @@
 .chatbot-fab {
   animation: orangeGlow 2.5s infinite;
 }
+.bot-status {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.bot-status.online {
+  color: #16a34a;
+}
+
+.bot-status.waking {
+  color: #f59e0b;
+}
+
+.bot-status.offline {
+  color: #dc2626;
+}

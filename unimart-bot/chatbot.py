@@ -30,7 +30,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 # ====================================================
 app = Flask(__name__)
 
-# ✅ EXPLICIT, STABLE CORS (IMPORTANT)
+# ✅ STABLE CORS CONFIG
 CORS(
     app,
     resources={r"/*": {"origins": "*"}},
@@ -39,7 +39,7 @@ CORS(
     methods=["GET", "POST", "OPTIONS"],
 )
 
-# ✅ FORCE CORS HEADERS ON EVERY RESPONSE
+# ✅ FORCE CORS HEADERS ON ALL RESPONSES
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
@@ -97,6 +97,8 @@ def ensure_rag_ready():
             rag.load_index()
             print("✅ RAG index loaded")
 
+        print("✅ RAG READY")
+
     except Exception as e:
         print("❌ RAG init failed:", e)
         traceback.print_exc()
@@ -126,7 +128,17 @@ def generate_with_gemini(prompt: str) -> str:
 # ====================================================
 @app.route("/health")
 def health():
-    return "OK", 200
+    return jsonify({"status": "ok"}), 200
+
+# ====================================================
+# BOT STATUS (FOR UI)
+# ====================================================
+@app.route("/status")
+def status():
+    return jsonify({
+        "server": "online",
+        "rag_ready": rag is not None
+    }), 200
 
 # ====================================================
 # RAG STATUS (DEBUG)
@@ -140,14 +152,19 @@ def rag_status():
     })
 
 # ====================================================
-# CHAT API
+# CHAT API (✅ CORS FIXED)
 # ====================================================
 @app.route("/chat", methods=["POST", "OPTIONS"])
 def chat():
     global rag
 
+    # ✅ Proper OPTIONS handling (CRITICAL FIX)
     if request.method == "OPTIONS":
-        return "", 200
+        response = app.make_response("")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        return response
 
     data = request.get_json(force=True)
     user_message = data.get("message", "").strip()
@@ -155,7 +172,7 @@ def chat():
     if not user_message:
         return jsonify({"response": "Please enter a message."}), 400
 
-    # ✅ If RAG not ready → Gemini-only fallback (NO BLOCKING)
+    # ✅ Gemini-only fallback if RAG not ready
     if rag is None:
         prompt = build_prompt(user_message, "")
         reply = generate_with_gemini(prompt)
