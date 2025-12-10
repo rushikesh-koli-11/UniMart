@@ -1,12 +1,10 @@
-Flask
+flask
 flask-cors
 Flask-Compress
 python-dotenv
 google-generativeai
-sentence-transformers
-torch
 faiss-cpu
 numpy
+scikit-learn
 PyMuPDF
 tqdm
-scikit-learn
