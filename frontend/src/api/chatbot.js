@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const chatbotAPI = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: "https://unimart-bot.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
