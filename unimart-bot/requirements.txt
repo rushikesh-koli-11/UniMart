@@ -8,3 +8,5 @@ numpy
 scikit-learn
 PyMuPDF
 tqdm
+sentence-transformers
+torch
