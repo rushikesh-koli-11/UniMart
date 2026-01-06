@@ -10,12 +10,19 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://uni-mart-seven.vercel.app"
+  "https://uni-mart-seven.vercel.app",
+   "https://main.dbdp8voei34ki.amplifyapp.com"
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
