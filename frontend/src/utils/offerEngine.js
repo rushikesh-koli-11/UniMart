@@ -1,7 +1,4 @@
-// PRIORITY:
-// 1) Product offer
-// 2) Subcategory offer
-// 3) Category offer
+
 
 export const applyOffersToProduct = (product, offers) => {
   if (!product || !offers) {
@@ -18,12 +15,10 @@ export const applyOffersToProduct = (product, offers) => {
   offers.forEach((offer) => {
     if (!offer.active) return;
 
-    // PRODUCT LEVEL
     if (offer.scopeType === "product" && offer.product === product._id) {
       productOffer = offer;
     }
 
-    // SUBCATEGORY LEVEL
     if (
       offer.scopeType === "subcategory" &&
       product.subcategory?._id === offer.subcategoryId
@@ -31,7 +26,6 @@ export const applyOffersToProduct = (product, offers) => {
       subcategoryOffer = offer;
     }
 
-    // CATEGORY LEVEL
     if (
       offer.scopeType === "category" &&
       product.category?.toString() === offer.category?.toString()
@@ -40,7 +34,6 @@ export const applyOffersToProduct = (product, offers) => {
     }
   });
 
-  // PRIORITY MECHANISM
   const finalOffer = productOffer || subcategoryOffer || categoryOffer;
 
   if (!finalOffer) {
@@ -49,7 +42,6 @@ export const applyOffersToProduct = (product, offers) => {
 
   appliedOffer = finalOffer;
 
-  // Apply discount
   if (finalOffer.discountType === "percentage") {
     finalPrice = Math.round(
       finalPrice - (finalPrice * finalOffer.discountValue) / 100

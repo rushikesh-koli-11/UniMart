@@ -2,12 +2,10 @@ const axios = require("axios");
 const OTP = require("../models/OTP");
 const User = require("../models/User");
 
-// Generate random OTP function
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
 };
 
-// ====================== SEND OTP ======================
 exports.sendOTP = async (req, res) => {
   try {
     const { phoneNumber, purpose = "signup" } = req.body;
@@ -18,7 +16,6 @@ exports.sendOTP = async (req, res) => {
         .json({ success: false, message: "Phone number is required" });
     }
 
-    // Indian 10-digit mobile validation
     if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
       return res.status(400).json({
         success: false,
@@ -26,7 +23,6 @@ exports.sendOTP = async (req, res) => {
       });
     }
 
-    // 🔒 For signup: do NOT allow if user already exists
     if (purpose === "signup") {
       const existingUser = await User.findOne({ phone: phoneNumber });
       if (existingUser) {
@@ -38,7 +34,6 @@ exports.sendOTP = async (req, res) => {
       }
     }
 
-    // 🔒 For forgot password: ensure user exists
     if (purpose === "forgot") {
       const existingUser = await User.findOne({ phone: phoneNumber });
       if (!existingUser) {
@@ -49,7 +44,6 @@ exports.sendOTP = async (req, res) => {
       }
     }
 
-    // Remove existing OTP (if any)
     await OTP.deleteOne({ phoneNumber });
 
     const otp = generateOTP();
@@ -62,7 +56,6 @@ exports.sendOTP = async (req, res) => {
         .json({ success: false, message: "SMS service not configured" });
     }
 
-    // Send SMS via Fast2SMS
     const response = await axios({
       method: "POST",
       url: "https://www.fast2sms.com/dev/bulkV2",
@@ -100,7 +93,6 @@ exports.sendOTP = async (req, res) => {
   }
 };
 
-// ====================== VERIFY OTP ======================
 exports.verifyOTP = async (req, res) => {
   try {
     const { phoneNumber, otp } = req.body;

@@ -1,16 +1,15 @@
-// src/components/DeliveryZoneMap.jsx
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Polygon, useMap } from "react-leaflet";
 import L from "leaflet";
 
-// Fix marker icons
+
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-// Solapur boundary (simplified)
+
 export const solapurBoundary = [
   [17.7206, 75.868],
   [17.7044, 75.9421],
@@ -23,7 +22,7 @@ export const solapurBoundary = [
   [17.7206, 75.868],
 ];
 
-// Wait for map before moving view
+
 function Recenter({ coords }) {
   const map = useMap();
 
@@ -31,7 +30,7 @@ function Recenter({ coords }) {
     if (coords && map) {
       setTimeout(() => {
         map.setView(coords, 13);
-      }, 100); // prevent leaflet_pos undefined
+      }, 100); 
     }
   }, [coords]);
 
@@ -59,10 +58,8 @@ export default function DeliveryZoneMap({ coords }) {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        {/* Delivery Area */}
         <Polygon positions={solapurBoundary} pathOptions={{ color: "green", fillOpacity: 0.12 }} />
 
-        {/* Render marker only when map is ready */}
         {ready && coords && (
           <>
             <Marker position={coords} />

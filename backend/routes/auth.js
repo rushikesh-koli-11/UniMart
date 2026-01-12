@@ -5,15 +5,9 @@ const jwt = require("jsonwebtoken");
 const { protectUser } = require("../middleware/auth");
 const OTP = require("../models/OTP"); // 🔥 NEW: to check OTP status
 
-/* ============================================
-   HELPER – Generate JWT
-============================================= */
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-/* ============================================
-   USER REGISTER (PHONE + PASSWORD, AFTER OTP)
-============================================= */
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
@@ -24,13 +18,11 @@ router.post("/register", async (req, res) => {
         .json({ message: "Name, email, phone & password are required" });
     }
 
-    // Email unique
     const emailExists = await User.findOne({ email });
     if (emailExists) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Phone unique
     const phoneExists = await User.findOne({ phone });
     if (phoneExists) {
       return res
@@ -38,8 +30,6 @@ router.post("/register", async (req, res) => {
         .json({ message: "Phone already registered. Please login." });
     }
 
-    // ✅ OTP must be VERIFIED before register
-    // In our flow: OTP is deleted from DB AFTER successful verify.
     const pendingOtp = await OTP.findOne({ phoneNumber: phone });
     if (pendingOtp) {
       return res
@@ -47,7 +37,6 @@ router.post("/register", async (req, res) => {
         .json({ message: "Please verify OTP before registration" });
     }
 
-    // NOTE: password is plain, pre-save hook on User will hash it
     const user = await User.create({
       name,
       email,
@@ -69,9 +58,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* ============================================
-   USER LOGIN (Using Phone Instead of Email)
-============================================= */
 router.post("/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
@@ -99,9 +85,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* ============================================
-   UPDATE BASIC PROFILE
-============================================= */
 router.put("/update", protectUser, async (req, res) => {
   try {
     const { name, phone } = req.body;
@@ -118,9 +101,6 @@ router.put("/update", protectUser, async (req, res) => {
   }
 });
 
-/* ============================================
-   MULTIPLE ADDRESSES
-============================================= */
 router.post("/address/add", protectUser, async (req, res) => {
   const { label, address } = req.body;
 
@@ -209,9 +189,6 @@ router.post("/address/save-from-checkout", protectUser, async (req, res) => {
   res.json({ message: "Address saved", user: req.user });
 });
 
-/* ============================================
-   RESET PASSWORD (AFTER OTP VERIFIED)
-============================================= */
 router.post("/reset-password", async (req, res) => {
   try {
     const { phone, newPassword } = req.body;
@@ -229,7 +206,6 @@ router.post("/reset-password", async (req, res) => {
         .json({ message: "User not found for this phone" });
     }
 
-    // ✅ Ensure OTP was verified → OTP must be deleted already
     const pendingOtp = await OTP.findOne({ phoneNumber: phone });
     if (pendingOtp) {
       return res
@@ -237,8 +213,7 @@ router.post("/reset-password", async (req, res) => {
         .json({ message: "Please verify OTP before resetting password" });
     }
 
-    user.password = newPassword; // pre-save hook will hash
-    await user.save();
+    user.password = newPassword; 
 
     res.json({
       success: true,

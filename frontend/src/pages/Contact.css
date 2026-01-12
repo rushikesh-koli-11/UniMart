@@ -1,8 +1,3 @@
-/* ================================
-   UNI MART CONTACT PAGE STYLES
-================================ */
-
-/* Page Layout */
 .contact-container {
   padding: 60px 20px;
   background-color: #f5f7ff;
@@ -17,9 +12,6 @@
   flex-wrap: wrap;
 }
 
-/* ============================
-   LEFT SIDE (INFO SECTION)
-=========================== */
 .info-section {
   flex: 1;
   min-width: 320px;
@@ -43,7 +35,6 @@
   margin-bottom: 25px;
 }
 
-/* Info Items */
 .info-box {
   display: flex;
   align-items: center;
@@ -69,9 +60,6 @@
   color: #444;
 }
 
-/* ============================
-   RIGHT SIDE (FORM SECTION)
-=========================== */
 .form-section {
   flex: 1;
   min-width: 350px;
@@ -90,7 +78,6 @@
   font-weight: 700;
 }
 
-/* Input Fields */
 .input-box {
   border: 1px solid #dcdcdc;
   border-radius: 6px;
@@ -103,7 +90,6 @@
   box-shadow: 0 0 5px rgba(3, 21, 118, 0.4);
 }
 
-/* Send Button */
 .send-btn {
   background-color: #fd6e04 !important;
   color: #ffffff !important;
@@ -117,7 +103,6 @@
   background-color: #e26000 !important;
 }
 
-/* Alerts */
 .alert {
   padding: 10px 14px;
   font-size: 15px;
@@ -137,9 +122,6 @@
   border-left: 5px solid #d9534f;
 }
 
-/* ============================
-   RESPONSIVE DESIGN
-=========================== */
 @media (max-width: 768px) {
   .contact-wrapper {
     flex-direction: column;
@@ -160,7 +142,6 @@
     padding: 40px 15px;
   }
 }
-/* PAGE LAYOUT */
 .contact-page {
   max-width: 1100px;
   margin: auto;
@@ -168,7 +149,6 @@
   font-family: "Inter", sans-serif;
 }
 
-/* HERO */
 .contact-hero {
   text-align: center;
   padding: 50px 20px;
@@ -193,7 +173,6 @@
   font-size: 17px;
 }
 
-/* GRID */
 .contact-grid {
   display: grid;
   gap: 25px;
@@ -206,7 +185,6 @@
   }
 }
 
-/* LEFT CARD */
 .contact-info-card {
   background: #fff;
   padding: 30px;
@@ -227,7 +205,6 @@
   line-height: 1.5;
 }
 
-/* INFO ITEMS */
 .contact-detail {
   display: flex;
   align-items: center;
@@ -242,7 +219,6 @@
   color: #031576;
 }
 
-/* NOTE */
 .info-note {
   background: #f8f9ff;
   padding: 12px;
@@ -253,7 +229,6 @@
   font-size: 14px;
 }
 
-/* FORM CARD */
 .contact-form-card {
   background: #fff;
   padding: 30px;
@@ -269,7 +244,6 @@
   margin-bottom: 20px;
 }
 
-/* INPUTS */
 .input-label {
   font-weight: 600;
   margin-bottom: 5px;
@@ -304,8 +278,7 @@
   margin-bottom: 10px;
 }
 
-/* BUTTON */
-.submit-btn {
+s.submit-btn {
   width: 100%;
   background: linear-gradient(135deg, #ff7a00, #ff9900);
   color: #fff;

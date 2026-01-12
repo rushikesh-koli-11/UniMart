@@ -1,11 +1,9 @@
-// backend/controllers/uploadController.js
 const cloudinary = require('../config/cloudinary');
 
 exports.uploadImage = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'No file provided' });
 
-    // Buffer -> Cloudinary (using promise wrapper)
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: 'unimark' },

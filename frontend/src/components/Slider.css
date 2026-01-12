@@ -1,4 +1,4 @@
-/* FULL WIDTH SLIDER */
+
 #esevaSlider {
   width: 100% !important;
   margin: 0 !important;
@@ -6,7 +6,6 @@
   overflow: hidden !important;
 }
 
-/* WRAPPER AUTO HEIGHT */
 .slider-img-wrapper {
   width: 100%;
   height: auto;
@@ -16,23 +15,20 @@
   align-items: center;
 }
 
-/* IMAGE — FULL WIDTH, NO CROP, AUTO HEIGHT */
 .slider-img-responsive {
   width: 100%;
   height: auto !important;
-  object-fit: contain !important;  /* show full image */
+  object-fit: contain !important;  
   object-position: center !important;
   display: block;
 }
 
-/* REMOVE ALL MAX-HEIGHT BREAKPOINTS */
 @media (min-width: 0px) {
   .slider-img-wrapper {
     max-height: none !important;
   }
 }
 
-/* TIMER BAR */
 .slider-timer-bar {
   position: absolute;
   bottom: 10px;

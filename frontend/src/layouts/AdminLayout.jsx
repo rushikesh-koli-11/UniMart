@@ -1,4 +1,3 @@
-// frontend/src/layouts/AdminLayout.jsx
 import React from 'react';
 import { Box, Drawer, List, ListItemButton, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';

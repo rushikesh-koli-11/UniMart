@@ -3,9 +3,6 @@ const { protectUser, protectAdmin } = require("../middleware/auth");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-/* =====================================================
-   CREATE NEW ORDER  (Auto Reduce Stock)
-===================================================== */
 router.post("/", protectUser, async (req, res) => {
   try {
     const { items, total, paymentDetails, shippingInfo } = req.body;
@@ -16,7 +13,6 @@ router.post("/", protectUser, async (req, res) => {
     if (!shippingInfo?.address)
       return res.status(400).json({ message: "Shipping address required" });
 
-    // Check stock before creating order
     for (const item of items) {
       const product = await Product.findById(item.product);
       if (!product)
@@ -29,7 +25,6 @@ router.post("/", protectUser, async (req, res) => {
       }
     }
 
-    // Create order
     const order = await Order.create({
       user: req.user._id,
       items,
@@ -38,7 +33,6 @@ router.post("/", protectUser, async (req, res) => {
       shippingInfo,
     });
 
-    // Reduce stock
     for (const item of items) {
       await Product.findByIdAndUpdate(
         item.product,
@@ -55,9 +49,6 @@ router.post("/", protectUser, async (req, res) => {
   }
 });
 
-/* =====================================================
-   GET USER ORDERS
-===================================================== */
 router.get("/my", protectUser, async (req, res) => {
   try {
     let orders = await Order.find({ user: req.user._id })
@@ -74,9 +65,6 @@ router.get("/my", protectUser, async (req, res) => {
   }
 });
 
-/* =====================================================
-   CANCEL ORDER (Auto Restore Stock)
-===================================================== */
 router.put("/:id/cancel", protectUser, async (req, res) => {
   try {
     const order = await Order.findOne({
@@ -90,7 +78,6 @@ router.put("/:id/cancel", protectUser, async (req, res) => {
     if (order.status !== "processing")
       return res.status(400).json({ message: "Cannot cancel now" });
 
-    // Restore stock
     for (const item of order.items) {
       await Product.findByIdAndUpdate(
         item.product,
@@ -110,9 +97,6 @@ router.put("/:id/cancel", protectUser, async (req, res) => {
   }
 });
 
-/* =====================================================
-   ADMIN: GET ALL ORDERS
-===================================================== */
 router.get("/", protectAdmin, async (req, res) => {
   try {
     const orders = await Order.find()
@@ -126,10 +110,6 @@ router.get("/", protectAdmin, async (req, res) => {
   }
 });
 
-/* =====================================================
-   ADMIN: UPDATE ORDER STATUS
-   (processing → packed → shipped → delivered)
-===================================================== */
 router.put("/:id/status", protectAdmin, async (req, res) => {
   try {
     const { status } = req.body;
@@ -140,7 +120,6 @@ router.put("/:id/status", protectAdmin, async (req, res) => {
 
     order.status = status;
 
-    // Auto-set delivery time
     if (status === "delivered") {
       order.deliveredAt = new Date();
     }

@@ -12,7 +12,6 @@ export default function UserLogin() {
   const [form, setForm] = useState({ phone: "", password: "" });
   const [msg, setMsg] = useState("");
 
-  // Forgot Password states
   const [forgot, setForgot] = useState(false);
   const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -20,9 +19,6 @@ export default function UserLogin() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [newPassword, setNewPassword] = useState("");
 
-  /* ================================================
-     LOGIN USING MOBILE + PASSWORD
-  ================================================= */
   const submitLogin = async () => {
     if (!/^\d{10}$/.test(form.phone))
       return setMsg("❌ Enter valid 10-digit mobile number");
@@ -35,9 +31,6 @@ export default function UserLogin() {
     }
   };
 
-  /* ================================================
-     SEND REAL OTP using /otp/send-otp
-  ================================================= */
   const sendOTP = async () => {
     if (!/^\d{10}$/.test(phone))
       return setMsg("Enter valid 10-digit registered phone number");
@@ -55,9 +48,6 @@ export default function UserLogin() {
     }
   };
 
-  /* ================================================
-     VERIFY OTP using /otp/verify-otp
-  ================================================= */
   const verifyOTP = async () => {
     try {
       await API.post("/otp/verify-otp", {
@@ -71,10 +61,6 @@ export default function UserLogin() {
       setMsg(err.response?.data?.message || "❌ Incorrect or expired OTP");
     }
   };
-
-  /* ================================================
-     SET NEW PASSWORD IN BACKEND
-  ================================================= */
   const resetPassword = async () => {
     if (!newPassword) return setMsg("Enter new password");
 
@@ -97,7 +83,6 @@ export default function UserLogin() {
     }
   };
 
-  /* ---------------- UI ---------------- */
 
   return (
     <div className="login-container">
@@ -109,7 +94,6 @@ export default function UserLogin() {
 
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
-        {/* ========== LOGIN FORM ========== */}
         {!forgot ? (
           <>
             <input
@@ -147,7 +131,6 @@ export default function UserLogin() {
           </>
         ) : (
           <>
-            {/* ========== ENTER PHONE FOR RESET ========== */}
             {!otpSent && (
               <>
                 <input
@@ -167,7 +150,6 @@ export default function UserLogin() {
               </>
             )}
 
-            {/* ========== ENTER OTP ========== */}
             {otpSent && !otpVerified && (
               <>
                 <input
@@ -183,7 +165,6 @@ export default function UserLogin() {
               </>
             )}
 
-            {/* ========== SET NEW PASSWORD ========== */}
             {otpVerified && (
               <>
                 <input

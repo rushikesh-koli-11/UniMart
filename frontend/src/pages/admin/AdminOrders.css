@@ -5,7 +5,6 @@
   --white: #ffffffd9;
 }
 
-/* ---------- PAGE TITLE ---------- */
 .orders-title {
   font-weight: 800;
   font-size: 26px;
@@ -14,7 +13,6 @@
   padding-left: 12px;
 }
 
-/* ---------- SEARCH INPUT ---------- */
 .search-input {
   border: 2px solid var(--blue);
   border-radius: 10px;
@@ -25,7 +23,6 @@
   border-color: var(--orange);
 }
 
-/* ---------- TABLE STYLE ---------- */
 .admin-table thead.table-header {
   background: var(--blue);
   color: white;
@@ -36,13 +33,11 @@
   vertical-align: middle;
 }
 
-/* Address column */
 .address-col {
   max-width: 150px;
   word-wrap: break-word;
 }
 
-/* ---------- BUTTONS ---------- */
 .btn-view {
   background: var(--blue);
   color: white;
@@ -70,14 +65,12 @@
   background: #c95803;
 }
 
-/* Align action buttons in row */
 .actions-col {
   display: flex;
   gap: 6px;
   justify-content: center;
 }
 
-/* ---------- ORDER ITEMS MODAL ---------- */
 .modal-header-custom {
   background: var(--blue);
   color: white;
@@ -93,7 +86,6 @@
   border-radius: 8px;
 }
 
-/* ---------- RESPONSIVENESS ---------- */
 @media (max-width: 768px) {
   .orders-title {
     font-size: 22px;
@@ -117,7 +109,6 @@
     font-size: 20px;
   }
 }
-/* ---------------- HERO SECTION ---------------- */
 .admin-orders-hero {
   background: linear-gradient(135deg, #03076b, #0839e6);
   padding: 45px 25px;
@@ -140,7 +131,6 @@
   opacity: 0.9;
 }
 
-/* Responsive Hero */
 @media (max-width: 768px) {
   .admin-orders-hero {
     padding: 35px 20px;

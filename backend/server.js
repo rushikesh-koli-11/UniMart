@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const { auth } = require("./middleware/auth"); // ⭐ ADD THIS
+const { auth } = require("./middleware/auth"); 
 const otpRoutes = require("./routes/otp");
 
 const app = express();
@@ -30,7 +30,7 @@ app.use(
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-app.use(auth);  // ⭐ VERY IMPORTANT – decode token globally
+app.use(auth);  
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/otp", otpRoutes);

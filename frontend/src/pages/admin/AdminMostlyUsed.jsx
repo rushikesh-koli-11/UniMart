@@ -86,7 +86,6 @@ export default function AdminMostlyUsed() {
         <h3 className="mused-title">Manage Mostly Used Links</h3>
         <div className="mused-underline"></div>
 
-        {/* Upload Box */}
         <form onSubmit={uploadItem} className="mused-upload-box">
           <input
             type="file"
@@ -107,7 +106,6 @@ export default function AdminMostlyUsed() {
           <button className="mused-upload-btn">Upload</button>
         </form>
 
-        {/* Grid */}
         <div className="mused-grid mt-4">
           {items.map((item, index) => (
             <div className="mused-card" key={item._id}>

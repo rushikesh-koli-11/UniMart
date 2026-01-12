@@ -1,8 +1,6 @@
-// backend/controllers/productController.js
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 
-// CREATE PRODUCT
 exports.createProduct = async (req, res) => {
   try {
     const { title, description, price, stock, category, subcategory, images, offer } = req.body;
@@ -31,7 +29,6 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
   try {
     const { title, description, price, stock, category, subcategory, images, offer } = req.body;
@@ -64,7 +61,6 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
@@ -75,7 +71,6 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
-// GET SINGLE PRODUCT
 exports.getProduct = async (req, res) => {
   try {
     const p = await Product.findById(req.params.id)
@@ -88,7 +83,6 @@ exports.getProduct = async (req, res) => {
   }
 };
 
-// LIST PRODUCTS (supports search + filters + sorting)
 exports.listProducts = async (req, res) => {
   try {
     const { q, category, subcategory, sort, limit } = req.query;
@@ -109,33 +103,27 @@ exports.listProducts = async (req, res) => {
       ];
     }
 
-    // CATEGORY filter
     if (category) {
       filter.category = category;
     }
 
-    // SUBCATEGORY filter
     if (subcategory) {
       filter["subcategory._id"] = subcategory;
     }
 
-    // OFFERS filter (for /products?sort=offers on homepage)
     if (sort === "offers") {
       filter.offer = { $ne: null };
     }
 
     let query = Product.find(filter).populate("category").populate("offer");
 
-    // ⭐ SORTING LOGIC
     if (sort === "top-rated") {
       query = query.sort({ avgRating: -1, numReviews: -1, createdAt: -1 });
     } else if (sort === "trending") {
-      // "Trending" = many reviews + good rating + recent
       query = query.sort({ numReviews: -1, avgRating: -1, createdAt: -1 });
     } else if (sort === "new") {
       query = query.sort({ createdAt: -1 });
     } else {
-      // Default: newest first
       query = query.sort({ createdAt: -1 });
     }
 
@@ -149,7 +137,6 @@ exports.listProducts = async (req, res) => {
   }
 };
 
-// ADD REVIEW
 exports.addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
@@ -174,7 +161,6 @@ exports.addReview = async (req, res) => {
 
     product.reviews.push(review);
 
-    // ⭐ Update numReviews + avgRating
     product.numReviews = product.reviews.length;
     product.avgRating =
       product.reviews.reduce((acc, r) => acc + r.rating, 0) /
@@ -194,7 +180,6 @@ exports.addReview = async (req, res) => {
   }
 };
 
-// DELETE REVIEW
 exports.deleteReview = async (req, res) => {
   try {
     const { id, reviewId } = req.params;

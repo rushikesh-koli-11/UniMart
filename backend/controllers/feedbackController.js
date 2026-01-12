@@ -1,4 +1,3 @@
-// backend/controllers/feedbackController.js
 const Feedback = require('../models/Feedback');
 
 exports.create = async (req, res) => {

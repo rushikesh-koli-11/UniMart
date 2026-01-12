@@ -10,12 +10,8 @@ import { Link } from "react-router-dom";
 import API from "../api/api";
 import "./Cart.css";
 
-// ⭐ REQUIRED for similar products
 import ProductCard from "../components/ProductCard";
 
-/* =====================================================
-   OFFER ENGINE HELPERS
-===================================================== */
 
 const getId = (val) =>
   typeof val === "object" && val !== null ? val._id : val || null;
@@ -108,9 +104,6 @@ const applyCartOffer = (cartTotal, offers) => {
   return { finalTotal, bestOffer, savings: bestSavings };
 };
 
-/* =====================================================
-   CART COMPONENT
-===================================================== */
 
 export default function Cart() {
   const { cart, incrementQty, decrementQty, clearCart } =
@@ -118,10 +111,8 @@ export default function Cart() {
 
   const [offers, setOffers] = useState([]);
 
-  // ⭐ SIMILAR PRODUCTS STATE
   const [similarProducts, setSimilarProducts] = useState([]);
 
-  // ⭐ LOAD SIMILAR PRODUCTS (based on first cart item)
   useEffect(() => {
     const loadSimilarProducts = async () => {
       if (cart.length === 0) return;
@@ -151,7 +142,6 @@ export default function Cart() {
     loadSimilarProducts();
   }, [cart]);
 
-  // Load offers
   useEffect(() => {
     const loadOffers = async () => {
       try {
@@ -217,8 +207,6 @@ export default function Cart() {
 
   return (
     <div className="container cart-page">
-      {/* HERO SECTION */}
-      {/* HERO SECTION */}
 <div className="cart-hero mb-4">
   <h1>
     Your <span>Cart</span>
@@ -226,14 +214,12 @@ export default function Cart() {
 
   <p>Review your items before checkout.</p>
 
-  {/* Delivery Time */}
   <p className="delivery-time mt-2" style={{ fontSize: "15px", fontWeight: "600", color: "#e67e22" }}>
     🚚 Fast Delivery: Expected within <strong>120 – 180 minutes</strong>
   </p>
 </div>
 
 
-      {/* EMPTY CART */}
       {cart.length === 0 && (
         <div className="empty-cart-box text-center">
           <h3>Your cart is empty</h3>
@@ -249,7 +235,6 @@ export default function Cart() {
         </div>
       )}
 
-      {/* CART ITEMS */}
       {cart.length > 0 && (
         <div className="cart-card shadow-sm p-3 rounded">
           <div className="d-none d-md-block">
@@ -467,7 +452,6 @@ export default function Cart() {
             })}
           </div>
 
-          {/* FOOTER */}
           <div className="cart-footer text-center mt-4">
             <div className="mb-2">
               <div>Cart value (before offers): ₹{totals.base}</div>
@@ -526,7 +510,6 @@ export default function Cart() {
       )}
 
 
-      {/* ⭐ SIMILAR PRODUCTS SECTION */}
       {similarProducts.length > 0 && (
         <div className="similar-products mt-5">
           <h3 className="review-heading">You May Also Like</h3>

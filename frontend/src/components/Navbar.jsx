@@ -52,12 +52,9 @@ export default function Navbar() {
 
   const [language, setLanguage] = useState(localStorage.getItem("lang") || "en");
 
-  /* ========================================================
-      🌍 GOOGLE TRANSLATE LANGUAGE HANDLER
-  ======================================================== */
 const handleLanguageChange = (lang) => {
-  setLanguage(lang);                    // update dropdown instantly
-  localStorage.setItem("lang", lang);   // persist it
+  setLanguage(lang);                    
+  localStorage.setItem("lang", lang);  
 
   const select = document.querySelector(".goog-te-combo");
   if (select) {
@@ -73,7 +70,7 @@ const handleLanguageChange = (lang) => {
   const savedLang = localStorage.getItem("lang");
   if (!savedLang) return;
 
-  setLanguage(savedLang); // <-- update dropdown immediately
+  setLanguage(savedLang); 
 
   let attempts = 0;
   const interval = setInterval(() => {
@@ -98,7 +95,6 @@ const handleLanguageChange = (lang) => {
     return "";
   };
 
-  /* --------------------------------------------- */
   useEffect(() => {
     let mounted = true;
 
@@ -126,7 +122,6 @@ const handleLanguageChange = (lang) => {
     };
   }, []);
 
-  /* -------------------------------------------------- */
   useEffect(() => {
     if (!categoryId) {
       setSubcategories([]);
@@ -137,7 +132,6 @@ const handleLanguageChange = (lang) => {
     setSubcategories(cat?.subcategories || []);
   }, [categoryId, categories]);
 
-  /* --------------------------------------------- */
   const saveSearchHistory = (term) => {
     if (!term.trim()) return;
     const updated = [term, ...recentSearches.filter((x) => x !== term)].slice(
@@ -148,7 +142,6 @@ const handleLanguageChange = (lang) => {
     localStorage.setItem("recentSearches", JSON.stringify(updated));
   };
 
-  /* --------------------------------------------- */
   const applyFilters = (forcedSubId = null, forcedQ = null, forcedCat = null) => {
     const params = new URLSearchParams();
 
@@ -169,7 +162,6 @@ const handleLanguageChange = (lang) => {
     setMenuOpen(false);
   };
 
-  /* --------------------------------------------- */
   const clearFilters = () => {
     setSearch("");
     setSubcatId("");
@@ -188,12 +180,10 @@ const handleLanguageChange = (lang) => {
     <AppBar position="sticky" className="navbar-main">
       <Toolbar className="navbar-toolbar">
 
-        {/* LOGO */}
         <Box component={Link} to="/" className="navbar-logo-img">
           <img src={Logo} className="logo-img" alt="UniMart Logo" />
         </Box>
 
-        {/* DESKTOP SEARCH */}
         {!admin && (
           <Box className="nav-center desktop-only">
             <TextField
@@ -222,7 +212,6 @@ const handleLanguageChange = (lang) => {
           </Box>
         )}
 
-        {/* FILTER BUTTON */}
         {!admin && (
           <Button
             className="nav-link-btn desktop-only"
@@ -235,7 +224,6 @@ const handleLanguageChange = (lang) => {
           </Button>
         )}
 
-        {/* =============== 🌍 LANGUAGE DROPDOWN (DESKTOP) =============== */}
         <Box className="desktop-only" sx={{ ml: 2 }}>
           <select
             className="language-dropdown"
@@ -253,7 +241,6 @@ const handleLanguageChange = (lang) => {
           </select>
         </Box>
 
-        {/* FILTER MENU */}
         <Menu
           anchorEl={filtersMenuAnchor}
           open={Boolean(filtersMenuAnchor)}
@@ -390,7 +377,6 @@ const handleLanguageChange = (lang) => {
             </>
           )}
 
-          {/* ADMIN NAV */}
           {admin && (
             <Box sx={{ display: "flex", gap: "12px", marginLeft: "auto" }}>
               <Button
@@ -478,7 +464,6 @@ const handleLanguageChange = (lang) => {
           )}
         </Box>
 
-        {/* MOBILE ICONS */}
         <Box
           className="mobile-only"
           sx={{ marginLeft: "auto", display: "flex", gap: "12px" }}
@@ -506,11 +491,9 @@ const handleLanguageChange = (lang) => {
         </Box>
       </Toolbar>
 
-      {/* MOBILE MENU */}
       {menuOpen && (
         <Box className="mobile-menu">
 
-          {/* 🌍 LANGUAGE DROPDOWN (MOBILE) */}
           <select
             className="language-dropdown"
             value={localStorage.getItem("lang") || "en"}

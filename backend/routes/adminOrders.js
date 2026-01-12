@@ -1,9 +1,7 @@
-// backend/routes/adminOrders.js
 const router = require("express").Router();
 const { protectAdmin } = require("../middleware/auth");
 const Order = require("../models/Order");
 
-// ✅ Get all orders (Admin)
 router.get("/", protectAdmin, async (req, res) => {
   try {
     const orders = await Order.find()
@@ -15,7 +13,6 @@ router.get("/", protectAdmin, async (req, res) => {
   }
 });
 
-// ✅ Update order status (processing/shipped/delivered/cancelled)
 router.put("/:id/status", protectAdmin, async (req, res) => {
   try {
     const { status } = req.body;
@@ -31,7 +28,6 @@ router.put("/:id/status", protectAdmin, async (req, res) => {
   }
 });
 
-// ✅ Update payment status (pending/paid/failed)
 router.put("/:id/payment", protectAdmin, async (req, res) => {
   try {
     const { paymentStatus } = req.body;
@@ -47,7 +43,6 @@ router.put("/:id/payment", protectAdmin, async (req, res) => {
   }
 });
 
-// ✅ Delete order
 router.delete("/:id", protectAdmin, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);

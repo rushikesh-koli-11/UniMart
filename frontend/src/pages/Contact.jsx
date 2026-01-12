@@ -17,7 +17,6 @@ const Contact = () => {
   const [status, setStatus] = useState(null);
   const navigate = useNavigate();
 
-  // Autofill user data when logged in
   useEffect(() => {
     if (user) {
       setForm({
@@ -67,7 +66,6 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      {/* HERO SECTION */}
       <div className="contact-hero">
         <h1>
           Contact <span>UniMart</span>
@@ -76,7 +74,6 @@ const Contact = () => {
       </div>
 
       <div className="contact-grid">
-        {/* LEFT — INFO CARD */}
         <div className="contact-info-card">
           <h2>Get in Touch</h2>
 
@@ -110,7 +107,6 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* RIGHT — FORM CARD */}
         <div className="contact-form-card">
           <h2 className="form-title">Send Us a Message</h2>
 
@@ -125,7 +121,6 @@ const Contact = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            {/* NAME */}
             <label className="input-label">Full Name</label>
             <input
               value={form.name}
@@ -135,7 +130,6 @@ const Contact = () => {
               required
             />
 
-            {/* EMAIL */}
             <label className="input-label">Email</label>
             <input
               value={form.email}
@@ -145,7 +139,6 @@ const Contact = () => {
               required
             />
 
-            {/* PHONE */}
             <label className="input-label ">Phone</label>
             <input
               value={form.phone}
@@ -154,7 +147,6 @@ const Contact = () => {
               placeholder="Login required"
             />
 
-            {/* COMMENT */}
             <label className="input-label">Message</label>
             <textarea placeholder="Enter your message here..."
               value={form.comment}

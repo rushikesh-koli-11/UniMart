@@ -1,4 +1,3 @@
-/* ========= HERO SECTION ========= */
 .legal-hero {
   width: 100%;
   text-align: center;
@@ -19,7 +18,6 @@
   margin-top: 5px;
 }
 
-/* ========= CONTENT SECTION ========= */
 .legal-content {
   line-height: 1.8;
   font-size: 16px;
@@ -35,7 +33,7 @@
   font-size: 22px;
 }
 
-/* Bullet list style */
+/* Bullet list  */
 .legal-content ul {
   margin-left: 20px;
 }
@@ -44,7 +42,6 @@
   margin-bottom: 6px;
 }
 
-/* ========= RESPONSIVENESS ========= */
 @media (max-width: 576px) {
   .legal-hero h1 {
     font-size: 32px;

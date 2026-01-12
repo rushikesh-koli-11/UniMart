@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./About.css";
 
-// MUI Icons
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SecurityIcon from "@mui/icons-material/Security";
@@ -38,13 +37,11 @@ export default function About() {
   return (
     <div className="about-wrapper">
 
-      {/* HERO SECTION */}
       <section className="about-hero">
         <h1>Welcome to <span>UniMart</span></h1>
         <p>Your modern grocery shopping destination.</p>
       </section>
 
-      {/* WHO WE ARE */}
       <section className="about-section card-section">
         <div className="section-header">
           <div className="line"></div>
@@ -58,7 +55,6 @@ export default function About() {
         </p>
       </section>
 
-      {/* OUR MISSION */}
       <section className="about-section highlight-section">
         <h2>Our Mission</h2>
         <p>
@@ -67,7 +63,6 @@ export default function About() {
         </p>
       </section>
 
-      {/* WHY CHOOSE US */}
       <section className="about-section card-section">
         <div className="section-header">
           <div className="line"></div>
@@ -104,7 +99,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* CONTACT */}
       <section className="about-section contact-section styled-card">
         <h2>Contact Us</h2>
         <div className="contact-info">
@@ -113,7 +107,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* FAQ */}
       <section className="about-section card-section">
         <div className="section-header">
           <div className="line"></div>

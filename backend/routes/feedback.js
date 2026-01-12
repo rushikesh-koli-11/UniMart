@@ -2,11 +2,7 @@ const router = require("express").Router();
 const Feedback = require("../models/Feedback");
 const {protectAdmin } = require("../middleware/auth");
 
-/**
- * PUBLIC + USER FEEDBACK
- * - If logged in → auto attach user ID + user's info
- * - If NOT logged in → allow public submission
- */
+
 router.post("/", async (req, res) => {
   try {
     const { name, email, phone, comment } = req.body;
@@ -17,7 +13,6 @@ router.post("/", async (req, res) => {
 
     let payload = { name, email, phone, comment };
 
-    // If logged in → attach user data
     if (req.user) {
       payload.user = req.user._id;
     }
@@ -30,9 +25,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * ADMIN — GET ALL FEEDBACK
- */
+
 router.get("/all", protectAdmin, async (req, res) => {
   try {
     const feedbacks = await Feedback.find()
@@ -44,9 +37,7 @@ router.get("/all", protectAdmin, async (req, res) => {
   }
 });
 
-/**
- * ADMIN — DELETE FEEDBACK
- */
+
 router.delete("/:id", protectAdmin, async (req, res) => {
   try {
     await Feedback.findByIdAndDelete(req.params.id);

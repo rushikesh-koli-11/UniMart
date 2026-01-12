@@ -9,17 +9,15 @@ const categorySchema = new mongoose.Schema({
     public_id: String,
   },
 
-  // Category-level offer
   offer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Offer",
     default: null,
   },
 
-  // Subcategories inside category
   subcategories: [
     {
-      _id: { type: String }, // Make sure subcategories are created with a unique string ID
+      _id: { type: String }, 
       name: { type: String, required: true },
       description: String,
       image: {

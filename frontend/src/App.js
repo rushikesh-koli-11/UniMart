@@ -1,4 +1,4 @@
-// frontend/src/App.jsx
+
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -48,12 +48,10 @@ import ChatbotWidget from "./components/ChatbotWiddget";
 export default function App() {
   const location = useLocation();
 
-  /* ✅ BACKEND WARM-UP (RUNS ONCE) */
   useEffect(() => {
     axios
       .get("https://unimart-bot.onrender.com")
       .catch(() => {
-        // silent warm-up, ignore errors
       });
   }, []);
 
@@ -62,12 +60,10 @@ export default function App() {
       <ScrollToTop />
       <Navbar />
 
-      {/* ✅ Show slider only on homepage */}
       {location.pathname === "/" && <SliderWrapper />}
 
       <Container>
         <Routes>
-          {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
@@ -81,11 +77,9 @@ export default function App() {
           />
           <Route path="/search" element={<SearchResults />} />
 
-          {/* USER AUTH */}
           <Route path="/user/login" element={<UserLogin />} />
           <Route path="/user/register" element={<Register />} />
 
-          {/* USER PROTECTED */}
           <Route
             path="/checkout"
             element={
@@ -122,11 +116,9 @@ export default function App() {
             }
           />
 
-          {/* ADMIN AUTH */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin/register" element={<AdminRegister />} />
 
-          {/* ADMIN PROTECTED */}
           <Route
             path="/admin/dashboard"
             element={

@@ -1,4 +1,3 @@
-/* import bootstrap module */
 import { Carousel } from "bootstrap";
 import React, { useEffect } from "react";
 import "./Slider.css";
@@ -9,7 +8,6 @@ const Slider = ({ sliderImages }) => {
       const carouselElement = document.getElementById("esevaSlider");
       if (!carouselElement) return;
 
-      // Initialize Carousel using module, not global
       const bsCarousel =
         Carousel.getInstance(carouselElement) ||
         new Carousel(carouselElement);

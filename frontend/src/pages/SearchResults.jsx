@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import API from "../api/api";
 import ProductCard from "../components/ProductCard";
-import "./SubcategoryProducts.css"; // ⭐ Reuse same grid styling
+import "./SubcategoryProducts.css"; 
 
 export default function SearchResults() {
   const location = useLocation();
@@ -32,12 +32,10 @@ export default function SearchResults() {
 
   return (
     <div className="subcategory-page">
-      {/* ⭐ Same Title Style */}
       <h2 className="subcategory-title">
         Search Results for: <span style={{ color: "#031576" }}>{q}</span>
       </h2>
 
-      {/* ⭐ Same grid UI as subcategory products */}
       <div className="subcategory-product-grid">
         {products.length > 0 ? (
           products.map((product) => (

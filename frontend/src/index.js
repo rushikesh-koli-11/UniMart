@@ -16,9 +16,9 @@ root.render(
     v7_startTransition: true,
     v7_relativeSplatPath: true,
   }}>
-    <AdminAuthProvider>     {/* ✅ Admin first */}
-      <UserAuthProvider>    {/* ✅ Then user */}
-        <CartProvider>      {/* ✅ Cart last */}
+    <AdminAuthProvider>     
+      <UserAuthProvider>    
+        <CartProvider>  
           <App />
         </CartProvider>
       </UserAuthProvider>

@@ -5,7 +5,6 @@
   --white: #ffffff;
 }
 
-/* ----------- PRODUCT CARD ----------- */
 .small-card {
   min-width: 180px;
   max-width: 180px;
@@ -18,7 +17,6 @@
   cursor: pointer;
   transition: 0.25s ease;
   position: relative;
-  /* height: 310px; FIXED HEIGHT */
 }
 
 .small-card:hover {
@@ -27,7 +25,6 @@
   border-color: var(--primary-orange);
 }
 
-/* ----------- IMAGE ----------- */
 .small-card img {
   width: 100%;
   height: 140px;
@@ -36,7 +33,6 @@
   padding: 10px;
 }
 
-/* ----------- STOCK TAG OVERLAY ----------- */
 .stock-tag {
   position: absolute;
   bottom: 145px;
@@ -59,7 +55,6 @@
   color: #fff;
 }
 
-/* ----------- CONTENT ----------- */
 .small-card-content {
   padding: 10px;
   flex-grow: 1;
@@ -95,7 +90,6 @@
   color: #42b231;
 }
 
-/* ----------- ACTION BUTTONS ----------- */
 .small-actions {
   display: flex;
   justify-content: space-between;
@@ -119,7 +113,6 @@
   background: var(--primary-orange) !important;
 }
 
-/* ----------- BADGES ----------- */
 .rating-number-badge {
   position: absolute;
   top: 6px;
@@ -153,7 +146,7 @@
   font-size: 16px;
   font-weight: bold;
   min-height: 20px;
-  height: 20px; /* FIXED HEIGHT */
+  height: 20px;
   color: var(--success-green);
 }
 .translate-safe {

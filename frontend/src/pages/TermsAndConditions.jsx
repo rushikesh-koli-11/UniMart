@@ -5,13 +5,11 @@ export default function TermsAndConditions() {
   return (
     <div className="legal-wrapper">
 
-      {/* HERO SECTION */}
       <section className="legal-hero">
         <h1>Terms & Conditions</h1>
         <p>Please read these terms carefully before using UniMart.</p>
       </section>
 
-      {/* CONTENT */}
       <div className="container py-4 legal-content">
 
         <h3 className="section-title">1. Acceptance of Terms</h3>

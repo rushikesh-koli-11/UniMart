@@ -46,7 +46,7 @@ export default function AdminProducts() {
     images: [],
   });
 
-  // LOAD ALL DATA
+  
   useEffect(() => {
     load();
     loadCategories();
@@ -64,7 +64,6 @@ export default function AdminProducts() {
     setCategories(data);
   };
 
-  // MULTIPLE IMAGE UPLOAD
   const handleMultiUpload = async (e) => {
     const files = Array.from(e.target.files);
 
@@ -93,7 +92,6 @@ export default function AdminProducts() {
       images: prev.images.filter((_, idx) => idx !== i),
     }));
 
-  // ----------- DRAG & DROP IMAGE SORTING -----------
 
   const reorder = (list, startIndex, endIndex) => {
     const result = [...list];
@@ -117,7 +115,6 @@ export default function AdminProducts() {
     }));
   };
 
-  // SAVE PRODUCT
   const saveProduct = async () => {
     try {
       setError("");
@@ -166,7 +163,6 @@ export default function AdminProducts() {
     }
   };
 
-  // EDIT PRODUCT
   const editProduct = (p) => {
     const cat = categories.find((c) => c._id === p.category?._id);
     setSubcats(cat?.subcategories || []);
@@ -196,13 +192,11 @@ export default function AdminProducts() {
 
   return (
     <div className="container-fluid admin-products-wrapper mt-3">
-      {/* HERO */}
       <div className="admin-products-hero">
         <h1>Products Dashboard</h1>
         <p>Manage all products, categories, and stock levels</p>
       </div>
 
-      {/* FILTER BAR */}
       <div className="row g-3 filter-row justify-content-center">
         <div className="col-12 col-md-4">
           <TextField
@@ -232,7 +226,6 @@ export default function AdminProducts() {
           />
         </div>
 
-        {/* CATEGORY */}
         <div className="col-6 col-md-3">
           <TextField
             select
@@ -270,7 +263,6 @@ export default function AdminProducts() {
           </TextField>
         </div>
 
-        {/* SUBCATEGORY */}
         <div className="col-6 col-md-3">
           {subcats.length > 0 && (
             <TextField
@@ -297,7 +289,6 @@ export default function AdminProducts() {
           )}
         </div>
 
-        {/* ADD PRODUCT */}
         <div className="col-12 col-md-2 text-md-end">
           <Button
             variant="contained"
@@ -323,7 +314,6 @@ export default function AdminProducts() {
         </div>
       </div>
 
-      {/* LOW STOCK LIST */}
       {lowStock.length > 0 && (
         <div className="low-stock-box">
           <Typography className="low-stock-title">
@@ -384,7 +374,6 @@ export default function AdminProducts() {
         </div>
       )}
 
-      {/* MAIN PRODUCT TABLE */}
       <div className="table-responsive admin-products-table-box">
         <table className="table table-bordered admin-products-table">
           <thead>
@@ -451,7 +440,6 @@ export default function AdminProducts() {
         </table>
       </div>
 
-      {/* ADD / EDIT PRODUCT MODAL */}
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle className="dialog-title">
           {editing ? "Edit Product" : "Add Product"}
@@ -487,7 +475,6 @@ export default function AdminProducts() {
               onChange={(e) => setForm({ ...form, price: e.target.value })}
             />
 
-            {/* STOCK INPUT */}
             <Box className="stock-box">
               <Button
                 className="stock-btn minus"
@@ -568,7 +555,6 @@ export default function AdminProducts() {
               </TextField>
             )}
 
-            {/* UPLOAD IMAGE BUTTON */}
             <Button variant="outlined" component="label" className="upload-btn">
               <AddPhotoAlternateIcon /> Upload Images
               <input type="file" hidden multiple onChange={handleMultiUpload} />

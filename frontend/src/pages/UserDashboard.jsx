@@ -22,7 +22,6 @@ export default function UserDashboard() {
 
   const addresses = user.addresses || [];
 
-  /* PROFILE STATE */
   const [profile, setProfile] = useState({
     name: user.name || "",
     email: user.email || "",
@@ -43,20 +42,17 @@ export default function UserDashboard() {
     setTimeout(() => setMsg(""), 2000);
   };
 
-  /* NEW ADDRESS */
   const [newAddr, setNewAddr] = useState({
     label: "Home",
     address: "",
   });
 
-  /* COLLAPSE */
   const [openIndex, setOpenIndex] = useState(null);
   const toggleOpen = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <div className="container py-3">
 
-      {/* HERO */}
       <section className="ud-hero mb-4 text-center">
         <h1>
           My <span>Account</span>
@@ -67,12 +63,10 @@ export default function UserDashboard() {
       <section className="row justify-content-center">
         <div className="col-lg-8 col-md-10 col-12">
 
-          {/* CARD */}
           <div className="profile-card styled-card">
 
             {msg && <Alert severity="success">{msg}</Alert>}
 
-            {/* PROFILE DETAILS */}
             <h3 className="sub-title mt-3">Profile Details</h3>
 
             <Stack spacing={2} className="ud-form">
@@ -109,7 +103,6 @@ export default function UserDashboard() {
 
             <hr className="divider" />
 
-            {/* ADDRESS LIST */}
             <h3 className="sub-title">Saved Addresses</h3>
 
             {addresses.length === 0 && (
@@ -203,7 +196,6 @@ export default function UserDashboard() {
 
             <hr className="divider" />
 
-            {/* ADD NEW ADDRESS */}
             <h3 className="sub-title">Add / Edit Address</h3>
 
             <Stack spacing={2} className="ud-form">
@@ -239,7 +231,6 @@ export default function UserDashboard() {
 
             <hr className="divider" />
 
-            {/* ONE BUTTON */}
             <div className="text-center my-3">
               <Button
                 className="primary-btn big-save-btn w-100"

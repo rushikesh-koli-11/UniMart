@@ -2,7 +2,6 @@ const router = require("express").Router();
 const Category = require("../models/Category");
 const { protectAdmin } = require("../middleware/auth");
 
-/* ---------------- GET ALL CATEGORIES ---------------- */
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
@@ -12,7 +11,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-/* ---------------- CREATE CATEGORY ---------------- */
 router.post("/", protectAdmin, async (req, res) => {
   try {
     const { name, description, image } = req.body;
@@ -23,7 +21,7 @@ router.post("/", protectAdmin, async (req, res) => {
     const category = await Category.create({
       name,
       description,
-      image  // ✅ now image object is saved properly
+      image  
     });
 
     res.status(201).json(category);
@@ -32,7 +30,6 @@ router.post("/", protectAdmin, async (req, res) => {
   }
 });
 
-/* ---------------- ADD SUBCATEGORY ---------------- */
 router.post("/:id/sub", protectAdmin, async (req, res) => {
   try {
     const { name, description, image } = req.body;
@@ -43,7 +40,7 @@ router.post("/:id/sub", protectAdmin, async (req, res) => {
     cat.subcategories.push({
       name,
       description,
-      image   // ✅ store image object
+      image   
     });
 
     await cat.save();
@@ -53,7 +50,6 @@ router.post("/:id/sub", protectAdmin, async (req, res) => {
   }
 });
 
-/* ---------------- UPDATE CATEGORY ---------------- */
 router.put("/:id", protectAdmin, async (req, res) => {
   try {
     const { name, description, image } = req.body;
@@ -65,7 +61,7 @@ router.put("/:id", protectAdmin, async (req, res) => {
     category.description = description;
 
     if (image) {
-      category.image = image; // ✅ Update image if provided
+      category.image = image; 
     }
 
     await category.save();
@@ -75,7 +71,6 @@ router.put("/:id", protectAdmin, async (req, res) => {
   }
 });
 
-/* ---------------- UPDATE SUBCATEGORY ---------------- */
 router.put("/:catId/sub/:subId", protectAdmin, async (req, res) => {
   try {
     const { name, description, image } = req.body;
@@ -90,7 +85,7 @@ router.put("/:catId/sub/:subId", protectAdmin, async (req, res) => {
     sub.description = description;
 
     if (image) {
-      sub.image = image;  // ✅ Update image if provided
+      sub.image = image;  
     }
 
     await cat.save();
@@ -100,7 +95,6 @@ router.put("/:catId/sub/:subId", protectAdmin, async (req, res) => {
   }
 });
 
-/* ---------------- DELETE CATEGORY ---------------- */
 router.delete("/:id", protectAdmin, async (req, res) => {
   try {
     await Category.findByIdAndDelete(req.params.id);
@@ -110,7 +104,6 @@ router.delete("/:id", protectAdmin, async (req, res) => {
   }
 });
 
-/* ---------------- DELETE SUBCATEGORY ---------------- */
 router.delete("/:id/sub/:subId", protectAdmin, async (req, res) => {
   try {
     const cat = await Category.findById(req.params.id);

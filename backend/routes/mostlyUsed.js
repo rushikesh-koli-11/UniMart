@@ -10,8 +10,6 @@ const {
   updateOrder
 } = require("../controllers/mostlyUsedController");
 
-// Admin Protected (optional)
-// const adminAuth = require("../middleware/adminAuth");
 
 router.post("/add", upload.single("logo"), addLink);
 router.get("/all", getLinks);

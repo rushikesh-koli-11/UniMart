@@ -13,7 +13,6 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
-  // ADD ITEM TO CART
   const addToCart = (product) => {
     const existing = cart.find((item) => item._id === product._id);
 
@@ -29,7 +28,6 @@ export const CartProvider = ({ children }) => {
     updateLocalStorage(updatedCart);
   };
 
-  // INCREASE QTY
   const incrementQty = (id) => {
     const updatedCart = cart.map((item) =>
       item._id === id ? { ...item, qty: item.qty + 1 } : item
@@ -37,7 +35,6 @@ export const CartProvider = ({ children }) => {
     updateLocalStorage(updatedCart);
   };
 
-  // DECREASE QTY
   const decrementQty = (id) => {
     const updatedCart = cart.map((item) =>
       item._id === id && item.qty > 1
@@ -47,7 +44,6 @@ export const CartProvider = ({ children }) => {
     updateLocalStorage(updatedCart);
   };
 
-  // CLEAR CART
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("cart");

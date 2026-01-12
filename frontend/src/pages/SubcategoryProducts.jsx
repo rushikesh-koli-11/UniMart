@@ -5,7 +5,7 @@ import ProductCard from "../components/ProductCard";
 import "./SubcategoryProducts.css";
 
 export default function SubcategoryProducts() {
-  const { subcategoryId } = useParams(); // ⬅️ FIXED
+  const { subcategoryId } = useParams(); 
 
   const [products, setProducts] = useState([]);
   const [subcategoryName, setSubcategoryName] = useState("");

@@ -67,10 +67,6 @@ export default function AdminOrders() {
 
     doc.save(`Invoice_${order._id}.pdf`);
   };
-
-  /* ======================================================
-        FILTER LOGIC FOR 3 SECTIONS
-  ====================================================== */
   const matchesSearch = (o) => {
     const q = search.toLowerCase();
     return (
@@ -80,14 +76,12 @@ export default function AdminOrders() {
     );
   };
 
-  // 1️⃣ PENDING ORDERS  (Not delivered OR not paid)
   const pendingOrders = orders.filter((o) => {
     const deliveredPaid = o.status === "delivered" && o.paymentStatus === "paid";
     const deliveredNotPaid = o.status === "delivered" && o.paymentStatus !== "paid";
     return matchesSearch(o) && !deliveredPaid && !deliveredNotPaid;
   });
 
-  // 2️⃣ Delivered but Payment NOT Paid
   const deliveredNotPaid = orders.filter(
     (o) =>
       o.status === "delivered" &&
@@ -95,7 +89,6 @@ export default function AdminOrders() {
       matchesSearch(o)
   );
 
-  // 3️⃣ Delivered & Paid Orders
   const completedOrders = orders.filter(
     (o) =>
       o.status === "delivered" &&
@@ -106,13 +99,11 @@ export default function AdminOrders() {
   return (
     <div className="container-fluid py-3">
 
-      {/* HERO SECTION */}
       <div className="admin-orders-hero mb-4">
         <h1>Orders Dashboard</h1>
         <p>Manage, track, and verify all customer orders</p>
       </div>
 
-      {/* SEARCH BAR */}
       <div className="row mb-3 justify-content-center">
         <div className="col-md-4 col-sm-10">
           <input
@@ -125,9 +116,6 @@ export default function AdminOrders() {
         </div>
       </div>
 
-      {/* ======================================================
-            1️⃣ PENDING ORDERS TABLE
-      ====================================================== */}
       <h3 className="orders-title mb-3">⏳ Pending Orders</h3>
 
       <div className="table-responsive shadow-sm rounded mb-4">
@@ -212,9 +200,6 @@ export default function AdminOrders() {
         </table>
       </div>
 
-      {/* ======================================================
-            2️⃣ DELIVERED BUT PAYMENT NOT PAID
-      ====================================================== */}
      {deliveredNotPaid.length > 0 && (
   <div className="mt-4">
     <h3 className="orders-title">⚠️ Delivered but Payment Not Paid</h3>
@@ -243,7 +228,6 @@ export default function AdminOrders() {
 
               <td className="fw-bold text-success">₹{o.total}</td>
 
-              {/* PAYMENT DROPDOWN */}
               <td>
                 <select
                   className="form-select form-select-sm"
@@ -258,7 +242,6 @@ export default function AdminOrders() {
                 </select>
               </td>
 
-              {/* STATUS DROPDOWN (DISABLED, delivered fixed) */}
               <td>
                 <select className="form-select form-select-sm" disabled>
                   <option>Delivered</option>
@@ -299,9 +282,6 @@ export default function AdminOrders() {
 
 
 
-      {/* ======================================================
-            3️⃣ DELIVERED & PAID ORDERS
-      ====================================================== */}
      {completedOrders.length > 0 && (
   <div className="mt-4">
     <h3 className="orders-title">✔️ Delivered & Paid Orders</h3>
@@ -330,14 +310,12 @@ export default function AdminOrders() {
 
               <td className="fw-bold text-success">₹{o.total}</td>
 
-              {/* PAYMENT LOCKED */}
               <td>
                 <select className="form-select form-select-sm" disabled>
                   <option>Paid</option>
                 </select>
               </td>
 
-              {/* STATUS LOCKED */}
               <td>
                 <select className="form-select form-select-sm" disabled>
                   <option>Delivered</option>
@@ -377,7 +355,6 @@ export default function AdminOrders() {
 )}
 
 
-      {/* VIEW ORDER MODAL */}
       <Modal show={!!viewOrder} onHide={() => setViewOrder(null)} centered size="lg">
         <Modal.Header closeButton className="modal-header-custom">
           <Modal.Title>Order Items</Modal.Title>

@@ -7,7 +7,6 @@ const ManageSlider = () => {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
 
-  // Dropdown state
   const [mainCategories, setMainCategories] = useState([]);
   const [categoriesMap, setCategoriesMap] = useState({});
   const [products, setProducts] = useState([]);
@@ -18,7 +17,6 @@ const ManageSlider = () => {
 
   const [link, setLink] = useState("");
 
-  // Load categories from /categories
   const loadCategories = async () => {
     try {
       const res = await API.get("/categories");
@@ -36,7 +34,6 @@ const ManageSlider = () => {
     }
   };
 
-  // Load products from /products
   const loadProducts = async () => {
     try {
       const res = await API.get("/products");
@@ -46,7 +43,6 @@ const ManageSlider = () => {
     }
   };
 
-  // Load slider images
   const loadImages = async () => {
     try {
       const res = await API.get("/slider");
@@ -64,7 +60,6 @@ const ManageSlider = () => {
     loadImages();
   }, []);
 
-  // Upload image
   const uploadImage = async (e) => {
     e.preventDefault();
     if (!file) return;
@@ -106,7 +101,6 @@ const ManageSlider = () => {
     }
   };
 
-  // Delete image
   const deleteImg = async (id) => {
     const confirmed = await Swal.fire({
       title: "Delete Image?",
@@ -134,7 +128,6 @@ const ManageSlider = () => {
     }
   };
 
-  // Move image up/down
   const moveImage = (index, direction) => {
     const updated = [...images];
 
@@ -153,7 +146,6 @@ const ManageSlider = () => {
     setImages(reordered);
   };
 
-  // Save order
   const saveOrder = async () => {
     const confirmed = await Swal.fire({
       title: "Save Slider Order?",
@@ -187,7 +179,6 @@ const ManageSlider = () => {
         <h3 className="slider-title">Manage Slider Images</h3>
         <div className="underline"></div>
 
-        {/* Upload Form */}
         <form onSubmit={uploadImage} className="upload-box">
           <input
             type="file"
@@ -196,7 +187,6 @@ const ManageSlider = () => {
             required
           />
 
-          {/* Main Category */}
           <select
             className="form-select mt-2"
             value={selectedMain}
@@ -216,7 +206,6 @@ const ManageSlider = () => {
             ))}
           </select>
 
-          {/* Subcategory */}
           {selectedMain && (
             <select
               className="form-select mt-2"
@@ -225,7 +214,6 @@ const ManageSlider = () => {
                 const sub = e.target.value;
                 setSelectedSub(sub);
                 setSelectedProduct("");
-                // Default: subcategory page
                 setLink(`/products?subcategory=${encodeURIComponent(sub)}`);
               }}
             >
@@ -238,7 +226,6 @@ const ManageSlider = () => {
             </select>
           )}
 
-          {/* Product */}
           {selectedSub && (
             <select
               className="form-select mt-2"
@@ -264,7 +251,6 @@ const ManageSlider = () => {
             </select>
           )}
 
-          {/* Custom link override */}
           <input
             type="text"
             className="form-control mt-2"
@@ -278,7 +264,6 @@ const ManageSlider = () => {
           </button>
         </form>
 
-        {/* Slider Images Display */}
         <div className="slider-grid mt-4">
           {images.length === 0 ? (
             <p>No images uploaded.</p>

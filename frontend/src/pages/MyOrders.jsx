@@ -39,9 +39,6 @@ export default function MyOrders() {
     loadOrders();
   }, []);
 
-  /* =====================================================
-       COUNTDOWN HELPER
-  ===================================================== */
   const formatTime = (ms) => {
     if (ms <= 0) return "Arriving soon";
 
@@ -53,7 +50,6 @@ export default function MyOrders() {
     return `${hrs}h ${mins}m ${secs}s`;
   };
 
-  // ⭐ update countdown every second
   useEffect(() => {
     const interval = setInterval(() => {
       const updated = {};
@@ -74,9 +70,6 @@ export default function MyOrders() {
     return () => clearInterval(interval);
   }, [orders]);
 
-  /* =====================================================
-       STATUS TRACKING
-  ===================================================== */
   const steps = ["Ordered", "Packed", "Shipped", "Delivered"];
   const getActiveStep = (status) =>
     status === "packed"
@@ -87,9 +80,6 @@ export default function MyOrders() {
           ? 3
           : 0;
 
-  /* =====================================================
-       DELIVERY TIME CALCULATOR
-  ===================================================== */
   const getDeliveryTime = (order) => {
     if (!order.deliveredAt) return "Not delivered yet";
 
@@ -104,9 +94,6 @@ export default function MyOrders() {
     return `${days}d ${hours}h ${minutes}m`;
   };
 
-  /* =====================================================
-       CANCEL ORDER
-  ===================================================== */
   const cancelOrder = async (id) => {
     try {
       await API.put(`/orders/${id}/cancel`);

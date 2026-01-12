@@ -1,10 +1,8 @@
-// backend/routes/products.js
 const router = require("express").Router();
 const productController = require("../controllers/productController");
 const { protectAdmin, protectUser } = require("../middleware/auth");
 const Product = require("../models/Product");
 
-// ⭐ SEARCH (by query/category/subcategory)
 router.get("/search", async (req, res) => {
   try {
     const { q, category, subcategory } = req.query;
@@ -32,11 +30,9 @@ router.get("/search", async (req, res) => {
   }
 });
 
-// ⭐ PUBLIC ROUTES
-router.get("/", productController.listProducts);      // supports sort, limit, filters
+router.get("/", productController.listProducts);      
 router.get("/:id", productController.getProduct);
 
-// ⭐ REVIEWS
 router.post("/:id/reviews", protectUser, productController.addReview);
 
 router.delete(
@@ -48,12 +44,10 @@ router.delete(
   productController.deleteReview
 );
 
-// ⭐ ADMIN ROUTES
 router.post("/", protectAdmin, productController.createProduct);
 router.put("/:id", protectAdmin, productController.updateProduct);
 router.delete("/:id", protectAdmin, productController.deleteProduct);
 
-// LOW STOCK (path: /products/low-stock)
 router.get("/low-stock/list", async (req, res) => {
   const lowStock = await Product.find({ stock: { $lte: 5 } });
   res.json(lowStock);

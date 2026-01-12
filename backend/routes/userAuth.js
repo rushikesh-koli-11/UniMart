@@ -3,14 +3,12 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// USER REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ message: "Email already registered" });
 
-    // ❌ No hashing here — let mongoose model hash it
     await User.create({ name, email, phone, password });
 
     res.json({ message: "Registered successfully" });
@@ -19,7 +17,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// USER LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;

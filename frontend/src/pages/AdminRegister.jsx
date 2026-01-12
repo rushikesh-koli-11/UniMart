@@ -21,11 +21,9 @@ export default function AdminRegister() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  // Live warnings
   const [emailWarning, setEmailWarning] = useState("");
   const [phoneWarning, setPhoneWarning] = useState("");
 
-  /* ---------------- TIMER ---------------- */
   useEffect(() => {
     if (timer <= 0) return;
     const interval = setInterval(() => setTimer((t) => t - 1), 1000);
@@ -38,7 +36,6 @@ export default function AdminRegister() {
     return `${m}:${s}`;
   };
 
-  /* ---------------- SEND OTP ---------------- */
   const sendOTP = async () => {
     if (emailWarning || phoneWarning)
       return setMsg("Fix validation errors first");
@@ -57,7 +54,6 @@ export default function AdminRegister() {
     }
   };
 
-  /* ---------------- VERIFY OTP ---------------- */
   const verifyOTP = async () => {
     try {
       await API.post("/otp/verify-otp", {
@@ -72,7 +68,6 @@ export default function AdminRegister() {
     }
   };
 
-  /* ---------------- REGISTER ADMIN ---------------- */
   const submit = async () => {
     if (!otpVerified)
       return setMsg("⚠️ Verify phone number before registration");
@@ -96,14 +91,12 @@ export default function AdminRegister() {
 
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
-        {/* NAME */}
         <input
           className="form-control input-box mb-3"
           placeholder="Full Name"
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
-        {/* EMAIL */}
         <input
           className="form-control input-box mb-0"
           placeholder="Admin Email (@gmail.com)"
@@ -119,7 +112,6 @@ export default function AdminRegister() {
         />
         {emailWarning && <small className="text-danger">{emailWarning}</small>}
 
-        {/* PHONE + SEND OTP */}
         <div className="d-flex gap-2 mt-3 mb-2">
           <input
             className="form-control input-box"
@@ -150,7 +142,6 @@ export default function AdminRegister() {
 
         {phoneWarning && <small className="text-danger">{phoneWarning}</small>}
 
-        {/* OTP FIELD */}
         {otpSent && !otpVerified && (
           <>
             <div className="d-flex gap-2 mt-3 mb-2">
@@ -178,7 +169,6 @@ export default function AdminRegister() {
           </>
         )}
 
-        {/* PASSWORD FIELDS — ONLY AFTER OTP VERIFIED */}
         {otpVerified && (
           <>
             <input

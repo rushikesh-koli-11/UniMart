@@ -1,13 +1,9 @@
-// backend/routes/adminOffers.js
 const router = require("express").Router();
 const { protectAdmin } = require("../middleware/auth");
 const Offer = require("../models/Offer");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 
-/* =====================================================
-   GET ALL OFFERS
-===================================================== */
 router.get("/", protectAdmin, async (req, res) => {
   try {
     const offers = await Offer.find()
@@ -21,9 +17,6 @@ router.get("/", protectAdmin, async (req, res) => {
   }
 });
 
-/* =====================================================
-   CREATE OFFER
-===================================================== */
 router.post("/", protectAdmin, async (req, res) => {
   try {
     const {
@@ -81,9 +74,6 @@ router.post("/", protectAdmin, async (req, res) => {
   }
 });
 
-/* =====================================================
-   UPDATE OFFER
-===================================================== */
 router.put("/:id", protectAdmin, async (req, res) => {
   try {
     const offer = await Offer.findByIdAndUpdate(req.params.id, req.body, {
@@ -99,9 +89,6 @@ router.put("/:id", protectAdmin, async (req, res) => {
   }
 });
 
-/* =====================================================
-   DELETE OFFER
-===================================================== */
 router.delete("/:id", protectAdmin, async (req, res) => {
   try {
     const offer = await Offer.findByIdAndDelete(req.params.id);

@@ -7,13 +7,11 @@
   --card-bg: #ffffff;
 }
 
-/* WRAPPER */
 .orders-wrapper {
   margin: 25px 10px;
   padding-bottom: 40px;
 }
 
-/* PAGE TITLE */
 .orders-title {
   font-weight: 800 !important;
   color: var(--primary-blue) !important;
@@ -21,7 +19,6 @@
   font-size: 28px !important;
 }
 
-/* EMPTY STATE */
 .no-orders {
   text-align: center;
   margin-top: 80px;
@@ -30,7 +27,6 @@
   font-weight: 700;
 }
 
-/* ORDER CARD */
 .order-card {
   border-radius: 14px !important;
   background: var(--card-bg);
@@ -45,7 +41,6 @@
   box-shadow: 0px 12px 30px rgba(3, 21, 118, 0.15) !important;
 }
 
-/* HEADER */
 .order-header {
   display: flex;
   justify-content: space-between;
@@ -58,7 +53,6 @@
   color: var(--primary-blue);
 }
 
-/* STATUS BADGE */
 .order-status {
   font-weight: 700 !important;
   padding: 5px 12px !important;
@@ -83,14 +77,12 @@
   background: var(--danger-red) !important;
 }
 
-/* DATE */
 .order-date {
   color: #888;
   font-size: 14px;
   margin-bottom: 8px;
 }
 
-/* SECTION TITLE */
 .section-title {
   font-weight: 800;
   color: var(--primary-blue);
@@ -99,7 +91,6 @@
   font-size: 17px;
 }
 
-/* SHIPPING BOX */
 .shipping-box {
   background: var(--light-bg);
   padding: 12px;
@@ -109,7 +100,6 @@
   line-height: 1.5;
 }
 
-/* ITEMS ROW */
 .item-row {
   display: flex;
   align-items: center;
@@ -150,7 +140,6 @@
   text-align: right;
 }
 
-/* TOTAL */
 .order-total {
   margin-top: 14px;
   text-align: right;
@@ -161,7 +150,6 @@
   padding-top: 10px;
 }
 
-/* BUTTONS */
 .invoice-btn {
   background: var(--primary-blue) !important;
   color: white !important;
@@ -188,7 +176,6 @@
   color: white !important;
 }
 
-/* TRACKING STEPPER */
 .MuiStepLabel-label {
   font-weight: 700 !important;
   color: var(--primary-blue) !important;
@@ -202,7 +189,6 @@
   color: var(--success-green) !important;
 }
 
-/* RESPONSIVE */
 @media (max-width: 480px) {
   .item-row {
     flex-direction: column;
@@ -247,13 +233,11 @@
   color: #fff !important;
 }
 
-/* Status colors */
 .order-status.processing { background:#ff9800 !important; color:#fff !important; }
 .order-status.packed { background:#0288d1 !important; color:#fff !important; }
 .order-status.shipped { background:#3949ab !important; color:#fff !important; }
 .order-status.delivered { background:#2e7d32 !important; color:#fff !important; }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .order-id { font-size: 16px; }
   .item-img { width: 55px; height: 55px; }

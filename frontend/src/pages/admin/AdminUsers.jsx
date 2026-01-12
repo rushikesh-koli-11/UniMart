@@ -29,13 +29,11 @@ export default function AdminUsers() {
   return (
     <div className="container-fluid admin-users-wrapper py-3">
 
-      {/* HERO */}
       <div className="admin-users-hero text-center mb-4">
         <h2 className="hero-title">Manage Users</h2>
         <p className="hero-subtitle">View, monitor, and manage all registered users</p>
       </div>
 
-      {/* TABLE SECTION */}
       <div className="table-responsive shadow-sm rounded admin-users-table-container">
         <table className="table table-bordered table-hover text-center align-middle admin-users-table">
           <thead className="table-header">

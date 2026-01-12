@@ -3,14 +3,12 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 
-// ✅ ADMIN REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
     const exists = await Admin.findOne({ email });
     if (exists) return res.status(400).json({ message: "Admin already exists" });
 
-    // ❌ DO NOT hash here — model will hash automatically
     const admin = await Admin.create({ name, email, phone, password, isAdmin: true });
 
     res.json({ message: "Admin registered successfully" });
@@ -19,7 +17,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// ✅ ADMIN LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;

@@ -7,12 +7,10 @@ const { protectAdmin } = require("../middleware/auth");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// ✅ Admin-only image upload
 router.post("/image", protectAdmin, upload.single("image"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
-    // Decide folder dynamically
     const folder =
       req.body.type === "category"
         ? "unimark/categories"

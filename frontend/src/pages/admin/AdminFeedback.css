@@ -5,12 +5,10 @@
   --white-d9: #ffffffd9;
 }
 
-/* PAGE */
 .admin-feedback-page {
   width: 100%;
 }
 
-/* HEADER */
 .feedback-header {
   background: linear-gradient(135deg, #03076b, #0629c2);
   color: var(--white-d9);
@@ -23,7 +21,6 @@
   font-weight: 800;
 }
 
-/* TABLE CONTAINER */
 .feedback-table-box {
   background: #fff;
   border-radius: 14px;
@@ -31,7 +28,6 @@
   box-shadow: 0 3px 14px rgba(0,0,0,0.08);
 }
 
-/* TABLE HEAD */
 .feedback-table thead {
   background: var(--orange);
   color: #fff;
@@ -42,21 +38,18 @@
   font-weight: 700;
 }
 
-/* TABLE BODY */
 .feedback-table td {
   background: #fafbff;
   padding: 10px;
   font-size: 14px;
 }
 
-/* COMMENT FIX */
 .comment-cell {
   max-width: 420px;
   white-space: normal;
   word-wrap: break-word;
 }
 
-/* DELETE BUTTON */
 .delete-btn {
   background: red!important;
   border: none !important;
@@ -68,7 +61,6 @@
   background: #d75a02 !important;
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .feedback-header {
     padding: 20px;

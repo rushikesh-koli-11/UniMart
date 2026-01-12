@@ -5,14 +5,12 @@ const SliderImage = require("../models/SliderImage");
 const upload = require("../config/multer");
 const cloudinary = require("../config/cloudinary");
 
-// ✅ Upload slider image (Cloudinary + memoryStorage)
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // Upload buffer to Cloudinary
     const uploadResult = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         { folder: "slider" },
@@ -27,7 +25,7 @@ router.post("/", upload.single("image"), async (req, res) => {
     const count = await SliderImage.countDocuments();
 
     const newImg = await SliderImage.create({
-      imageUrl: uploadResult.secure_url, // ✅ Cloudinary URL
+      imageUrl: uploadResult.secure_url, 
       order: count + 1,
       link: link || null,
     });
@@ -39,7 +37,6 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// ✅ Get all slider images (sorted)
 router.get("/", async (req, res) => {
   try {
     const images = await SliderImage.find().sort({ order: 1 });
@@ -50,7 +47,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Delete slider image (with Cloudinary cleanup if you want)
 router.delete("/:id", async (req, res) => {
   try {
     const img = await SliderImage.findByIdAndDelete(req.params.id);
@@ -58,9 +54,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ message: "Image not found" });
     }
 
-    // OPTIONAL: If you stored public_id too, delete from Cloudinary here
 
-    // Reorder remaining images
     const remaining = await SliderImage.find().sort({ order: 1 });
     for (let i = 0; i < remaining.length; i++) {
       remaining[i].order = i + 1;
@@ -74,7 +68,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// ✅ Reorder images
 router.put("/reorder", async (req, res) => {
   try {
     const { images } = req.body;

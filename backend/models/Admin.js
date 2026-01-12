@@ -7,7 +7,7 @@ const adminSchema = new mongoose.Schema({
   phone: String,
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: true }
-}, { timestamps: true }); // ✅ add this
+}, { timestamps: true }); 
 
 
 adminSchema.pre("save", async function (next) {

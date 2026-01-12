@@ -5,7 +5,7 @@
   --white: #ffffffd9;
 }
 
-/* HERO SECTION */
+
 .dashboard-hero {
   background: linear-gradient(135deg, #03076b, #fe6e03);
   color: var(--white);
@@ -22,7 +22,7 @@
   opacity: 0.9;
 }
 
-/* STAT CARDS */
+
 .stat-card {
   border-radius: 14px !important;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -34,7 +34,6 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* ICON STYLE */
 .stat-icon {
   width: 60px;
   height: 60px;
@@ -74,14 +73,12 @@
   color: var(--blue);
 }
 
-/* SECTION TITLES */
 .section-title {
   color: var(--blue);
   border-left: 5px solid var(--orange);
   padding-left: 10px;
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 26px;

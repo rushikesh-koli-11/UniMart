@@ -53,7 +53,6 @@ export default function Checkout() {
       return;
     }
 
-    // ⭐ CITY VALIDATION — ONLY ALLOW SOLAPUR
     const addressLower = form.address.toLowerCase();
     if (!addressLower.includes("solapur")) {
       setMsg("❌ We currently deliver only within Solapur city.");
@@ -61,7 +60,6 @@ export default function Checkout() {
     }
 
     try {
-      // STEP 1 — SAVE TYPED ADDRESS IF NEW
       const exists = addresses.some(
         (a) => a.address.toLowerCase() === form.address.toLowerCase()
       );
@@ -76,7 +74,6 @@ export default function Checkout() {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
-      // STEP 2 — CREATE ORDER
       await API.post("/orders", {
         items: cart.map((i) => ({
           product: i._id,
@@ -98,13 +95,11 @@ export default function Checkout() {
   return (
     <div className="checkout-page">
 
-      {/* HERO */}
       <div className="checkout-hero">
         <h1>Checkout</h1>
         <p>Almost there! Complete your delivery details to confirm your order.</p>
       </div>
 
-      {/* ADDRESS SELECTION */}
       <div className="checkout-container">
         <Typography variant="h6" className="section-title">
           Select Delivery Address
@@ -134,7 +129,6 @@ export default function Checkout() {
           </Card>
         ))}
 
-        {/* DELIVERY DETAILS FORM */}
         <Typography variant="h6" className="section-title mt-4">
           Enter Delivery Details
         </Typography>
@@ -175,7 +169,6 @@ export default function Checkout() {
           </Stack>
         </Card>
 
-        {/* SUMMARY BOX */}
         <Card className="summary-card">
           <Typography className="summary-title">Order Summary</Typography>
 

@@ -1,4 +1,3 @@
-/* THEME COLORS */
 :root {
   --primary-blue: #031576;
   --primary-orange: #fd6e04;
@@ -6,7 +5,6 @@
   --white: #ffffff;
 }
 
-/* MAIN WRAPPER */
 .checkout-page {
   max-width: 1100px;
   margin: auto;
@@ -14,7 +12,7 @@
   font-family: "Inter", sans-serif;
 }
 
-/* HERO */
+
 .checkout-hero {
   text-align: center;
   padding: 45px 20px;
@@ -35,20 +33,17 @@
   font-size: 17px;
 }
 
-/* CONTAINER */
 .checkout-container {
   max-width: 750px;
   margin: auto;
 }
 
-/* SECTION TITLE */
 .section-title {
   font-weight: 700;
   color: var(--primary-blue);
   margin-bottom: 8px;
 }
 
-/* ADDRESS CARD */
 .address-card {
   padding: 16px;
   border-radius: 14px;
@@ -72,7 +67,6 @@
   color: #666;
 }
 
-/* DETAILS CARD */
 .details-card {
   padding: 20px;
   border-radius: 14px;
@@ -80,7 +74,6 @@
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-/* SUMMARY CARD */
 .summary-card {
   padding: 20px;
   border-radius: 14px;
@@ -108,7 +101,6 @@
   font-size: 18px;
 }
 
-/* PLACE ORDER BUTTON */
 .place-order-btn {
   margin-top: 15px;
   background: linear-gradient(135deg, var(--primary-orange), #ff9f00) !important;

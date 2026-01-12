@@ -17,9 +17,6 @@ import ProductCard from "../components/ProductCard"; // ⭐ REQUIRED
 
 import "./ProductPage.css";
 
-/* ===========================================
-   OFFER ENGINE FOR SINGLE PRODUCT
-=========================================== */
 const applyOffersToProduct = (product, offers) => {
   if (!product) return { finalPrice: product?.price || 0, appliedOffer: null };
 
@@ -104,14 +101,12 @@ export default function ProductPage() {
 
         setMainImg(product?.images?.[0]?.url);
 
-        /* ⭐ FETCH SIMILAR PRODUCTS (same subcategory) */
         if (product.subcategory?._id) {
   const simRes = await API.get(
     `/products?subcategory=${product.subcategory._id}`
   );
 
 
-          // remove current product from list
           const filtered = simRes.data.filter(
             (item) => item._id !== product._id
           );
@@ -128,7 +123,7 @@ export default function ProductPage() {
 
   if (!p) return <div className="loading">Loading...</div>;
 
-  /* SWEET ALERT */
+
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -206,7 +201,6 @@ export default function ProductPage() {
 
   return (
     <div className="container product-page">
-      {/* MAIN PRODUCT SECTION */}
       <div className="row g-4 product-wrapper">
         <div className="col-12 col-md-6 col-lg-5">
           <div className="product-img-box">
@@ -244,7 +238,6 @@ export default function ProductPage() {
 
           <Divider className="divider" />
 
-          {/* PRICE SECTION */}
           <Typography variant="h5" className="product-price">
             {p.appliedOffer ? (
               <>
@@ -299,7 +292,6 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* ⭐ SIMILAR PRODUCTS SECTION */}
       {similarProducts.length > 0 && (
         <div className="similar-products mt-5">
           <h3 className="review-heading">Similar Products</h3>
@@ -313,7 +305,6 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* ⭐ REVIEWS SECTION */}
       <div className="reviews-section text-center mt-5">
         <h3 className="review-heading">Customer Reviews</h3>
         <Divider className="mb-3" />

@@ -1,4 +1,3 @@
-// backend/models/Offer.js
 const mongoose = require("mongoose");
 
 const offerSchema = new mongoose.Schema(
@@ -6,23 +5,17 @@ const offerSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: String,
 
-    // category | subcategory | product | cart
     scopeType: {
       type: String,
       enum: ["category", "subcategory", "product", "cart"],
       required: true,
     },
 
-    // If scope = category
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", default: null },
 
-    // If scope = subcategory (stored as nested ID inside Category)
-    subcategoryId: { type: String, default: null }, // use string _id
-
-    // If scope = product
+    subcategoryId: { type: String, default: null }, 
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", default: null },
 
-    // Discount
     discountType: { type: String, enum: ["percentage", "flat"], required: true },
     discountValue: { type: Number, required: true },
 

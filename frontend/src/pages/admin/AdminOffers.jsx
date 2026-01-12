@@ -13,7 +13,7 @@ export default function AdminOffers() {
   const emptyForm = {
     title: "",
     description: "",
-    scopeType: "product", // product | subcategory | category | cart
+    scopeType: "product", 
     category: "",
     subcategoryId: "",
     product: "",
@@ -30,22 +30,18 @@ export default function AdminOffers() {
 
   const [form, setForm] = useState(emptyForm);
 
-  /* =====================================================
-      LOAD ALL DATA
-  ===================================================== */
   const loadData = async () => {
     try {
       const [offersRes, categoriesRes, productsRes] = await Promise.all([
-        API.get("/admin/offers"),   // admin route
-        API.get("/categories"),     // category route
-        API.get("/products"),       // ✔ correct product route
+        API.get("/admin/offers"),   
+        API.get("/categories"),    
+        API.get("/products"),       
       ]);
 
       setOffers(offersRes.data);
       setCategories(categoriesRes.data);
       setProducts(productsRes.data);
 
-      // extract subcategories
       const subs = [];
       categoriesRes.data.forEach((cat) => {
         if (Array.isArray(cat.subcategories)) {
@@ -72,9 +68,6 @@ export default function AdminOffers() {
     loadData();
   }, []);
 
-  /* =====================================================
-      HANDLE CHANGES
-  ===================================================== */
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -90,9 +83,6 @@ export default function AdminOffers() {
     });
   };
 
-  /* =====================================================
-      SUBMIT (CREATE / UPDATE)
-  ===================================================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -124,9 +114,6 @@ export default function AdminOffers() {
     setForm(emptyForm);
   };
 
-  /* =====================================================
-      EDIT OFFER
-  ===================================================== */
   const startEdit = (offer) => {
     setEditingOffer(offer);
 
@@ -149,9 +136,6 @@ export default function AdminOffers() {
     });
   };
 
-  /* =====================================================
-      DELETE OFFER
-  ===================================================== */
   const deleteOffer = async (id) => {
     if (!window.confirm("Delete this offer?")) return;
 
@@ -163,9 +147,6 @@ export default function AdminOffers() {
     }
   };
 
-  /* =====================================================
-      CONDITIONAL SELECT BOXES
-  ===================================================== */
   const renderScopeSelector = () => {
     if (form.scopeType === "category") {
       return (
@@ -226,12 +207,9 @@ export default function AdminOffers() {
       );
     }
 
-    return null; // cart-level
+    return null; 
   };
 
-  /* =====================================================
-      UI
-  ===================================================== */
   return (
     <div className="container py-3">
 
@@ -240,7 +218,6 @@ export default function AdminOffers() {
         <p>Manage Product, Subcategory, Category, and Cart-level offers.</p>
       </div>
 
-      {/* ===================== FORM ===================== */}
       <div className="card shadow-sm p-3 mb-4">
         <h4>{editingOffer ? "Edit Offer" : "Create New Offer"}</h4>
 
@@ -397,7 +374,6 @@ export default function AdminOffers() {
         </form>
       </div>
 
-      {/* ===================== OFFER TABLE ===================== */}
       <div className="table-responsive shadow-sm">
         <table className="table table-bordered text-center align-middle">
           <thead className="table-header">

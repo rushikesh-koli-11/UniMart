@@ -22,14 +22,12 @@ export default function Register() {
 
   const [timer, setTimer] = useState(0);
 
-  // TIMER
   useEffect(() => {
     if (timer <= 0) return;
     const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [timer]);
 
-  // INPUT VALIDATION BEFORE SENDING OTP
   const validateBeforeOtp = () => {
     if (!form.name) return "Enter full name";
     if (!form.email.endsWith("@gmail.com"))
@@ -39,7 +37,6 @@ export default function Register() {
     return null;
   };
 
-  // SEND OTP
   const sendOTP = async () => {
     const err = validateBeforeOtp();
     if (err) return setMsg(err);
@@ -58,7 +55,6 @@ export default function Register() {
     }
   };
 
-  // VERIFY OTP
   const verifyOTP = async () => {
     try {
       await API.post("/otp/verify-otp", {
@@ -73,7 +69,6 @@ export default function Register() {
     }
   };
 
-  // REGISTER USER
   const submit = async () => {
     if (!otpVerified) return setMsg("⚠️ Please verify phone first");
 
@@ -102,14 +97,12 @@ export default function Register() {
 
         {msg && <Alert severity="info" className="mb-3">{msg}</Alert>}
 
-        {/* NAME */}
         <input
           className="form-control input-box mb-1"
           placeholder="Full Name"
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
-        {/* EMAIL */}
         <input
           className="form-control input-box mb-0"
           placeholder="Email (@gmail.com only)"
@@ -121,7 +114,6 @@ export default function Register() {
           }}
         />
 
-        {/* PHONE + SEND OTP */}
         <div className="otp-box mt-3 mb-1">
           <input
             className="form-control input-box"
@@ -142,7 +134,6 @@ export default function Register() {
           )}
         </div>
 
-        {/* OTP SECTION */}
         {otpSent && !otpVerified && (
           <>
             <div className="otp-box mb-2 mt-3">
@@ -157,7 +148,6 @@ export default function Register() {
               </button>
             </div>
 
-            {/* TIMER / RESEND */}
             <div className="text-center mb-3">
               {timer > 0 ? (
                 <p className="text-muted">OTP expires in {formatTime(timer)}</p>
@@ -170,7 +160,6 @@ export default function Register() {
           </>
         )}
 
-        {/* PASSWORD FIELDS — ONLY AFTER OTP VERIFIED */}
         {otpVerified && (
           <>
             <input

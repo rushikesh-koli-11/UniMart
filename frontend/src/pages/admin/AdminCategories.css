@@ -5,12 +5,10 @@
   --white-d9: #ffffffd9;
 }
 
-/* PAGE WIDTH */
 .admin-category-page {
   max-width: 1250px;
 }
 
-/* HERO SECTION */
 .admin-cat-hero {
   background: linear-gradient(135deg, #03076b, #0d3ddf);
   padding: 55px 25px;
@@ -33,7 +31,6 @@
   opacity: 0.92;
 }
 
-/* Mobile */
 @media (max-width: 576px) {
   .admin-cat-hero {
     padding: 35px 20px;
@@ -43,12 +40,10 @@
   }
 }
 
-/* HEADER TITLE COLOR */
 .text-primary-blue {
   color: var(--blue) !important;
 }
 
-/* ADD BUTTON */
 .add-btn {
   background: var(--orange) !important;
   color: var(--white-d9) !important;
@@ -57,7 +52,6 @@
   border-radius: 8px !important;
 }
 
-/* CATEGORY CARD */
 .cat-card {
   border: 2px solid var(--blue) !important;
   border-radius: 14px !important;
@@ -75,7 +69,6 @@
   color: #666;
 }
 
-/* SUBCATEGORY HEADING */
 .sub-title {
   margin-top: 10px;
   font-size: 16px;
@@ -83,14 +76,12 @@
   color: var(--blue);
 }
 
-/* SUBCATEGORY GRID */
 .sub-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 per row */
   gap: 10px;
 }
 
-/* SUBCATEGORY ITEM */
 .sub-item {
   background: #f1f4ff;
   padding: 10px;
@@ -113,7 +104,6 @@
   font-size: 14px;
 }
 
-/* DELETE SUB BUTTON */
 .delete-sub-btn {
   background: #ffe5e5 !important;
   color: #d62828 !important;
@@ -125,14 +115,12 @@
   background: #ffcccc !important;
 }
 
-/* CARD FOOTER */
 .cat-actions {
   padding: 10px 16px;
   display: flex;
   justify-content: space-between;
 }
 
-/* DIALOG BOX */
 .dialog-box .MuiPaper-root {
   border-radius: 14px !important;
   border: 2px solid var(--blue) !important;
@@ -144,7 +132,6 @@
   font-weight: 700 !important;
 }
 
-/* RESPONSIVE GRID */
 @media (max-width: 992px) {
   .sub-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -167,11 +154,6 @@
 .edit-sub-btn:hover {
   background: #c9ceff !important;
 }
-/* ====================================================== */
-/*              BUTTON STYLING (THEME BASED)              */
-/* ====================================================== */
-
-/* Add Subcategory Button (inside card footer) */
 .cat-actions button:first-child {
   background: var(--green) !important;
   color: #fff !important;
@@ -184,7 +166,6 @@
   background: #2d8c1f !important;
 }
 
-/* Delete Category Button */
 .cat-actions button:last-child {
   background: var(--orange) !important;
   color: #fff !important;
@@ -197,9 +178,6 @@
   background: #c65605 !important;
 }
 
-/* ====================================================== */
-/*       Subcategory Edit / Delete Icon Buttons           */
-/* ====================================================== */
 
 .edit-sub-btn {
   background: rgba(3, 7, 107, 0.07) !important;
@@ -213,7 +191,6 @@
   background: rgba(3, 7, 107, 0.13) !important;
 }
 
-/* Delete subcategory button */
 .delete-sub-btn {
   background: rgba(254, 110, 3, 0.12) !important;
   color: red !important;
@@ -225,9 +202,6 @@
   background: rgba(254, 110, 3, 0.22) !important;
 }
 
-/* ====================================================== */
-/*                Add Category (Orange Button)            */
-/* ====================================================== */
 
 .add-btn {
   background: var(--orange) !important;
@@ -241,7 +215,6 @@
 .add-btn:hover {
   background: #c65605 !important;
 }
-/* CATEGORY IMAGE */
 .cat-image-box {
   width: 60px;
   height: 60px;
@@ -260,7 +233,6 @@
   object-fit: cover;
 }
 
-/* SUBCATEGORY IMAGE */
 .sub-image-box {
   width: 35px;
   height: 35px;
@@ -279,7 +251,6 @@
   object-fit: cover;
 }
 
-/* FALLBACK */
 .no-image {
   font-size: 12px;
   color: #999;
@@ -289,7 +260,6 @@
 .no-image.small {
   font-size: 10px;
 }
-/* FULL IMAGE PREVIEW */
 .image-preview-content {
   text-align: center;
   padding: 15px;
@@ -302,7 +272,6 @@
   border-radius: 8px;
 }
 
-/* CURSOR INDICATOR */
 .cat-image-box, .sub-image-box {
   transition: transform 0.2s ease;
 }

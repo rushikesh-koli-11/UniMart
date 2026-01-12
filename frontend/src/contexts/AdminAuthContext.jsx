@@ -11,9 +11,6 @@ export const AdminAuthProvider = ({ children }) => {
   const [token, setToken] = useState(storedToken || null);
   const [loading, setLoading] = useState(true);
 
-  /* ============================================
-     FETCH ADMIN PROFILE IF TOKEN EXISTS
-  ============================================= */
   useEffect(() => {
     const fetchAdmin = async () => {
       if (!token) {
@@ -29,7 +26,6 @@ export const AdminAuthProvider = ({ children }) => {
         setAdmin(res.data.admin);
         localStorage.setItem("admin", JSON.stringify(res.data.admin));
       } catch (err) {
-        // Token expired or invalid → logout admin
         logoutAdmin();
       } finally {
         setLoading(false);
@@ -39,9 +35,6 @@ export const AdminAuthProvider = ({ children }) => {
     fetchAdmin();
   }, [token]);
 
-  /* ============================================
-     LOGIN ADMIN
-  ============================================= */
   const loginAdmin = async (phone, password) => {
     const { data } = await API.post("/admin/login", { phone, password });
 
@@ -53,9 +46,6 @@ export const AdminAuthProvider = ({ children }) => {
     setAdmin(data.admin);
   };
 
-  /* ============================================
-     LOGOUT ADMIN
-  ============================================= */
   const logoutAdmin = () => {
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin");

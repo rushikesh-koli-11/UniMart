@@ -7,9 +7,6 @@ const Order = require("../models/Order");
 const OTP = require("../models/OTP");         // ⭐ Required for OTP verification
 const { protectAdmin } = require("../middleware/auth");
 
-/* ===========================================================
-   GENERATE TOKEN
-=========================================================== */
 const generateAdminToken = (admin) =>
   jwt.sign(
     { id: admin._id, isAdmin: true },
@@ -17,9 +14,6 @@ const generateAdminToken = (admin) =>
     { expiresIn: "7d" }
   );
 
-/* ===========================================================
-   ADMIN REGISTER (Requires OTP Verification)
-=========================================================== */
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
@@ -33,17 +27,14 @@ router.post("/register", async (req, res) => {
     if (!/^\d{10}$/.test(phone))
       return res.status(400).json({ message: "Phone must be 10 digits" });
 
-    // Email unique check
     const existsEmail = await Admin.findOne({ email });
     if (existsEmail)
       return res.status(400).json({ message: "Email already registered" });
 
-    // Phone unique check
     const existsPhone = await Admin.findOne({ phone });
     if (existsPhone)
       return res.status(400).json({ message: "Phone number already registered" });
 
-    // ⭐ OTP must be verified → OTP record MUST NOT exist
     const pendingOtp = await OTP.findOne({ phoneNumber: phone });
     if (pendingOtp) {
       return res.status(400).json({
@@ -51,12 +42,12 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Create admin
+    
     const admin = await Admin.create({
       name,
       email,
       phone,
-      password, // will be hashed by pre-save hook
+      password, 
     });
 
     res.json({ message: "Admin registered successfully" });
@@ -66,9 +57,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* ===========================================================
-   ADMIN LOGIN (PHONE + PASSWORD)
-=========================================================== */
 router.post("/login", async (req, res) => {
   try {
     const { phone, password } = req.body;
@@ -93,9 +81,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* ===========================================================
-   ADMIN RESET PASSWORD (After OTP Verified)
-=========================================================== */
 router.post("/reset-password", async (req, res) => {
   try {
     const { phone, newPassword } = req.body;
@@ -107,7 +92,6 @@ router.post("/reset-password", async (req, res) => {
     if (!admin)
       return res.status(404).json({ message: "Admin not found" });
 
-    // ⭐ OTP must be verified → OTP document MUST NOT exist
     const pendingOtp = await OTP.findOne({ phoneNumber: phone });
     if (pendingOtp) {
       return res.status(400).json({
@@ -115,7 +99,7 @@ router.post("/reset-password", async (req, res) => {
       });
     }
 
-    admin.password = newPassword; // hashed by hook
+    admin.password = newPassword; 
     await admin.save();
 
     res.json({ success: true, message: "Password reset successfully" });
@@ -125,9 +109,6 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-/* ===========================================================
-   GET ALL ORDERS (ADMIN ONLY)
-=========================================================== */
 router.get("/orders", protectAdmin, async (req, res) => {
   try {
     const orders = await Order.find()
@@ -141,9 +122,6 @@ router.get("/orders", protectAdmin, async (req, res) => {
   }
 });
 
-/* ===========================================================
-   UPDATE ORDER STATUS
-=========================================================== */
 router.put("/orders/:id/status", protectAdmin, async (req, res) => {
   try {
     const { status } = req.body;
@@ -164,9 +142,6 @@ router.put("/orders/:id/status", protectAdmin, async (req, res) => {
   }
 });
 
-/* ===========================================================
-   DELETE ORDER
-=========================================================== */
 router.delete("/orders/:id", protectAdmin, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);

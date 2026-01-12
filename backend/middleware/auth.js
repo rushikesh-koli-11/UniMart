@@ -12,7 +12,7 @@ exports.auth = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // ✅ Check Admin first
+    
     if (decoded.isAdmin === true) {
       const admin = await Admin.findById(decoded.id).select("-password");
       if (admin) {
@@ -20,10 +20,10 @@ exports.auth = async (req, res, next) => {
         req.user.isAdmin = true;
         return next();
       }
-      return next(); // token said admin, but admin no longer in DB
+      return next(); 
     }
 
-    // ✅ Otherwise treat as USER
+   
     const user = await User.findById(decoded.id).select("-password");
     if (user) {
       req.user = user;
@@ -38,14 +38,13 @@ exports.auth = async (req, res, next) => {
   }
 };
 
-// ✅ Protect normal user routes
+
 exports.protectUser = (req, res, next) => {
   if (!req.user || req.user.isAdmin === true)
     return res.status(401).json({ message: "User auth required" });
   next();
 };
 
-// ✅ Protect admin routes
 exports.protectAdmin = (req, res, next) => {
   if (!req.user || req.user.isAdmin !== true)
     return res.status(403).json({ message: "Admin auth required" });

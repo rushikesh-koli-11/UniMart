@@ -2,7 +2,6 @@ const MostlyUsedLink = require("../models/MostlyUsedLink");
 const cloudinary = require("../config/cloudinary");
 
 
-// Upload helper for Cloudinary
 const uploadToCloudinary = (fileBuffer, folder) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
@@ -16,7 +15,6 @@ const uploadToCloudinary = (fileBuffer, folder) => {
 };
 
 
-// ADD new logo
 exports.addLink = async (req, res) => {
   try {
     const { link } = req.body;
@@ -41,7 +39,6 @@ exports.addLink = async (req, res) => {
 };
 
 
-// GET ALL (sorted)
 exports.getLinks = async (req, res) => {
   try {
     const data = await MostlyUsedLink.find().sort({ order: 1 });
@@ -52,14 +49,12 @@ exports.getLinks = async (req, res) => {
 };
 
 
-// UPDATE link/logo
 exports.updateLink = async (req, res) => {
   try {
     let updatedData = {
       link: req.body.link
     };
 
-    // If new logo uploaded
     if (req.file) {
       const upload = await uploadToCloudinary(req.file.buffer, "mostlyUsedLinks");
       updatedData.logo = upload.secure_url;
@@ -79,7 +74,6 @@ exports.updateLink = async (req, res) => {
 };
 
 
-// DELETE
 exports.deleteLink = async (req, res) => {
   try {
     await MostlyUsedLink.findByIdAndDelete(req.params.id);
@@ -90,7 +84,6 @@ exports.deleteLink = async (req, res) => {
 };
 
 
-// REORDER ITEMS
 exports.updateOrder = async (req, res) => {
   try {
     const { items } = req.body;

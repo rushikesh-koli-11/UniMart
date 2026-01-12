@@ -12,7 +12,6 @@ export default function AdminLogin() {
   const [form, setForm] = useState({ phone: "", password: "" });
   const [msg, setMsg] = useState("");
 
-  // Forgot password states
   const [forgot, setForgot] = useState(false);
   const [phone, setPhone] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -20,7 +19,6 @@ export default function AdminLogin() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [newPass, setNewPass] = useState("");
 
-  /* ============= LOGIN ============= */
   const submitLogin = async () => {
     if (!/^\d{10}$/.test(form.phone))
       return setMsg("❌ Enter valid 10-digit mobile number");
@@ -33,7 +31,6 @@ export default function AdminLogin() {
     }
   };
 
-  /* ============= SEND OTP FOR FORGOT PASSWORD ============= */
   const sendOTP = async () => {
     if (!/^\d{10}$/.test(phone))
       return setMsg("Enter valid admin phone");
@@ -51,7 +48,6 @@ export default function AdminLogin() {
     }
   };
 
-  /* ============= VERIFY OTP ============= */
   const verifyOTP = async () => {
     try {
       await API.post("/otp/verify-otp", {
@@ -66,7 +62,6 @@ export default function AdminLogin() {
     }
   };
 
-  /* ============= UPDATE PASSWORD ============= */
   const resetPassword = async () => {
     if (!newPass) return setMsg("Enter new password");
 
@@ -138,7 +133,6 @@ export default function AdminLogin() {
           </>
         ) : (
           <>
-            {/* PHONE INPUT */}
             {!otpSent && (
               <>
                 <input
@@ -156,7 +150,6 @@ export default function AdminLogin() {
               </>
             )}
 
-            {/* OTP INPUT */}
             {otpSent && !otpVerified && (
               <>
                 <input
@@ -172,7 +165,6 @@ export default function AdminLogin() {
               </>
             )}
 
-            {/* NEW PASSWORD */}
             {otpVerified && (
               <>
                 <input

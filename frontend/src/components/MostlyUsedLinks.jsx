@@ -1,4 +1,3 @@
-// frontend/src/components/MostlyUsedLinks.jsx
 import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import "./MostlyUsedLinks.css";

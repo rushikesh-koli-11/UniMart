@@ -1,15 +1,9 @@
-/************************************
-            WRAPPER
-************************************/
 .ud-wrapper {
   max-width: 900px;
   margin: auto;
   padding: 20px;
 }
 
-/************************************
-              HERO
-************************************/
 .ud-hero {
   background: linear-gradient(135deg, #031576, #0d3ddf);
   padding: 60px 25px;
@@ -34,10 +28,6 @@
   margin-top: 10px;
   opacity: 0.95;
 }
-
-/************************************
-          SECTION HEADER
-************************************/
 .section-header {
   display: flex;
   align-items: center;
@@ -59,9 +49,6 @@
   font-weight: bold;
 }
 
-/************************************
-          PROFILE CARD
-************************************/
 .profile-card {
   padding: 25px;
   border-radius: 15px;
@@ -82,9 +69,6 @@
   border-top: 2px solid rgba(0,0,0,0.08);
 }
 
-/************************************
-           BUTTONS
-************************************/
 .primary-btn {
   background: #fe6e03 !important;
   color: #fff !important;
@@ -108,19 +92,12 @@
   border-radius: 8px !important;
 }
 
-/************************************
-            SELECT INPUT
-************************************/
 .ud-select {
   padding: 12px;
   border-radius: 8px;
   border: 1.5px solid #ccc;
   font-size: 16px;
 }
-
-/************************************
-     AMAZON / FLIPKART COMPACT STYLE
-************************************/
 .address-compact-list {
   margin-top: 10px;
 }
@@ -138,7 +115,6 @@
   border-color: #fe6e03;
 }
 
-/* HEADER */
 .compact-head {
   display: flex;
   justify-content: space-between;
@@ -180,9 +156,6 @@
   font-size: 13px;
 }
 
-/************************************
-        EDIT + DELETE ICONS
-************************************/
 .ch-right-icons {
   display: flex;
   align-items: center;
@@ -205,9 +178,6 @@
   background: #ffe8e8;
 }
 
-/************************************
-        COLLAPSIBLE BODY
-************************************/
 .ch-arrow {
   font-size: 18px;
   color: #fe6e03;
@@ -236,7 +206,6 @@
   display: flex;
   gap: 10px;
 }
-/* Mobile Responsive Fixes */
 @media (max-width: 768px) {
   .ud-hero {
     padding: 40px 20px;

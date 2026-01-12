@@ -37,7 +37,6 @@ export default function AdminDashboard() {
   return (
     <div className="container-fluid p-0 admin-dashboard-wrapper mt-3">
 
-      {/* HERO SECTION */}
       <div className="dashboard-hero d-flex align-items-center justify-content-center text-center">
         <div>
           <h1 className="hero-title">Welcome Back, {admin?.name} 👋</h1>
@@ -45,11 +44,9 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* MAIN STATS */}
       <div className="container mt-4">
         <div className="row g-4">
 
-          {/* PRODUCTS */}
           <div className="col-12 col-md-4">
             <Card className="stat-card shadow-sm">
               <CardContent className="stat-content">
@@ -62,7 +59,6 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
-          {/* ORDERS */}
           <div className="col-12 col-md-4">
             <Card className="stat-card shadow-sm">
               <CardContent className="stat-content">
@@ -75,7 +71,6 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
-          {/* USERS */}
           <div className="col-12 col-md-4">
             <Card className="stat-card shadow-sm">
               <CardContent className="stat-content">
@@ -90,12 +85,10 @@ export default function AdminDashboard() {
 
         </div>
 
-        {/* REVENUE SECTION */}
         <h3 className="fw-bold mt-5 mb-3 section-title">💰 Revenue Overview</h3>
 
         <div className="row g-4">
 
-          {/* TODAY */}
           <div className="col-12 col-md-4">
             <Card className="stat-card revenue-card shadow-sm">
               <CardContent className="stat-content">
@@ -110,7 +103,6 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
-          {/* WEEKLY */}
           <div className="col-12 col-md-4">
             <Card className="stat-card revenue-card shadow-sm">
               <CardContent className="stat-content">
@@ -125,7 +117,6 @@ export default function AdminDashboard() {
             </Card>
           </div>
 
-          {/* MONTHLY */}
           <div className="col-12 col-md-4">
             <Card className="stat-card revenue-card shadow-sm">
               <CardContent className="stat-content">

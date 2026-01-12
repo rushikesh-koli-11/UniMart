@@ -5,7 +5,7 @@ import ProductCard from "../components/ProductCard";
 import GrocerySubcategories from "../components/GrocerySubcategories";
 import { useSearchParams } from "react-router-dom";
 import "./Home.css";
-import HomeLoader from "../components/HomeLoader"; // ✅ NEW
+import HomeLoader from "../components/HomeLoader"; // 
 
 const SectionRow = ({ title, products }) => {
   if (!products || products.length === 0) return null;
@@ -29,7 +29,7 @@ export default function Home() {
   const [bestOffers, setBestOffers] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
 
-  const [loading, setLoading] = useState(true); // ✅ NEW
+  const [loading, setLoading] = useState(true); 
   const [searchParams] = useSearchParams();
 
   const loadProducts = async () => {
@@ -68,7 +68,7 @@ export default function Home() {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false); // ✅ hide loader
+        setLoading(false);
       }
     };
 
@@ -88,7 +88,6 @@ export default function Home() {
     return map;
   };
 
-  // ✅ SHOW LOADER UNTIL BACKEND RESPONDS
   if (loading) {
     return <HomeLoader />;
   }

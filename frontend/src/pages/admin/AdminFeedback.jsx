@@ -40,7 +40,6 @@ export default function AdminFeedback() {
   return (
     <div className="admin-feedback-page container-fluid py-3">
 
-      {/* HEADER */}
       <div className="row">
         <div className="col-12">
           <div className="feedback-header text-center">
@@ -50,7 +49,6 @@ export default function AdminFeedback() {
         </div>
       </div>
 
-      {/* TABLE */}
       <div className="row mt-3">
         <div className="col-12">
           <div className="table-responsive feedback-table-box">

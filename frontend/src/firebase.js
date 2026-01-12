@@ -13,12 +13,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// FIXED RECAPTCHA SYNTAX
 export const setupRecaptcha = () => {
   if (!window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,                     // ✔ FIRST ARG (correct)
-      "recaptcha-container",    // ✔ SECOND ARG
+      auth,                     
+      "recaptcha-container",    
       {
         size: "invisible",
       }

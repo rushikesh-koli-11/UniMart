@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, default: "" },
-    addresses: [AddressSchema], // MULTIPLE ADDRESSES
+    addresses: [AddressSchema], 
     password: { type: String, required: true },
     avatar: String
   },

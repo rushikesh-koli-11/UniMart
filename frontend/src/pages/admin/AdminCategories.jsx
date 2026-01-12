@@ -49,7 +49,6 @@ export default function AdminCategories() {
   const [selectedCat, setSelectedCat] = useState(null);
   const [selectedSub, setSelectedSub] = useState(null);
 
-  /* 🔹 LOAD CATEGORIES */
   const load = async () => {
     const { data } = await API.get("/categories");
 
@@ -69,12 +68,11 @@ export default function AdminCategories() {
     load();
   }, []);
 
-  /* 🔹 IMAGE UPLOAD */
   const uploadImage = async (file) => {
     try {
       const formData = new FormData();
       formData.append("image", file);
-      formData.append("type", "category");   // ✅ tells backend it's category image
+      formData.append("type", "category");   
 
       const { data } = await API.post("/upload/image", formData);
 
@@ -98,7 +96,6 @@ export default function AdminCategories() {
     setter((prev) => ({ ...prev, image: uploaded }));
   };
 
-  /* ---------------- CATEGORY ---------------- */
 
   const addCategory = async () => {
     if (!form.name.trim()) return alert("Enter Category Name!");
@@ -132,7 +129,6 @@ export default function AdminCategories() {
     }
   };
 
-  /* ---------------- SUBCATEGORY ---------------- */
 
   const openAddSub = (cat) => {
     setSelectedCat(cat);
@@ -177,13 +173,11 @@ export default function AdminCategories() {
   return (
     <div className="container py-3 admin-category-page">
 
-      {/* HERO */}
       <div className="admin-cat-hero">
         <h1>Category Management</h1>
         <p>Organize & manage categories and subcategories effortlessly</p>
       </div>
 
-      {/* HEADER */}
       <div className="text-center mb-4">
         <Button
           variant="contained"
@@ -195,7 +189,6 @@ export default function AdminCategories() {
         </Button>
       </div>
 
-      {/* CATEGORY LIST */}
       <div className="row g-4">
         {categories.map((cat) => (
           <div className="col-12" key={cat._id}>
@@ -298,7 +291,6 @@ export default function AdminCategories() {
         ))}
       </div>
 
-      {/* ADD CATEGORY */}
       <Dialog open={open} onClose={() => setOpen(false)} className="dialog-box">
         <DialogTitle>Add Category</DialogTitle>
         <DialogContent>
@@ -321,7 +313,6 @@ export default function AdminCategories() {
         </DialogContent>
       </Dialog>
 
-      {/* EDIT CATEGORY */}
       <Dialog open={openEditCat} onClose={() => setOpenEditCat(false)} className="dialog-box">
         <DialogTitle>Edit Category</DialogTitle>
         <DialogContent>
@@ -344,7 +335,6 @@ export default function AdminCategories() {
         </DialogContent>
       </Dialog>
 
-      {/* ADD SUBCATEGORY */}
       <Dialog open={openSub} onClose={() => setOpenSub(false)} className="dialog-box">
         <DialogTitle>Add Subcategory</DialogTitle>
         <DialogContent>
@@ -367,7 +357,6 @@ export default function AdminCategories() {
         </DialogContent>
       </Dialog>
 
-      {/* EDIT SUBCATEGORY */}
       <Dialog open={openEditSub} onClose={() => setOpenEditSub(false)} className="dialog-box">
         <DialogTitle>Edit Subcategory</DialogTitle>
         <DialogContent>

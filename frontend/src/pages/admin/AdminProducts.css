@@ -5,7 +5,6 @@
   --white: #ffffffd9;
 }
 
-/* ------------------------ HERO SECTION ------------------------ */
 .admin-products-hero {
   background: linear-gradient(135deg, #03076b, #0839e6);
   padding: 50px 25px;
@@ -27,13 +26,11 @@
   opacity: 0.9;
 }
 
-/* ------------------------ PAGE TITLE ------------------------ */
 .page-title {
   color: var(--blue);
   font-weight: 700;
 }
 
-/* ------------------------ FILTER BAR ------------------------ */
 .filter-row .filter-input {
   border-radius: 10px !important;
   background: #ffffff;
@@ -52,7 +49,6 @@
   background-color: #cc5804 !important;
 }
 
-/* ------------------------ TABLES ------------------------ */
 .admin-products-table {
   background: #fff;
   border-radius: 12px;
@@ -70,7 +66,6 @@
   font-size: 14px;
 }
 
-/* MAIN PRODUCT IMAGE */
 .table-img {
   width: 60px;
   height: 60px;
@@ -78,19 +73,16 @@
   border-radius: 6px;
 }
 
-/* PRODUCT NAME */
 .prod-title {
   font-weight: 600;
   color: var(--blue);
 }
 
-/* PRICE */
 .price {
   font-weight: bold;
   color: var(--green);
 }
 
-/* STOCK BADGES */
 .stock-badge {
   padding: 5px 10px;
   border-radius: 8px;
@@ -110,7 +102,6 @@
   background: #4caf50;
 }
 
-/* --------------------- ACTION BUTTONS ---------------------- */
 .btn-action {
   border: none;
   padding: 6px 10px;
@@ -127,7 +118,6 @@
   background: var(--orange);
 }
 
-/* ----------------------- MODAL --------------------------- */
 .dialog-title {
   background: var(--blue);
   color: white;
@@ -170,7 +160,6 @@
   border-radius: 50% !important;
 }
 
-/* ------------------ RESPONSIVE ------------------ */
 @media (max-width: 768px) {
   .admin-products-hero h1 {
     font-size: 30px;
@@ -200,7 +189,6 @@
     padding: 35px 20px;
   }
 }
-/* -------------------- FORM CARD -------------------- */
 .product-form-card {
   background: #ffffff;
   padding: 25px 22px;
@@ -217,7 +205,6 @@
   border-bottom: 3px solid var(--orange);
 }
 
-/* -------------------- TEXTFIELDS -------------------- */
 .MuiInputBase-root {
   border-radius: 12px !important;
   background: #f8f9ff !important;
@@ -235,7 +222,6 @@
   border-color: var(--orange) !important;
 }
 
-/* Label styling */
 .MuiInputLabel-root {
   color: #555 !important;
 }
@@ -244,7 +230,6 @@
   color: var(--blue) !important;
 }
 
-/* -------------------- STOCK BOX -------------------- */
 .stock-box {
   display: flex;
   align-items: center;
@@ -268,7 +253,6 @@
   background: #020b62 !important;
 }
 
-/* -------------------- UPLOAD IMAGE BUTTON -------------------- */
 .upload-btn {
   border-radius: 12px !important;
   border: 2px dashed var(--blue) !important;
@@ -280,7 +264,6 @@
   background: rgba(3, 7, 107, 0.09) !important;
 }
 
-/* -------------------- IMAGE PREVIEW GRID -------------------- */
 .image-preview {
   position: relative;
   margin-top: 10px;
@@ -306,7 +289,6 @@
   box-shadow: 0 0 8px rgba(0,0,0,0.3);
 }
 
-/* -------------------- SAVE BUTTON -------------------- */
 .save-btn {
   background: linear-gradient(135deg, var(--green), #2c8f24) !important;
   padding: 12px !important;
@@ -321,7 +303,6 @@
   background: #2c8f24 !important;
 }
 
-/* -------------------- RESPONSIVE -------------------- */
 @media (max-width: 600px) {
   .product-form-card {
     padding: 18px;
@@ -332,9 +313,6 @@
     height: 72px;
   }
 }
-/* ------------------------
-   LOW STOCK ALERT SECTION
--------------------------*/
 
 .low-stock-box {
   background: #fff5f5;
@@ -346,7 +324,6 @@
   box-shadow: 0 4px 14px rgba(214, 40, 40, 0.25);
 }
 
-/* Title */
 .low-stock-title {
   font-size: 20px;
   font-weight: 800;
@@ -354,7 +331,6 @@
   color: #d62828;
 }
 
-/* Table container */
 .low-table {
   background: #fff;
   border-radius: 10px;
@@ -362,7 +338,6 @@
  
 }
 
-/* Table Head */
 .low-table thead {
   background: #d62828 !important;
   color: #fff !important;
@@ -372,7 +347,6 @@
   background: #ffe3e3 !important;
 }
 
-/* Stock badge */
 .stock-badge.low {
   background: #ffb3b3 !important;
   color: #7a0000 !important;
@@ -381,7 +355,6 @@
   border-radius: 8px;
 }
 
-/* Delete/Edit buttons inside low stock */
 .low-table .btn-action.edit {
   background: #ff9900 !important;
   color: white !important;
@@ -392,7 +365,6 @@
   color: white !important;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .low-stock-box {
     padding: 15px;

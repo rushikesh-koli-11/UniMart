@@ -1,4 +1,3 @@
-// backend/routes/publicOffers.js
 const router = require("express").Router();
 const Offer = require("../models/Offer");
 

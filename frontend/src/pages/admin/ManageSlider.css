@@ -30,7 +30,6 @@
   margin: 8px auto 25px auto;
 }
 
-/* 🟠 Upload Section */
 .upload-box {
   background: #fff9f3 !important;
   padding: 15px;
@@ -65,26 +64,24 @@
   opacity: 0.9;
 }
 
-/* 🖼 Image Grid Layout */
 .slider-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr); /* 1 on sm */
+  grid-template-columns: repeat(1, 1fr);
   gap: 20px;
 }
 
 @media (min-width: 768px) {
   .slider-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 on md */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 992px) {
   .slider-grid {
-    grid-template-columns: repeat(4, 1fr); /* 4 on lg */
+    grid-template-columns: repeat(4, 1fr); 
   }
 }
 
-/* 🖼 Image Cards */
 .image-card {
   position: relative;
   border-radius: 10px;
@@ -105,7 +102,6 @@
   display: block;
 }
 
-/* 🎛 Controls */
 .image-controls {
   position: absolute;
   top: 7px;
@@ -130,7 +126,6 @@
   background: #218838 !important;
 }
 
-/* 🧨 Delete Button (overlay style) */
 .delete-img-btn {
   position: absolute;
   top: 7px;
@@ -149,7 +144,6 @@
   background: #b02a27 !important;
 }
 
-/* 📱 Responsive fine-tuning */
 @media (max-width: 768px) {
   .slider-img {
     height: auto;
@@ -162,7 +156,6 @@
     padding: 3px 4px;
   }
 }
-/* 🎛 Image Controls - reorder + delete */
 .image-controls {
   position: absolute;
   top: 8px;
@@ -175,7 +168,6 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* ⬆⬇ Arrow Buttons (up/down) */
 .image-controls .btn-outline-primary {
   background: #021473 !important; /* orange */
   border: none !important;
@@ -189,11 +181,10 @@
 }
 
 .image-controls .btn-outline-primary:hover {
-  background:  #fe6e03!important; /* deep navy on hover */
+  background:  #fe6e03!important; 
   transform: scale(1.1);
 }
 
-/* ❌ Delete Button */
 .image-controls .btn-outline-danger {
   background: #ff3b30 !important;
   color: white !important;
@@ -210,7 +201,6 @@
   transform: scale(1.1);
 }
 
-/* 🧢 Disabled state (when arrow can't move) */
 .image-controls .btn[disabled] {
   opacity: 0.5 !important;
   cursor: not-allowed !important;

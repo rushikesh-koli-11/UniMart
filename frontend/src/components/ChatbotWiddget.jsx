@@ -21,14 +21,12 @@ export default function ChatbotWidget() {
 
   const chatBodyRef = useRef(null);
 
-  /* ✅ Auto-scroll */
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
-  /* ✅ Tooltip animation */
   useEffect(() => {
     if (open) return;
 
@@ -40,7 +38,6 @@ export default function ChatbotWidget() {
     return () => clearInterval(interval);
   }, [open]);
 
-  /* ✅ REAL bot readiness (NO time limit) */
   useEffect(() => {
     if (!open) return;
 
@@ -68,7 +65,6 @@ export default function ChatbotWidget() {
     };
   }, [open]);
 
-  /* ✅ Send message */
   const sendMessage = async () => {
     if (!input.trim() || loading || botStatus === "offline") return;
 
@@ -99,7 +95,6 @@ export default function ChatbotWidget() {
     }
   };
 
-  /* ✅ Status label */
   const statusLabel = {
     online: "🟢 Online",
     waking: "🟡 Starting…",

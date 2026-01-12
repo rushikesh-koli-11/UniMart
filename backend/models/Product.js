@@ -1,4 +1,4 @@
-// backend/models/Product.js
+
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({
@@ -22,12 +22,12 @@ const productSchema = new mongoose.Schema({
 
   stock: { type: Number, default: 0 },
 
-  // ⭐ REVIEWS
+
   reviews: [reviewSchema],
   avgRating: { type: Number, default: 0 },
   numReviews: { type: Number, default: 0 },
 
-  // ⭐ OFFER REF
+  
   offer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Offer",

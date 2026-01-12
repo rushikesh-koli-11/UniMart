@@ -5,7 +5,7 @@
   --white: #ffffff !important;
 }
 
-/* MAIN FOOTER */
+
 .footer-wrapper {
   background: var(--primary-blue) !important;
   padding: 40px 20px !important;
@@ -17,7 +17,6 @@
   padding: 0 30px !important;
 }
 
-/* LOGO */
 .footer-logo-box {
   margin-bottom: 10px !important;
 }
@@ -27,14 +26,12 @@
   height: auto !important;
 }
 
-/* TEXT */
 .footer-text {
   color: #d9d9d9 !important;
   font-size: 15px !important;
   line-height: 1.5 !important;
 }
 
-/* TITLES */
 .footer-title {
   font-size: 20px !important;
   font-weight: 700 !important;
@@ -42,7 +39,6 @@
   color: #fd6e04 !important;
 }
 
-/* LINKS */
 .footer-link {
   display: block !important;
   color: #e6e6e6 !important;
@@ -58,7 +54,6 @@
   transform: translateX(4px) !important;
 }
 
-/* SOCIAL ICONS */
 .footer-social {
   display: flex !important;
   gap: 15px !important;
@@ -76,14 +71,12 @@
   background: var(--primary-orange) !important;
 }
 
-/* COPYRIGHT */
 .footer-bottom {
   margin-top: 25px !important;
   color: #cfcfcf !important;
   font-size: 14px !important;
 }
 
-/* DEVELOPER CREDIT */
 .developer-credit {
   margin-top: 5px !important;
   font-size: 15px !important;
@@ -97,7 +90,6 @@
   text-decoration: underline !important;
 }
 
-/* RESPONSIVE */
 @media (max-width: 576px) {
   .footer-wrapper {
     text-align: center !important;
@@ -139,7 +131,7 @@
 }
 @media (max-width: 576px) {
   .footer-wrapper {
-    text-align: left !important;   /* ← FIXED */
+    text-align: left !important;   
     padding: 25px 15px !important;
   }
 
@@ -148,17 +140,17 @@
   }
 
   .footer-social {
-    justify-content: flex-start !important;  /* icons left */
+    justify-content: flex-start !important; 
   }
 
   .footer-contact-item {
-    justify-content: flex-start !important;  /* contact items left */
+    justify-content: flex-start !important;  
   }
 }
 @media (max-width: 576px) {
   .footer-grid > .MuiGrid-item {
     display: flex;
     flex-direction: column;
-    align-items: flex-start !important; /* ← SHIFT LEFT */
+    align-items: flex-start !important;
   }
 }

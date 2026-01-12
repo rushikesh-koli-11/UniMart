@@ -7,11 +7,6 @@ export function UserAuthProvider({ children }) {
   const stored = localStorage.getItem("user");
   const [user, setUser] = useState(stored ? JSON.parse(stored) : null);
 
-  /* ======================
-      AUTH FUNCTIONS
-  ======================= */
-
-  // LOGIN USING PHONE + PASSWORD
   const loginUser = async (phone, password) => {
     const { data } = await API.post("/auth/login", { phone, password });
     localStorage.setItem("user_token", data.token);
@@ -25,18 +20,12 @@ export function UserAuthProvider({ children }) {
     setUser(null);
   };
 
-  /* ======================
-      PROFILE UPDATE
-  ======================= */
   const updateUser = async (updates) => {
     const { data } = await API.put("/auth/update", updates);
     localStorage.setItem("user", JSON.stringify(data.user));
     setUser(data.user);
   };
 
-  /* ======================
-      ADDRESS FUNCTIONS
-  ======================= */
 
   const addAddress = async (addr) => {
     const { data } = await API.post("/auth/address/add", addr);

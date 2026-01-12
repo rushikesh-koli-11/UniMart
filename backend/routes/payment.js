@@ -1,4 +1,3 @@
-// backend/routes/payment.js
 const router = require('express').Router();
 const Razorpay = require('razorpay');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
